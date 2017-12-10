@@ -132,7 +132,7 @@ KNOWN PROBLEMS
 
 VERSION HISTORY
 
-1.6.0-stable (2017-10-12)
+1.6.0-stable (2017-12-10)
  - a first dive into Java 10 (in the sense of new API methods)
    * JDK-8184690: Add Collectors for unmodifiable List, Set, and Map
    * JDK-8177290: Add unmodifiable List, Set, Map copy factories
