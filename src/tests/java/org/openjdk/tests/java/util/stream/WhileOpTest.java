@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -53,7 +53,7 @@ import java8.util.stream.TestData;
 
 /*
  * @test
- * @bug 8071597
+ * @bug 8071597 8193856
  */
 @Test
 public class WhileOpTest extends OpTestCase {
@@ -389,5 +389,34 @@ public class WhileOpTest extends OpTestCase {
             }
         }
         assertTrue(isClosed.get());
+    }
+
+    @Test(groups = { "serialization-hostile" })
+    public void testFlatMapThenTake() {
+        TestData.OfRef<Integer> range = TestData.Factory.ofSupplier(
+                "range", () -> IntStreams.range(0, 100).boxed());
+
+        this.<Integer, Integer, Stream<Integer>, Stream<Integer>>exerciseOpsMulti(range,
+                         // Reference result
+                         s -> s.takeWhile(e -> e != 50),
+                         // For other results collect into array,
+                         // stream the single array (not the elements),
+                         // then flat map to stream the array elements
+                         s -> RefStreams.<Integer[]>of(s.toArray(Integer[]::new)).
+                                 flatMap(RefStreams::of).
+                                 takeWhile(e -> e != 50),
+                         s -> RefStreams.of(s.mapToInt(e -> e).toArray()).
+                                 flatMapToInt(IntStreams::of).
+                                 takeWhile(e -> e != 50).
+                                 mapToObj(e -> e),
+                         s -> RefStreams.of(s.mapToLong(e -> e).toArray()).
+                                 flatMapToLong(LongStreams::of).
+                                 takeWhile(e -> e != 50L).
+                                 mapToObj(e -> (int) e),
+                         s -> RefStreams.of(s.mapToDouble(e -> e).toArray()).
+                                 flatMapToDouble(DoubleStreams::of).
+                                 takeWhile(e -> e != 50.0).
+                                 mapToObj(e -> (int) e)
+                         );
     }
 }
