@@ -36,8 +36,9 @@ import java8.util.stream.Stream;
 
 /**
  * A container object which may or may not contain a non-{@code null} value.
- * If a value is present, {@code isPresent()} returns {@code true} and
- * {@code get()} returns the value.
+ * If a value is present, {@code isPresent()} returns {@code true}. If no
+ * value is present, the object is considered <i>empty</i> and
+ * {@code isPresent()} returns {@code false}.
  *
  * <p>Additional methods that depend on the presence or absence of a contained
  * value are provided, such as {@link #orElse(Object) orElse()}
@@ -140,21 +141,13 @@ public final class Optional<T> {
      * {@code NoSuchElementException}.
      *
      * <p><b>API Note:</b><br>
-     * The methods {@link #orElse(Object) orElse} and
-     * {@link #orElseGet(Supplier) orElseGet}
-     * are generally preferable to this method, as they return a substitute
-     * value if the value is absent, instead of throwing an exception.
+     * The preferred alternative to this method is {@link #orElseThrow()}.
      *
      * @return the non-{@code null} value described by this {@code Optional}
      * @throws NoSuchElementException if no value is present
-     *
-     * @see Optional#isPresent()
      */
     public T get() {
-        if (value == null) {
-            throw new NoSuchElementException("No value present");
-        }
-        return value;
+        return orElseThrow();
     }
 
     /**
@@ -364,6 +357,21 @@ public final class Optional<T> {
      */
     public T orElseGet(Supplier<? extends T> supplier) {
         return value != null ? value : supplier.get();
+    }
+
+    /**
+     * If a value is present, returns the value, otherwise throws
+     * {@code NoSuchElementException}.
+     *
+     * @return the non-{@code null} value described by this {@code Optional}
+     * @throws NoSuchElementException if no value is present
+     * @since 10
+     */
+    public T orElseThrow() {
+        if (value == null) {
+            throw new NoSuchElementException("No value present");
+        }
+        return value;
     }
 
     /**
