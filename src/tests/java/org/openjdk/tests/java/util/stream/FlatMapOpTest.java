@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,7 +24,7 @@
 /*
  * @test
  * @summary flat-map operations
- * @bug 8044047 8076458
+ * @bug 8044047 8076458 8075939
  */
 package org.openjdk.tests.java.util.stream;
 
@@ -32,7 +32,6 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import java8.util.function.Function;
@@ -55,6 +54,7 @@ import static java8.util.stream.ThrowableHelper.checkNPE;
 @Test
 public class FlatMapOpTest extends OpTestCase {
 
+    @Test
     public void testNullMapper() {
         checkNPE(() -> RefStreams.of(1).flatMap(null));
         checkNPE(() -> IntStreams.of(1).flatMap(null));
@@ -65,6 +65,7 @@ public class FlatMapOpTest extends OpTestCase {
     static final Function<Integer, Stream<Integer>> integerRangeMapper
             = e -> IntStreams.range(0, e).boxed();
 
+    @Test
     public void testFlatMap() {
         String[] stringsArray = {"hello", "there", "", "yada"};
         Stream<String> strings = StreamSupport.stream(Arrays.asList(stringsArray));
@@ -150,11 +151,24 @@ public class FlatMapOpTest extends OpTestCase {
         exerciseOps(data, s -> s.flatMap((Integer e) -> IntStreams.range(0, e).boxed().limit(10)));
     }
 
+    @Test
+    public void testOpsShortCircuit() {
+        AtomicInteger count = new AtomicInteger();
+        RefStreams.of(0).flatMap(i -> IntStreams.range(0, 100).boxed()).
+                peek(i -> count.incrementAndGet()).
+                limit(10).toArray();
+        assertEquals(count.get(), 10);
+    }
+
     //
 
     @Test(dataProvider = "IntStreamTestData", dataProviderClass = IntStreamTestDataProvider.class)
     public void testIntOps(String name, TestData.OfInt data) {
-        Collection<Integer> result = exerciseOps(data, s -> s.flatMap(i -> StreamSupport.stream(Collections.singleton(i)).mapToInt(j -> j)));
+        Collection<Integer> result = exerciseOps(data, s -> s.flatMap(IntStreams::of));
+        assertEquals(data.size(), result.size());
+        assertContents(data, result);
+
+        result = exerciseOps(data, s -> s.boxed().flatMapToInt(IntStreams::of));
         assertEquals(data.size(), result.size());
         assertContents(data, result);
 
@@ -166,13 +180,35 @@ public class FlatMapOpTest extends OpTestCase {
     public void testIntOpsX(String name, TestData.OfInt data) {
         exerciseOps(data, s -> s.flatMap(e -> IntStreams.range(0, e)));
         exerciseOps(data, s -> s.flatMap(e -> IntStreams.range(0, e).limit(10)));
+
+        exerciseOps(data, s -> s.boxed().flatMapToInt(e -> IntStreams.range(0, e)));
+        exerciseOps(data, s -> s.boxed().flatMapToInt(e -> IntStreams.range(0, e).limit(10)));
+    }
+
+    @Test
+    public void testIntOpsShortCircuit() {
+        AtomicInteger count = new AtomicInteger();
+        IntStreams.of(0).flatMap(i -> IntStreams.range(0, 100)).
+                peek(i -> count.incrementAndGet()).
+                limit(10).toArray();
+        assertEquals(count.get(), 10);
+
+        count.set(0);
+        RefStreams.of(0).flatMapToInt(i -> IntStreams.range(0, 100)).
+                peek(i -> count.incrementAndGet()).
+                limit(10).toArray();
+        assertEquals(count.get(), 10);
     }
 
     //
 
     @Test(dataProvider = "LongStreamTestData", dataProviderClass = LongStreamTestDataProvider.class)
     public void testLongOps(String name, TestData.OfLong data) {
-        Collection<Long> result = exerciseOps(data, s -> s.flatMap(i -> StreamSupport.stream(Collections.singleton(i)).mapToLong(j -> j)));
+        Collection<Long> result = exerciseOps(data, s -> s.flatMap(LongStreams::of));
+        assertEquals(data.size(), result.size());
+        assertContents(data, result);
+
+        result = exerciseOps(data, s -> s.boxed().flatMapToLong(LongStreams::of));
         assertEquals(data.size(), result.size());
         assertContents(data, result);
 
@@ -186,11 +222,30 @@ public class FlatMapOpTest extends OpTestCase {
         exerciseOps(data, s -> s.flatMap(e -> LongStreams.range(0, e).limit(10)));
     }
 
+    @Test
+    public void testLongOpsShortCircuit() {
+        AtomicInteger count = new AtomicInteger();
+        LongStreams.of(0).flatMap(i -> LongStreams.range(0, 100)).
+                peek(i -> count.incrementAndGet()).
+                limit(10).toArray();
+        assertEquals(count.get(), 10);
+
+        count.set(0);
+        RefStreams.of(0).flatMapToLong(i -> LongStreams.range(0, 100)).
+                peek(i -> count.incrementAndGet()).
+                limit(10).toArray();
+        assertEquals(count.get(), 10);
+    }
+
     //
 
     @Test(dataProvider = "DoubleStreamTestData", dataProviderClass = DoubleStreamTestDataProvider.class)
     public void testDoubleOps(String name, TestData.OfDouble data) {
-        Collection<Double> result = exerciseOps(data, s -> s.flatMap(i -> StreamSupport.stream(Collections.singleton(i)).mapToDouble(j -> j)));
+        Collection<Double> result = exerciseOps(data, s -> s.flatMap(DoubleStreams::of));
+        assertEquals(data.size(), result.size());
+        assertContents(data, result);
+
+        result = exerciseOps(data, s -> s.boxed().flatMapToDouble(DoubleStreams::of));
         assertEquals(data.size(), result.size());
         assertContents(data, result);
 
@@ -202,5 +257,20 @@ public class FlatMapOpTest extends OpTestCase {
     public void testDoubleOpsX(String name, TestData.OfDouble data) {
         exerciseOps(data, s -> s.flatMap(e -> IntStreams.range(0, (int) e).asDoubleStream()));
         exerciseOps(data, s -> s.flatMap(e -> IntStreams.range(0, (int) e).limit(10).asDoubleStream()));
+    }
+
+    @Test
+    public void testDoubleOpsShortCircuit() {
+        AtomicInteger count = new AtomicInteger();
+        DoubleStreams.of(0).flatMap(i -> IntStreams.range(0, 100).asDoubleStream()).
+                peek(i -> count.incrementAndGet()).
+                limit(10).toArray();
+        assertEquals(count.get(), 10);
+
+        count.set(0);
+        RefStreams.of(0).flatMapToDouble(i -> IntStreams.range(0, 100).asDoubleStream()).
+                peek(i -> count.incrementAndGet()).
+                limit(10).toArray();
+        assertEquals(count.get(), 10);
     }
 }
