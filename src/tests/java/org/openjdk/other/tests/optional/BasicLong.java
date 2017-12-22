@@ -1,6 +1,6 @@
 package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -102,6 +102,13 @@ public class BasicLong {
         });
     }
 
+    @Test(expectedExceptions=NoSuchElementException.class)
+    public void testEmptyOrElseThrowNoArg() throws Exception {
+        OptionalLong empty = OptionalLong.empty();
+
+        long got = empty.orElseThrow();
+    }
+
     @Test(groups = "unit")
     public void testPresent() {
         OptionalLong empty = OptionalLong.empty();
@@ -115,7 +122,9 @@ public class BasicLong {
         assertTrue(Longs.hashCode(1) == present.hashCode());
         assertFalse(present.toString().isEmpty());
         assertTrue(-1 != present.toString().indexOf(Long.toString(present.getAsLong()).toString()));
+        assertTrue(-1 != present.toString().indexOf(Long.toString(present.orElseThrow()).toString()));
         assertEquals(1L, present.getAsLong());
+        assertEquals(1L, present.orElseThrow());
         try {
             present.ifPresent(new LongConsumer() {
                 @Override

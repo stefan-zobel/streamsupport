@@ -1,6 +1,6 @@
 package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -102,6 +102,13 @@ public class BasicInt {
         });
     }
 
+    @Test(expectedExceptions=NoSuchElementException.class)
+    public void testEmptyOrElseThrowNoArg() throws Exception {
+        OptionalInt empty = OptionalInt.empty();
+
+        int got = empty.orElseThrow();
+    }
+
     @Test(groups = "unit")
     public void testPresent() {
         OptionalInt empty = OptionalInt.empty();
@@ -115,7 +122,9 @@ public class BasicInt {
         assertTrue(Integers.hashCode(1) == present.hashCode());
         assertFalse(present.toString().isEmpty());
         assertTrue(-1 != present.toString().indexOf(Integer.toString(present.getAsInt()).toString()));
+        assertTrue(-1 != present.toString().indexOf(Integer.toString(present.orElseThrow()).toString()));
         assertEquals(1, present.getAsInt());
+        assertEquals(1, present.orElseThrow());
         try {
             present.ifPresent(new IntConsumer() {
                 @Override
