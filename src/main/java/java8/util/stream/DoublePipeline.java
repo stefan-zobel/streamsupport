@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -258,6 +258,12 @@ abstract class DoublePipeline<E_IN>
             @Override
             Sink<Double> opWrapSink(int flags, Sink<Double> sink) {
                 return new Sink.ChainedDouble<Double>(sink) {
+                    // true if cancellationRequested() has been called
+                    boolean cancellationRequested;
+
+                    // cache the consumer to avoid creation on every accepted element
+                    DoubleConsumer downstreamAsDouble = downstream::accept;
+
                     @Override
                     public void begin(long size) {
                         downstream.begin(-1);
@@ -268,15 +274,26 @@ abstract class DoublePipeline<E_IN>
                         DoubleStream result = null;
                         try {
                             result = mapper.apply(t);
-                            // We can do better than this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
-                                result.sequential().forEach(i -> downstream.accept(i));
+                                if (!cancellationRequested) {
+                                    result.sequential().forEach(downstreamAsDouble);
+                                }
+                                else {
+                                    Spliterator.OfDouble s = result.sequential().spliterator();
+                                    do { } while (!downstream.cancellationRequested() && s.tryAdvance(downstreamAsDouble));
+                                }
                             }
                         } finally {
                             if (result != null) {
                                 result.close();
                             }
                         }
+                    }
+
+                    @Override
+                    public boolean cancellationRequested() {
+                        cancellationRequested = true;
+                        return downstream.cancellationRequested();
                     }
                 };
             }
