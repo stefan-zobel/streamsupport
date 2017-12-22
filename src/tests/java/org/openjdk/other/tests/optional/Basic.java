@@ -1,6 +1,6 @@
 package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -113,6 +113,13 @@ public class Basic {
         });
     }
 
+    @Test(expectedExceptions=NoSuchElementException.class)
+    public void testEmptyOrElseThrowNoArg() throws Exception {
+        Optional<Boolean> empty = Optional.empty();
+
+        Boolean got = empty.orElseThrow();
+    }
+
     @Test(groups = "unit")
     public void testPresent() {
         Optional<Boolean> empty = Optional.empty();
@@ -128,6 +135,7 @@ public class Basic {
         assertTrue(!present.toString().equals(presentEmptyString.toString()));
         assertTrue(-1 != present.toString().indexOf(Boolean.TRUE.toString()));
         assertSame(Boolean.TRUE, present.get());
+        assertSame(Boolean.TRUE, present.orElseThrow());
         try {
             present.ifPresent(new Consumer<Boolean>() {
                 @Override
@@ -171,6 +179,7 @@ public class Basic {
         instance = Optional.ofNullable("Duke");
         assertTrue(instance.isPresent());
         assertEquals(instance.get(), "Duke");
+        assertEquals(instance.orElseThrow(), "Duke");
     }
 
     @Test(groups = "unit")
@@ -209,6 +218,7 @@ public class Basic {
         });
         assertTrue(result.isPresent());
         assertEquals(result.get(), "Duke");
+        assertEquals(result.orElseThrow(), "Duke");
 
         Optional<String> emptyString = Optional.of("");
         result = emptyString.filter((Predicate<String>) new Predicate<String>() {
@@ -219,6 +229,7 @@ public class Basic {
         });
         assertTrue(result.isPresent());
         assertEquals(result.get(), "");
+        assertEquals(result.orElseThrow(), "");
     }
 
     @Test(groups = "unit")
@@ -329,6 +340,7 @@ public class Basic {
         });
         assertTrue(l.isPresent());
         assertEquals(l.get().intValue(), 4);
+        assertEquals(l.orElseThrow().intValue(), 4);
 
         // Verify same instance
         l = duke.flatMap(new Function<String, Optional<Integer>>() {
