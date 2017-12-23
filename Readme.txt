@@ -66,8 +66,12 @@ GENERAL
    core streamsupport.jar component in order to make the new Collectors
    for unmodifiable Lists, Sets, and Maps (JDK-8184690) possible.
 
-   streamsupport-literal-1.6.0 is still available as a standalone
-   component without any dependencies but that may change in the future.
+   streamsupport-literal-1.6.0 is still available as a standalone component
+   without any dependencies but will be discontinued in release 1.6.1
+
+ - As of release 1.6.1, j8.u.c.Phaser has moved to the streamsupport-atomic
+   component and j8.u.c.CompletionException has moved to streamsupport-cfuture
+   (the only place where it is used).
 
 
 
