@@ -72,6 +72,8 @@ GENERAL
  - As of release 1.6.1, j8.u.c.Phaser has moved to the streamsupport-atomic
    component and j8.u.c.CompletionException has moved to streamsupport-cfuture
    (the only place where it is used).
+   streamsupport-literal is no longer maintained but the 1.6.0 version can
+   still be used since it doesn't have any dependencies on other artifacts.  
 
 
 
