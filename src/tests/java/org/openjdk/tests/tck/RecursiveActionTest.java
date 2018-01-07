@@ -28,7 +28,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class RecursiveActionTest extends JSR166TestCase {
-// CVS rev. 1.52
+// CVS rev. 1.53
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -353,7 +353,7 @@ public class RecursiveActionTest extends JSR166TestCase {
      */
     public void testJoinIgnoresInterruptsOutsideForkJoinPool() {
         final SynchronousQueue<FibAction[]> sq =
-            new SynchronousQueue<FibAction[]>();
+            new SynchronousQueue<>();
         @SuppressWarnings("serial")
         RecursiveAction a = new CheckedRecursiveAction() {
             protected void realCompute() throws InterruptedException {
