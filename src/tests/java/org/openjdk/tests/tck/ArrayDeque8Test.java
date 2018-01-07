@@ -16,7 +16,7 @@ import junit.framework.Test;
 
 @org.testng.annotations.Test
 public class ArrayDeque8Test extends JSR166TestCase {
-// CVS rev. 1.3
+// CVS rev. 1.4
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -89,14 +89,13 @@ public class ArrayDeque8Test extends JSR166TestCase {
             assertEquals((Integer) 1, q.peekLast());
             assertEquals(maxArraySize - 1, q.size());
 
-            ArrayDeque<Integer> qq = q;
             ArrayDeque<Integer> smallish = new ArrayDeque<>(
                 Collections.nCopies(Integer.MAX_VALUE - q.size() + 1, e));
             assertThrows(
                 IllegalStateException.class,
-                () -> qq.addAll(qq),
-                () -> qq.addAll(smallish),
-                () -> smallish.addAll(qq));
+                () -> q.addAll(q),
+                () -> q.addAll(smallish),
+                () -> smallish.addAll(q));
         }
     }
 }
