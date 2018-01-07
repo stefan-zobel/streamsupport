@@ -15,7 +15,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ThreadLocalRandomTest extends JSR166TestCase {
-// CVS rev. 1.27
+// CVS rev. 1.28
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -313,7 +313,7 @@ public class ThreadLocalRandomTest extends JSR166TestCase {
         // Don't use main thread's ThreadLocalRandom - it is likely to
         // be polluted by previous tests.
         final AtomicReference<ThreadLocalRandom> threadLocalRandom =
-            new AtomicReference<ThreadLocalRandom>();
+            new AtomicReference<>();
         final AtomicLong rand = new AtomicLong();
 
         long firstRand = 0;
