@@ -146,7 +146,7 @@ import static java8.util.concurrent.Flow.Subscription;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Publisher<T> {
-// CVS rev. 1.78
+// CVS rev. 1.79
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -726,8 +726,10 @@ public class SubmissionPublisher<T> implements Publisher<T> {
                     else
                         pred.next = next;
                 }
-                else
+                else {
                     subs.add(b.subscriber);
+                    pred = b;
+                }
             }
         }
         return subs;
