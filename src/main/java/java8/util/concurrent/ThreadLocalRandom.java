@@ -37,7 +37,7 @@ import java8.util.stream.StreamSupport;
  * {@code ThreadLocalRandom.current().nextX(...)} (where
  * {@code X} is {@code Int}, {@code Long}, etc).
  * When all usages are of this form, it is never possible to
- * accidently share a {@code ThreadLocalRandom} across multiple threads.
+ * accidentally share a {@code ThreadLocalRandom} across multiple threads.
  *
  * <p>This class also provides additional commonly used bounded random
  * generation methods.
@@ -53,7 +53,7 @@ import java8.util.stream.StreamSupport;
  * @author Doug Lea
  */
 public class ThreadLocalRandom extends Random {
-// CVS rev. 1.56
+// CVS rev. 1.57
     /*
      * This class implements the java.util.Random API (and subclasses
      * Random) using a single static instance that accesses random
