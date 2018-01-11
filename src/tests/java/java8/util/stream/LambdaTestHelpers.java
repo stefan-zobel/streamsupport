@@ -59,6 +59,7 @@ import java8.util.function.ToLongFunction;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.fail;
 
 /**
  * LambdaTestHelpers -- assertion methods and useful objects for lambda test cases
@@ -290,9 +291,45 @@ public class LambdaTestHelpers {
 
     public static<T> void assertContents(Iterable<T> actual, Iterable<T> expected) {
         if (actual instanceof Collection && expected instanceof Collection) {
-            assertEquals(actual, expected);
+        	assertIterableEquals(actual, expected);
         } else {
             assertContents(actual.iterator(), expected.iterator());
+        }
+    }
+
+    // Workaround excessive String creation in inner loop in org.testng.Assert.assertEquals(Iterable<?>, Iterable<?>)
+    static public void assertIterableEquals(Iterable<?> actual, Iterable<?> expected) {
+        if(actual == expected) {
+            return;
+        }
+
+        if(actual == null || expected == null) {
+            fail("Iterables not equal: expected: " + expected + " and actual: " + actual);
+        }
+
+        assertIteratorsEquals(actual.iterator(), expected.iterator());
+    }
+
+    // Workaround excessive String creation in inner loop in org.testng.Assert.assertEquals(Iterator<?>, Iterator<?>)
+    static public void assertIteratorsEquals(Iterator<?> actual, Iterator<?> expected) {
+        if (actual == expected) {
+            return;
+        }
+
+        if (actual == null || expected == null) {
+            fail("Iterators not equal: expected: " + expected + " and actual: " + actual);
+        }
+
+        while (actual.hasNext() && expected.hasNext()) {
+            Object e = expected.next();
+            Object a = actual.next();
+            assertEquals(a, e, "Iterator contents differ");
+        }
+
+        if(actual.hasNext()) {
+            fail("Actual iterator returned more elements than the expected iterator.");
+        } else if(expected.hasNext()) {
+            fail("Expected iterator returned more elements than the actual iterator.");
         }
     }
 
