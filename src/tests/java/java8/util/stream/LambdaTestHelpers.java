@@ -291,7 +291,7 @@ public class LambdaTestHelpers {
 
     public static<T> void assertContents(Iterable<T> actual, Iterable<T> expected) {
         if (actual instanceof Collection && expected instanceof Collection) {
-        	assertIterableEquals(actual, expected);
+            assertIterableEquals(actual, expected);
         } else {
             assertContents(actual.iterator(), expected.iterator());
         }
@@ -299,11 +299,11 @@ public class LambdaTestHelpers {
 
     // Workaround excessive String creation in inner loop in org.testng.Assert.assertEquals(Iterable<?>, Iterable<?>)
     static public void assertIterableEquals(Iterable<?> actual, Iterable<?> expected) {
-        if(actual == expected) {
+        if (actual == expected) {
             return;
         }
 
-        if(actual == null || expected == null) {
+        if (actual == null || expected == null) {
             fail("Iterables not equal: expected: " + expected + " and actual: " + actual);
         }
 
@@ -326,7 +326,7 @@ public class LambdaTestHelpers {
             assertEquals(a, e, "Iterator contents differ");
         }
 
-        if(actual.hasNext()) {
+        if (actual.hasNext()) {
             fail("Actual iterator returned more elements than the expected iterator.");
         } else if(expected.hasNext()) {
             fail("Expected iterator returned more elements than the actual iterator.");
