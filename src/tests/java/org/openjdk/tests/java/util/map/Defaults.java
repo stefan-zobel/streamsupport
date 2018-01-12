@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2017,  Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018,  Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,6 +29,10 @@ package org.openjdk.tests.java.util.map;
  * @author Mike Duigou
  * @run testng Defaults
  */
+
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
@@ -37,17 +41,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -56,17 +60,15 @@ import java8.util.function.BiFunction;
 import java8.util.function.Function;
 import java8.util.function.Supplier;
 
-import org.testng.annotations.Test;
-import org.testng.annotations.DataProvider;
-
 import static java8.util.Objects.requireNonNull;
 
-import static org.testng.Assert.fail;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
+import static org.testng.Assert.fail;
+import static org.testng.Assert.assertTrue;
+
 import static org.testng695.Assert.assertThrowsNPE;
 
 public class Defaults {
