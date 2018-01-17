@@ -327,6 +327,10 @@ abstract class IntPipeline<E_IN>
 
                     @Override
                     public boolean cancellationRequested() {
+                        // If this method is called then an operation within the stream
+                        // pipeline is short-circuiting (see AbstractPipeline.copyInto).
+                        // Note that we cannot differentiate between an upstream or
+                        // downstream operation
                         cancellationRequested = true;
                         return downstream.cancellationRequested();
                     }

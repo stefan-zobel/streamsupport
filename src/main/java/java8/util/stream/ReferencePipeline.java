@@ -290,6 +290,10 @@ abstract class ReferencePipeline<P_IN, P_OUT>
 
                     @Override
                     public boolean cancellationRequested() {
+                        // If this method is called then an operation within the stream
+                        // pipeline is short-circuiting (see AbstractPipeline.copyInto).
+                        // Note that we cannot differentiate between an upstream or
+                        // downstream operation
                         cancellationRequested = true;
                         return downstream.cancellationRequested();
                     }
