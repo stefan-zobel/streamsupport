@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.6.0-stable" is the current stable release
+ - "1.6.1-stable" is the current stable release
 
 
 GENERAL
