@@ -178,7 +178,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.239
+// CVS rev. 1.240
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1000,7 +1000,10 @@ public class JSR166TestCase extends TestCase {
         for (long retries = LONG_DELAY_MS * 3 / 4; retries-->0; ) {
             try { delay(1); }
             catch (InterruptedException fail) {
-                fail("Unexpected InterruptedException");
+                AssertionError ae =
+                    new AssertionError("Unexpected InterruptedException");
+                ae.initCause(fail);
+                throw ae;
             }
             Thread.State s = thread.getState();
             if (s == expected)
