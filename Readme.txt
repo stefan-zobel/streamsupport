@@ -67,7 +67,7 @@ GENERAL
    for unmodifiable Lists, Sets, and Maps (JDK-8184690) possible.
 
    streamsupport-literal-1.6.0 is still available as a standalone component
-   without any dependencies but will be discontinued in release 1.6.1
+   without any dependencies but has been discontinued in release 1.6.1
 
  - As of release 1.6.1, j8.u.c.Phaser has moved to the streamsupport-atomic
    component and j8.u.c.CompletionException has moved to streamsupport-cfuture
@@ -137,6 +137,15 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.6.1-stable (2018-01-28)
+ - JDK-8075939: flatMap() breaks short-circuiting of terminal Ops
+ - JDK-8193856: takeWhile produces incorrect result with flatMap
+ - JDK-8140281: Add no-arg orElseThrow() as alternative to get()
+ - JDK-8193300: Misc. changes imported from jsr166 CVS 2018-01
+ - JDK-8134459: WhileOpTest.java timed out
+ - Move j8.u.c.Phaser to atomic component [#349]
+ - Move j8.u.c.CompletionException to cfuture component [#348]
 
 1.6.0-stable (2017-12-10)
  - a first dive into Java 10 (in the sense of new API methods)
