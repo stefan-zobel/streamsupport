@@ -178,7 +178,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.240
+// CVS rev. 1.241
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -408,11 +408,12 @@ public class JSR166TestCase extends TestCase {
         for (String testClassName : testClassNames) {
             try {
                 Class<?> testClass = Class.forName(testClassName);
-                Method m = testClass.getDeclaredMethod("suite",
-                                                       new Class<?>[0]);
+                Method m = testClass.getDeclaredMethod("suite");
                 suite.addTest(newTestSuite((Test)m.invoke(null)));
             } catch (Exception e) {
-                throw new Error("Missing test class", e);
+                AssertionError ae = new AssertionError("Missing test class");
+                ae.initCause(e);
+                throw ae;
             }
         }
     }
@@ -495,7 +496,7 @@ public class JSR166TestCase extends TestCase {
                 suite.addTest((Test) c.newInstance(data, methodName));
             return suite;
         } catch (Exception e) {
-            throw new Error(e);
+            throw new AssertionError(e);
         }
     }
 
@@ -511,14 +512,14 @@ public class JSR166TestCase extends TestCase {
         if (atLeastJava8()) {
             String name = testClass.getName();
             String name8 = name.replaceAll("Test$", "8Test");
-            if (name.equals(name8)) throw new Error(name);
+            if (name.equals(name8)) throw new AssertionError(name);
             try {
                 return (Test)
                     Class.forName(name8)
-                    .getMethod("testSuite", new Class[] { dataClass })
+                    .getMethod("testSuite", dataClass)
                     .invoke(null, data);
             } catch (Exception e) {
-                throw new Error(e);
+                throw new AssertionError(e);
             }
         } else {
             return new TestSuite();
