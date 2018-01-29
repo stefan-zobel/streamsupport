@@ -15,7 +15,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class LongAdderTest extends JSR166TestCase {
-// CVS rev. 1.8
+// CVS rev. 1.9
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -47,7 +47,7 @@ public class LongAdderTest extends JSR166TestCase {
     /**
      * decrement decrements and sum returns current value
      */
-    public void testDecrementAndsum() {
+    public void testDecrementAndSum() {
         LongAdder ai = new LongAdder();
         ai.decrement();
         assertEquals(-1, ai.sum());
@@ -58,7 +58,7 @@ public class LongAdderTest extends JSR166TestCase {
     /**
      * incrementAndGet increments and returns current value
      */
-    public void testIncrementAndsum() {
+    public void testIncrementAndSum() {
         LongAdder ai = new LongAdder();
         ai.increment();
         assertEquals(1, ai.sum());
