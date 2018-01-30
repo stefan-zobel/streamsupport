@@ -54,7 +54,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.192
+// CVS rev. 1.193
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -303,7 +303,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         }
 
         f = new CompletableFuture<>();
-        f.completeExceptionally(ex = new CFException());
+        f.completeExceptionally(new CFException());
         f.obtrudeValue(v1);
         checkCompletedNormally(f, v1);
         f.obtrudeException(ex = new CFException());
