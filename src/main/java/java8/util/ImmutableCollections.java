@@ -118,7 +118,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(CollSer.IMM_LIST);
+            return new ColSer(ColSer.IMM_LIST);
         }
 
         @Override
@@ -161,7 +161,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(CollSer.IMM_LIST, e0);
+            return new ColSer(ColSer.IMM_LIST, e0);
         }
 
         @Override
@@ -215,7 +215,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(CollSer.IMM_LIST, e0, e1);
+            return new ColSer(ColSer.IMM_LIST, e0, e1);
         }
     }
 
@@ -267,7 +267,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(CollSer.IMM_LIST, elements);
+            return new ColSer(ColSer.IMM_LIST, elements);
         }
     }
 
@@ -318,7 +318,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(CollSer.IMM_SET);
+            return new ColSer(ColSer.IMM_SET);
         }
 
         @Override
@@ -354,7 +354,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(CollSer.IMM_SET, e0);
+            return new ColSer(ColSer.IMM_SET, e0);
         }
 
         @Override
@@ -426,7 +426,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(CollSer.IMM_SET, e0, e1);
+            return new ColSer(ColSer.IMM_SET, e0, e1);
         }
     }
 
@@ -532,7 +532,7 @@ final class ImmutableCollections {
                     array[dest++] = o;
                 }
             }
-            return new CollSer(CollSer.IMM_SET, array);
+            return new ColSer(ColSer.IMM_SET, array);
         }
     }
 
@@ -577,7 +577,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(CollSer.IMM_MAP);
+            return new ColSer(ColSer.IMM_MAP);
         }
 
         @Override
@@ -615,7 +615,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(CollSer.IMM_MAP, k0, v0);
+            return new ColSer(ColSer.IMM_MAP, k0, v0);
         }
 
         @Override
@@ -777,7 +777,7 @@ final class ImmutableCollections {
                     array[dest++] = table[i + 1];
                 }
             }
-            return new CollSer(CollSer.IMM_MAP, array);
+            return new ColSer(ColSer.IMM_MAP, array);
         }
     }
 
@@ -840,7 +840,7 @@ final class ImmutableCollections {
  * @serial
  * @since 9
  */
-final class CollSer implements Serializable {
+final class ColSer implements Serializable {
     private static final long serialVersionUID = 6309168927139932177L;
 
     static final int IMM_LIST = 1;
@@ -882,7 +882,7 @@ final class CollSer implements Serializable {
      */
     private transient Object[] array;
 
-    CollSer(int t, Object... a) {
+    ColSer(int t, Object... a) {
         tag = t;
         array = a;
     }
