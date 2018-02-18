@@ -170,9 +170,7 @@
       <class name="org.openjdk.tests.tck.LinkedBlockingQueue8Test"/>
       <class name="org.openjdk.tests.tck.LinkedBlockingDeque8Test"/>
 
-      <!-- Test dependencies block 14: streamsupport-literal.jar (nothing else) -->
-
-      <!-- block 14 (streamsupport-literal tests) -->
+      <!-- block 14 (former streamsupport-literal tests) -->
       <class name="org.openjdk.tests.java.util.EntrySetIterator"/>
       <class name="org.openjdk.tests.java.util.MOAT"/>
       <class name="org.openjdk.tests.java.util.ListFactories"/>

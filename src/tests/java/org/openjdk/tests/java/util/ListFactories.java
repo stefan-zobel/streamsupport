@@ -35,7 +35,6 @@ import java.util.List;
 
 import java8.util.Iterators;
 import java8.util.Lists;
-import java8.util.Lists2;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -80,28 +79,6 @@ public class ListFactories {
     @DataProvider(name="nonempty")
     public Iterator<Object[]> nonempty() {
         return asList(
-            a(Lists2.of("a"),
-               asList("a")),
-            a(Lists2.of("a", "b"),
-               asList("a", "b")),
-            a(Lists2.of("a", "b", "c"),
-               asList("a", "b", "c")),
-            a(Lists2.of("a", "b", "c", "d"),
-               asList("a", "b", "c", "d")),
-            a(Lists2.of("a", "b", "c", "d", "e"),
-               asList("a", "b", "c", "d", "e")),
-            a(Lists2.of("a", "b", "c", "d", "e", "f"),
-               asList("a", "b", "c", "d", "e", "f")),
-            a(Lists2.of("a", "b", "c", "d", "e", "f", "g"),
-               asList("a", "b", "c", "d", "e", "f", "g")),
-            a(Lists2.of("a", "b", "c", "d", "e", "f", "g", "h"),
-               asList("a", "b", "c", "d", "e", "f", "g", "h")),
-            a(Lists2.of("a", "b", "c", "d", "e", "f", "g", "h", "i"),
-               asList("a", "b", "c", "d", "e", "f", "g", "h", "i")),
-            a(Lists2.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
-               asList("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
-            a(Lists2.of(stringArray),
-               asList(stringArray)),
             a(Lists.of("a"),
                asList("a")),
             a(Lists.of("a", "b"),
@@ -161,18 +138,8 @@ public class ListFactories {
     }
 
     @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed1_2() {
-        Lists2.of((Object) null); // force one-arg overload
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed1() {
         Lists.of((Object) null); // force one-arg overload
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed2a_2() {
-        Lists2.of("a", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
@@ -181,18 +148,8 @@ public class ListFactories {
     }
 
     @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed2b_2() {
-        Lists2.of(null, "b");
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed2b() {
         Lists.of(null, "b");
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed3_2() {
-        Lists2.of("a", "b", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
@@ -201,18 +158,8 @@ public class ListFactories {
     }
 
     @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed4_2() {
-        Lists2.of("a", "b", "c", null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed4() {
         Lists.of("a", "b", "c", null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed5_2() {
-        Lists2.of("a", "b", "c", "d", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
@@ -221,18 +168,8 @@ public class ListFactories {
     }
 
     @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed6_2() {
-        Lists2.of("a", "b", "c", "d", "e", null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed6() {
         Lists.of("a", "b", "c", "d", "e", null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed7_2() {
-        Lists2.of("a", "b", "c", "d", "e", "f", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
@@ -241,18 +178,8 @@ public class ListFactories {
     }
 
     @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed8_2() {
-        Lists2.of("a", "b", "c", "d", "e", "f", "g", null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed8() {
         Lists.of("a", "b", "c", "d", "e", "f", "g", null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed9_2() {
-        Lists2.of("a", "b", "c", "d", "e", "f", "g", "h", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
@@ -261,20 +188,8 @@ public class ListFactories {
     }
 
     @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowed10_2() {
-        Lists2.of("a", "b", "c", "d", "e", "f", "g", "h", "i", null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed10() {
         Lists.of("a", "b", "c", "d", "e", "f", "g", "h", "i", null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
-    public void nullDisallowedN2() {
-        String[] array = stringArray.clone();
-        array[0] = null;
-        Lists2.of(array);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
@@ -285,21 +200,8 @@ public class ListFactories {
     }
 
     @Test(expectedExceptions=NullPointerException.class)
-    public void nullArrayDisallowed2() {
-        Lists2.of((Object[])null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
     public void nullArrayDisallowed() {
         Lists.of((Object[])null);
-    }
-
-    @Test
-    public void ensureArrayCannotModifyList2() {
-        String[] array = stringArray.clone();
-        List<String> list = Lists2.of(array);
-        array[0] = "xyzzy";
-        assertEquals(list, Arrays.asList(stringArray));
     }
 
     @Test
@@ -338,31 +240,12 @@ public class ListFactories {
     }
 
     @Test
-    public void copyOfResultsEqual2() {
-        List<Integer> orig = genList();
-        List<Integer> copy = Lists2.copyOf(orig);
-
-        assertEquals(orig, copy);
-        assertEquals(copy, orig);
-    }
-
-    @Test
     public void copyOfResultsEqual() {
         List<Integer> orig = genList();
         List<Integer> copy = Lists.copyOf(orig);
 
         assertEquals(orig, copy);
         assertEquals(copy, orig);
-    }
-
-    @Test
-    public void copyOfModifiedUnequal2() {
-        List<Integer> orig = genList();
-        List<Integer> copy = Lists2.copyOf(orig);
-        orig.add(4);
-
-        assertNotEquals(orig, copy);
-        assertNotEquals(copy, orig);
     }
 
     @Test
@@ -376,16 +259,6 @@ public class ListFactories {
     }
 
     @Test
-    public void copyOfIdentity2() {
-        List<Integer> orig = genList();
-        List<Integer> copy1 = Lists2.copyOf(orig);
-        List<Integer> copy2 = Lists2.copyOf(copy1);
-
-        assertNotSame(orig, copy1);
-        assertSame(copy1, copy2);
-    }
-
-    @Test
     public void copyOfIdentity() {
         List<Integer> orig = genList();
         List<Integer> copy1 = Lists.copyOf(orig);
@@ -396,21 +269,9 @@ public class ListFactories {
     }
 
     @Test(expectedExceptions=NullPointerException.class)
-    public void copyOfRejectsNullCollection2() {
-        @SuppressWarnings("unused")
-        List<Integer> list = Lists2.copyOf(null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
     public void copyOfRejectsNullCollection() {
         @SuppressWarnings("unused")
         List<Integer> list = Lists.copyOf(null);
-    }
-
-    @Test(expectedExceptions=NullPointerException.class)
-    public void copyOfRejectsNullElements2() {
-        @SuppressWarnings("unused")
-        List<Integer> list = Lists2.copyOf(Arrays.asList(1, null, 3));
     }
 
     @Test(expectedExceptions=NullPointerException.class)
