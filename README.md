@@ -48,6 +48,17 @@ dependencies {
 ```
 
 
+### Maven:
+
+```xml
+<dependency>
+    <groupId>net.sourceforge.streamsupport</groupId>
+    <artifactId>streamsupport</artifactId>
+    <version>1.6.1</version>
+</dependency>
+```
+
+
 ### Forks
 
 Android developers using the Android Studio 3.x toolchain should have a look at the `streamsupport'` forks:
