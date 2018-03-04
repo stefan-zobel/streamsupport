@@ -5,25 +5,27 @@
 
 ![](art/streamsupport-sf.png)
 
-streamsupport is a backport of the Java 8 java.util.function (functional interfaces) and java.util.stream (streams)
-API for Android and users of Java 6 or 7 supplemented with selected additions from java.util.concurrent which didn't
-exist back in Java 6.
+streamsupport is a backport of the Java 8 `java.util.function` (functional interfaces) and `java.util.stream`
+(streams) API for Android and users of Java 6 or 7 supplemented with selected additions from `java.util.concurrent`
+which didn't exist back in Java 6.
 
 Due to the lack of default interface methods and static interface methods in pre-Java 8 the API had to be slightly
 adjusted in these areas but still covers the full functionality scope of Java 8. In detail, static and default
 interface methods have been moved to companion classes in the same package that bear the identical name as the
-interface but with an "s" appended (e.g. Comparator -> Comparators).
+interface but with an "s" appended (e.g. `Comparator` -> `Comparators`).
 
 For ease of use, the default methods for most of the functional interfaces were NOT retained as abstract methods
 in the redefined interfaces (keeping them single method interfaces) - the missing default (and static) methods can
 always be found in the corresponding companion class.
 
-Want also lambdas? https://github.com/orfjackal/retrolambda
-
 The current stable release is `streamsupport-1.6.1`.
 
-Please give feedback [here](https://github.com/stefan-zobel/streamsupport/issues) if you experience
-any problems.
+Want also lambdas? https://github.com/orfjackal/retrolambda
+
+Note that the [streamsupport sourceforge](https://sourceforge.net/projects/streamsupport/) site has been discontinued.
+New developments, if any, will take place here.
+
+Please give feedback [here](https://github.com/stefan-zobel/streamsupport/issues) if you experience any problems.
 
 
 ## Features
