@@ -19,13 +19,13 @@
 			<name>Stefan Zobel</name>
 			<email>Spliterator@gmail.com</email>
 			<organization>net.sourceforge.streamsupport</organization>
-			<organizationUrl>http://sourceforge.net/projects/streamsupport/</organizationUrl>
+			<organizationUrl>https://github.com/stefan-zobel/streamsupport</organizationUrl>
 		</developer>
 	</developers>
 	<scm>
-		<url>http://hg.code.sf.net/p/streamsupport/code</url>
-		<connection>scm:hg:http://hg.code.sf.net/p/streamsupport/code</connection>
-		<developerConnection>scm:hg:https://hg.code.sf.net/p/streamsupport/code</developerConnection>
+		<url>https://github.com/stefan-zobel/streamsupport</url>
+		<connection>scm:git:https://github.com/stefan-zobel/streamsupport.git</connection>
+		<developerConnection>scm:git:https://github.com/stefan-zobel/streamsupport.git</developerConnection>
 	</scm>
 
 	<dependencies>
