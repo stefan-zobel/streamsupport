@@ -1,5 +1,6 @@
 [![Maven Central](https://img.shields.io/maven-central/v/net.sourceforge.streamsupport/streamsupport.svg)](http://mvnrepository.com/artifact/net.sourceforge.streamsupport/streamsupport)
 [![javadoc.io](https://javadocio-badges.herokuapp.com/net.sourceforge.streamsupport/streamsupport/badge.svg)](http://www.javadoc.io/doc/net.sourceforge.streamsupport/streamsupport/)
+[![Download](https://api.bintray.com/packages/stefan-zobel/streamsupport/streamsupport/images/download.svg) ](https://bintray.com/stefan-zobel/streamsupport/streamsupport/_latestVersion)
 
 # streamsupport
 
