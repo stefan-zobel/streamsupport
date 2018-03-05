@@ -62,7 +62,7 @@ dependencies {
 
 ### Forks
 
-Android developers using the Android Studio 3.x toolchain should have a look at the `streamsupport'` forks:
+Android developers using the Android Studio 3.x toolchain should have a look at the `streamsupport` forks:
 
 * [android-retrostreams](https://github.com/retrostreams/android-retrostreams)
 * [android-retrofuture](https://github.com/retrostreams/android-retrofuture)
