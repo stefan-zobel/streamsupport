@@ -18,7 +18,7 @@ import java8.util.function.DoubleBinaryOperator;
  */
 @SuppressWarnings("serial")
 abstract class Striped64 extends Number {
-// CVS rev. 1.25
+// CVS rev. 1.26
     /*
      * This class maintains a lazily-initialized table of atomically
      * updated variables, plus an extra "base" field. The table size
@@ -119,7 +119,7 @@ abstract class Striped64 extends Number {
                 VALUE = U.objectFieldOffset(Cell.class
                         .getDeclaredField("value"));
             } catch (Exception e) {
-                throw new Error(e);
+                throw new ExceptionInInitializerError(e);
             }
         }
     }
@@ -414,7 +414,7 @@ abstract class Striped64 extends Number {
             GET_INIT_PROBE_METHOD = getInitProbe;
             SET_PROBE_METHOD = setProbe;
         } catch (Exception e) {
-            throw new Error(e);
+            throw new ExceptionInInitializerError(e);
         }
     }
 }
