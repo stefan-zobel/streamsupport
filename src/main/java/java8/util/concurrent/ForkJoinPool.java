@@ -1166,10 +1166,10 @@ public class ForkJoinPool extends AbstractExecutorService {
                 ABASE = U.arrayBaseOffset(ForkJoinTask[].class);
                 int scale = U.arrayIndexScale(ForkJoinTask[].class);
                 if ((scale & (scale - 1)) != 0)
-                    throw new Error("array index scale not a power of two");
+                    throw new ExceptionInInitializerError("array index scale not a power of two");
                 ASHIFT = 31 - Integer.numberOfLeadingZeros(scale);
             } catch (Exception e) {
-                throw new Error(e);
+                throw new ExceptionInInitializerError(e);
             }
         }
     }
@@ -3317,10 +3317,10 @@ public class ForkJoinPool extends AbstractExecutorService {
             ABASE = U.arrayBaseOffset(ForkJoinTask[].class);
             int scale = U.arrayIndexScale(ForkJoinTask[].class);
             if ((scale & (scale - 1)) != 0)
-                throw new Error("array index scale not a power of two");
+                throw new ExceptionInInitializerError("array index scale not a power of two");
             ASHIFT = 31 - Integer.numberOfLeadingZeros(scale);
         } catch (Exception e) {
-            throw new Error(e);
+            throw new ExceptionInInitializerError(e);
         }
 
         // Reduce the risk of rare disastrous classloading in first call to
@@ -3410,7 +3410,7 @@ public class ForkJoinPool extends AbstractExecutorService {
             try {
                 OFF = U.objectFieldOffset(AtomicInteger.class.getDeclaredField("value"));
             } catch (Exception e) {
-                throw new Error(e);
+                throw new ExceptionInInitializerError(e);
             }
         }
     }

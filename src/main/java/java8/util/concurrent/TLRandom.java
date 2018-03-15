@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Doug Lea
  */
 /*package*/ final class TLRandom {
-// CVS rev. 1.57
+// CVS rev. 1.58
 
     static long mix64(long z) {
         z = (z ^ (z >>> 33)) * 0xff51afd7ed558ccdL;
@@ -270,7 +270,7 @@ import java.util.concurrent.atomic.AtomicLong;
             VALUE_OFF = U.objectFieldOffset(Integer.class.getDeclaredField("value"));
             CCL = U.objectFieldOffset(Thread.class.getDeclaredField("contextClassLoader"));
         } catch (Exception e) {
-            throw new Error(e);
+            throw new ExceptionInInitializerError(e);
         }
     }
 
