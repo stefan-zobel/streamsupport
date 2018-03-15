@@ -146,7 +146,7 @@ import static java8.util.concurrent.Flow.Subscription;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Publisher<T> {
-// CVS rev. 1.80
+// CVS rev. 1.81
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -1498,10 +1498,10 @@ public class SubmissionPublisher<T> implements Publisher<T> {
                 ABASE = U.arrayBaseOffset(Object[].class);
                 int scale = U.arrayIndexScale(Object[].class);
                 if ((scale & (scale - 1)) != 0)
-                    throw new Error("data type scale not a power of two");
+                    throw new ExceptionInInitializerError("data type scale not a power of two");
                 ASHIFT = 31 - Integer.numberOfLeadingZeros(scale);
             } catch (Exception e) {
-                throw new Error(e);
+                throw new ExceptionInInitializerError(e);
             }
 
             // Reduce the risk of rare disastrous classloading in first call to
