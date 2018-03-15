@@ -123,7 +123,7 @@ import java8.util.function.Supplier;
  * @since 1.8
  */
 public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
-// CVS rev. 1.211
+// CVS rev. 1.212
     /*
      * Overview:
      *
@@ -2870,7 +2870,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             NEXT = U.objectFieldOffset
                 (Completion.class.getDeclaredField("next"));
         } catch (Exception e) {
-            throw new Error(e);
+            throw new ExceptionInInitializerError(e);
         }
 
         // Reduce the risk of rare disastrous classloading in first call to
