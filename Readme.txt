@@ -132,7 +132,7 @@ KNOWN PROBLEMS
 
    The latest version of LinkedHashMap in AOSP implements its Spliterators via
    Spliterators.spliterator(), which means that this bug has already been fixed
-   in Android O.
+   in Android Oreo.
 
 
 
