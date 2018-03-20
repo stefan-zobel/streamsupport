@@ -7,7 +7,7 @@ SET JAVA8=F:/Java/jdk1.8.0_162-64bit/bin/java
 
 SET JAVA9=F:/Java/jdk9.0.4+11-64bit/bin/java
 
-SET JAVA10=F:/Java/jdk10_ea+46-64bit/bin/java
+SET JAVA10=F:/Java/jdk10_2018-03-20_64bit/bin/java
 
 SET JAVA11=F:/Java/jdk11_ea+5-64bit/bin/java
 
