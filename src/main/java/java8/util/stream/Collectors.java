@@ -742,7 +742,7 @@ public final class Collectors {
         return new CollectorImpl<>(downstream.supplier(),
                                    downstream.accumulator(),
                                    downstream.combiner(),
-                                   Functions.andThen(downstream.finisher(), (finisher)),
+                                   Functions.andThen(downstream.finisher(), finisher),
                                    characteristics);
     }
 
