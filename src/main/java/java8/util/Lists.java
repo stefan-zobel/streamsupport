@@ -181,7 +181,7 @@ public final class Lists {
      * @since 9
      */
     public static <E> List<E> of() {
-        return ImmutableCollections.List0.instance();
+        return ImmutableCollections.emptyList();
     }
 
     /**
@@ -197,7 +197,7 @@ public final class Lists {
      * @since 9
      */
     public static <E> List<E> of(E e1) {
-        return new ImmutableCollections.List1<E>(e1);
+        return new ImmutableCollections.List12<E>(e1);
     }
 
     /**
@@ -214,7 +214,7 @@ public final class Lists {
      * @since 9
      */
     public static <E> List<E> of(E e1, E e2) {
-        return new ImmutableCollections.List2<E>(e1, e2);
+        return new ImmutableCollections.List12<E>(e1, e2);
     }
 
     /**
@@ -420,7 +420,16 @@ public final class Lists {
      * @since 9
      */
     public static <E> List<E> of(E... elements) {
-        return ImmutableCollections.listOf(elements);
+        switch (elements.length) { // implicit null check of elements
+            case 0:
+                return ImmutableCollections.emptyList();
+            case 1:
+                return new ImmutableCollections.List12<E>(elements[0]);
+            case 2:
+                return new ImmutableCollections.List12<E>(elements[0], elements[1]);
+            default:
+                return new ImmutableCollections.ListN<E>(elements);
+        }
     }
 
     /**

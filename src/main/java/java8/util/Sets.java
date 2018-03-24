@@ -76,7 +76,7 @@ public final class Sets {
      * @since 9
      */
     public static <E> Set<E> of() {
-        return ImmutableCollections.Set0.instance();
+        return ImmutableCollections.emptySet();
     }
 
     /**
@@ -91,7 +91,7 @@ public final class Sets {
      * @since 9
      */
     public static <E> Set<E> of(E e1) {
-        return ImmutableCollections.setOf(e1);
+        return new ImmutableCollections.Set12<E>(e1);
     }
 
     /**
@@ -108,7 +108,7 @@ public final class Sets {
      * @since 9
      */
     public static <E> Set<E> of(E e1, E e2) {
-        return new ImmutableCollections.Set2<E>(e1, e2);
+        return new ImmutableCollections.Set12<E>(e1, e2);
     }
 
     /**
@@ -315,7 +315,16 @@ public final class Sets {
      * @since 9
      */
     public static <E> Set<E> of(E... elements) {
-        return ImmutableCollections.setOf(elements);
+        switch (elements.length) { // implicit null check of elements
+            case 0:
+                return ImmutableCollections.emptySet();
+            case 1:
+                return new ImmutableCollections.Set12<E>(elements[0]);
+            case 2:
+                return new ImmutableCollections.Set12<E>(elements[0], elements[1]);
+            default:
+                return new ImmutableCollections.SetN<E>(elements);
+        }
     }
 
     /**

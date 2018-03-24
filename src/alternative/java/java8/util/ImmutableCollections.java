@@ -30,13 +30,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.AbstractCollection;
+import java.util.AbstractList;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.RandomAccess;
@@ -74,283 +73,44 @@ final class ImmutableCollections {
 
     static UnsupportedOperationException uoe() { return new UnsupportedOperationException(); }
 
-    static abstract class AbstractImmutableCollection<E> extends AbstractCollection<E> {
-        // all mutating methods throw UnsupportedOperationException
+    // ---------- List Implementations ----------
+
+    abstract static class AbstractImmutableList<E> extends AbstractList<E>
+                                                implements RandomAccess, Serializable {
         @Override public boolean add(E e) { throw uoe(); }
         @Override public boolean addAll(Collection<? extends E> c) { throw uoe(); }
+        // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
+        @Override public boolean addAll(int index, Collection<? extends E> c) { rangeCheckForAdd(index, size()); throw uoe(); }
         @Override public void    clear() { throw uoe(); }
         @Override public boolean remove(Object o) { throw uoe(); }
         @Override public boolean removeAll(Collection<?> c) { throw uoe(); }
         @Override public boolean retainAll(Collection<?> c) { throw uoe(); }
     }
 
-    // ---------- List Implementations ----------
+    static final class List0<E> extends AbstractImmutableList<E> {
+        private static final List0<Object> INSTANCE = new List0<Object>();
 
-    @SuppressWarnings("unchecked")
-    static <E> List<E> emptyList() {
-        return (List<E>) ListN.EMPTY_LIST;
-    }
-
-    static abstract class AbstractImmutableList<E> extends AbstractImmutableCollection<E>
-            implements List<E>, RandomAccess {
-        // all mutating methods throw UnsupportedOperationException
-        @Override public void    add(int index, E element) { throw uoe(); }
-        // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
-        @Override public boolean addAll(int index, Collection<? extends E> c) { rangeCheckForAdd(index, size()); throw uoe(); }
-        @Override public E       remove(int index) { throw uoe(); }
-        @Override public E       set(int index, E element) { throw uoe(); }
-
-        @Override
-        public List<E> subList(int fromIndex, int toIndex) {
-            int size = size();
-            subListRangeCheck(fromIndex, toIndex, size);
-            return SubList.fromList(this, fromIndex, toIndex);
+        @SuppressWarnings("unchecked")
+        static final <T> List0<T> instance() {
+            return (List0<T>) INSTANCE;
         }
 
-        static void subListRangeCheck(int fromIndex, int toIndex, int size) {
-            if (fromIndex < 0)
-                throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
-            if (toIndex > size)
-                throw new IndexOutOfBoundsException("toIndex = " + toIndex);
-            if (fromIndex > toIndex)
-                throw new IllegalArgumentException("fromIndex(" + fromIndex +
-                        ") > toIndex(" + toIndex + ")");
+        private List0() { }
+
+        @Override
+        public int size() {
+            return 0;
         }
 
         @Override
         public Iterator<E> iterator() {
-            return new ListItr<E>(this, size());
-        }
-
-        @Override
-        public ListIterator<E> listIterator() {
-            return listIterator(0);
-        }
-
-        @Override
-        public ListIterator<E> listIterator(int index) {
-            int size = size();
-            if (index < 0 || index > size) {
-                throw outOfBounds(index);
-            }
-            return new ListItr<E>(this, size, index);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == this) {
-                return true;
-            }
-
-            if (!(o instanceof List)) {
-                return false;
-            }
-
-            Iterator<?> oit = ((List<?>) o).iterator();
-            for (int i = 0, s = size(); i < s; i++) {
-                if (!oit.hasNext() || !get(i).equals(oit.next())) {
-                    return false;
-                }
-            }
-            return !oit.hasNext();
-        }
-
-        @Override
-        public int indexOf(Object o) {
-            Objects.requireNonNull(o);
-            for (int i = 0, s = size(); i < s; i++) {
-                if (o.equals(get(i))) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        @Override
-        public int lastIndexOf(Object o) {
-            Objects.requireNonNull(o);
-            for (int i = size() - 1; i >= 0; i--) {
-                if (o.equals(get(i))) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 1;
-            for (int i = 0, s = size(); i < s; i++) {
-                hash = 31 * hash + get(i).hashCode();
-            }
-            return hash;
-        }
-
-        @Override
-        public boolean contains(Object o) {
-            return indexOf(o) >= 0;
-        }
-
-        IndexOutOfBoundsException outOfBounds(int index) {
-            return new IndexOutOfBoundsException("Index: " + index + " Size: " + size());
-        }
-    }
-
-    static final class ListItr<E> implements ListIterator<E> {
-
-        private final List<E> list;
-        private final int size;
-
-        private int cursor;
-
-        ListItr(List<E> list, int size) {
-            this(list, size, 0);
-        }
-
-        ListItr(List<E> list, int size, int index) {
-            this.list = list;
-            this.size = size;
-            this.cursor = index;
-        }
-
-        public boolean hasNext() {
-            return cursor != size;
-        }
-
-        public E next() {
-            try {
-                int i = cursor;
-                E next = list.get(i);
-                cursor = i + 1;
-                return next;
-            } catch (IndexOutOfBoundsException e) {
-                throw new NoSuchElementException();
-            }
-        }
-
-        public void remove() {
-            throw uoe();
-        }
-
-        public boolean hasPrevious() {
-            return cursor != 0;
-        }
-
-        public E previous() {
-            try {
-                int i = cursor - 1;
-                E previous = list.get(i);
-                cursor = i;
-                return previous;
-            } catch (IndexOutOfBoundsException e) {
-                throw new NoSuchElementException();
-            }
-        }
-
-        public int nextIndex() {
-            return cursor;
-        }
-
-        public int previousIndex() {
-            return cursor - 1;
-        }
-
-        public void set(E e) {
-            throw uoe();
-        }
-
-        public void add(E e) {
-            throw uoe();
-        }
-    }
-
-    static final class SubList<E> extends AbstractImmutableList<E>
-            implements RandomAccess {
-
-        private final List<E> root;
-        private final int offset;
-        private final int size;
-
-        private SubList(List<E> root, int offset, int size) {
-            this.root = root;
-            this.offset = offset;
-            this.size = size;
-        }
-
-        /**
-         * Constructs a sublist of another SubList.
-         */
-        static <E> SubList<E> fromSubList(SubList<E> parent, int fromIndex, int toIndex) {
-            return new SubList<E>(parent.root, parent.offset + fromIndex, toIndex - fromIndex);
-        }
-
-        /**
-         * Constructs a sublist of an arbitrary AbstractImmutableList, which is
-         * not a SubList itself.
-         */
-        static <E> SubList<E> fromList(List<E> list, int fromIndex, int toIndex) {
-            return new SubList<E>(list, fromIndex, toIndex - fromIndex);
-        }
-
-        public E get(int index) {
-            Objects.checkIndex(index, size);
-            return root.get(offset + index);
-        }
-
-        public int size() {
-            return size;
-        }
-
-        public Iterator<E> iterator() {
-            return new ListItr<E>(this, size());
-        }
-
-        public ListIterator<E> listIterator(int index) {
-            rangeCheck(index);
-            return new ListItr<E>(this, size(), index);
-        }
-
-        public List<E> subList(int fromIndex, int toIndex) {
-            subListRangeCheck(fromIndex, toIndex, size);
-            return SubList.fromSubList(this, fromIndex, toIndex);
-        }
-
-        private void rangeCheck(int index) {
-            if (index < 0 || index > size) {
-                throw outOfBounds(index);
-            }
-        }
-    }
-
-    static final class List12<E> extends AbstractImmutableList<E>
-            implements Serializable {
-
-        private final E e0;
-        private final E e1;
-
-        List12(E e0) {
-            this.e0 = Objects.requireNonNull(e0);
-            this.e1 = null;
-        }
-
-        List12(E e0, E e1) {
-            this.e0 = Objects.requireNonNull(e0);
-            this.e1 = Objects.requireNonNull(e1);
-        }
-
-        @Override
-        public int size() {
-            return e1 != null ? 2 : 1;
+            return Iterators.emptyIterator();
         }
 
         @Override
         public E get(int index) {
-            if (index == 0) {
-                return e0;
-            } else if (index == 1 && e1 != null) {
-                return e1;
-            }
-            throw outOfBounds(index);
+            Objects.checkIndex(index, 0); // always throws IndexOutOfBoundsException
+            return null;                  // but the compiler doesn't know this
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -358,19 +118,108 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            if (e1 == null) {
-                return new ColSer(ColSer.IMM_LIST, e0);
-            } else {
-                return new ColSer(ColSer.IMM_LIST, e0, e1);
-            }
+            return new ColSer(ColSer.IMM_LIST);
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            Objects.requireNonNull(o);
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> o) {
+            return o.isEmpty(); // implicit nullcheck of o
+        }
+
+        @Override
+        public int hashCode() {
+            return 1;
         }
     }
 
-    static final class ListN<E> extends AbstractImmutableList<E>
-            implements Serializable {
+    static final class List1<E> extends AbstractImmutableList<E> {
+        private final E e0;
 
-        static final List<?> EMPTY_LIST = new ListN<Object>();
+        List1(E e0) {
+            this.e0 = Objects.requireNonNull(e0);
+        }
 
+        @Override
+        public int size() {
+            return 1;
+        }
+
+        @Override
+        public E get(int index) {
+            Objects.checkIndex(index, 1);
+            return e0;
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            throw new InvalidObjectException("not serial proxy");
+        }
+
+        private Object writeReplace() {
+            return new ColSer(ColSer.IMM_LIST, e0);
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return o.equals(e0); // implicit nullcheck of o
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 + e0.hashCode();
+        }
+    }
+
+    static final class List2<E> extends AbstractImmutableList<E> {
+        private final E e0;
+        private final E e1;
+
+        List2(E e0, E e1) {
+            this.e0 = Objects.requireNonNull(e0);
+            this.e1 = Objects.requireNonNull(e1);
+        }
+
+        @Override
+        public int size() {
+            return 2;
+        }
+
+        @Override
+        public E get(int index) {
+            Objects.checkIndex(index, 2);
+            if (index == 0) {
+                return e0;
+            } else { // index == 1
+                return e1;
+            }
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return o.equals(e0) || o.equals(e1); // implicit nullcheck of o
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 31 + e0.hashCode();
+            return 31 * hash + e1.hashCode();
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            throw new InvalidObjectException("not serial proxy");
+        }
+
+        private Object writeReplace() {
+            return new ColSer(ColSer.IMM_LIST, e0, e1);
+        }
+    }
+
+    static final class ListN<E> extends AbstractImmutableList<E> {
         private final E[] elements;
 
         ListN(E... input) {
@@ -380,12 +229,7 @@ final class ImmutableCollections {
             for (int i = 0; i < input.length; i++) {
                 tmp[i] = Objects.requireNonNull(input[i]);
             }
-            elements = tmp;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return size() == 0;
+            this.elements = tmp;
         }
 
         @Override
@@ -395,7 +239,27 @@ final class ImmutableCollections {
 
         @Override
         public E get(int index) {
+            Objects.checkIndex(index, elements.length);
             return elements[index];
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            for (E e : elements) {
+                if (o.equals(e)) { // implicit nullcheck of o
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 1;
+            for (E e : elements) {
+                hash = 31 * hash + e.hashCode();
+            }
+            return hash;
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -409,50 +273,101 @@ final class ImmutableCollections {
 
     // ---------- Set Implementations ----------
 
-    static abstract class AbstractImmutableSet<E> extends AbstractImmutableCollection<E>
-            implements Set<E> {
+    abstract static class AbstractImmutableSet<E> extends AbstractSet<E> implements Serializable {
+        @Override public boolean add(E e) { throw uoe(); }
+        @Override public boolean addAll(Collection<? extends E> c) { throw uoe(); }
+        @Override public void    clear() { throw uoe(); }
+        @Override public boolean remove(Object o) { throw uoe(); }
+        @Override public boolean removeAll(Collection<?> c) { throw uoe(); }
+        @Override public boolean retainAll(Collection<?> c) { throw uoe(); }
+    }
+
+    static final class Set0<E> extends AbstractImmutableSet<E> {
+        private static final Set0<Object> INSTANCE = new Set0<Object>();
+
+        @SuppressWarnings("unchecked")
+        static final <T> Set0<T> instance() {
+            return (Set0<T>) INSTANCE;
+        }
+
+        private Set0() { }
 
         @Override
-        public boolean equals(Object o) {
-            if (o == this) {
-                return true;
-            } else if (!(o instanceof Set)) {
-                return false;
-            }
-
-            Collection<?> c = (Collection<?>) o;
-            if (c.size() != size()) {
-                return false;
-            }
-            for (Object e : c) {
-                if (e == null || !contains(e)) {
-                    return false;
-                }
-            }
-            return true;
+        public int size() {
+            return 0;
         }
 
         @Override
-        public abstract int hashCode();
+        public boolean contains(Object o) {
+            Objects.requireNonNull(o);
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> o) {
+            return o.isEmpty(); // implicit nullcheck of o
+        }
+
+        @Override
+        public Iterator<E> iterator() {
+            return Iterators.emptyIterator();
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            throw new InvalidObjectException("not serial proxy");
+        }
+
+        private Object writeReplace() {
+            return new ColSer(ColSer.IMM_SET);
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
     }
 
-    @SuppressWarnings("unchecked")
-    static <E> Set<E> emptySet() {
-        return (Set<E>) SetN.EMPTY_SET;
+    static final class Set1<E> extends AbstractImmutableSet<E> {
+        private final E e0;
+
+        Set1(E e0) {
+            this.e0 = Objects.requireNonNull(e0);
+        }
+
+        @Override
+        public int size() {
+            return 1;
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return o.equals(e0); // implicit nullcheck of o
+        }
+
+        @Override
+        public Iterator<E> iterator() {
+            return Iterators.singletonIterator(e0);
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            throw new InvalidObjectException("not serial proxy");
+        }
+
+        private Object writeReplace() {
+            return new ColSer(ColSer.IMM_SET, e0);
+        }
+
+        @Override
+        public int hashCode() {
+            return e0.hashCode();
+        }
     }
 
-    static final class Set12<E> extends AbstractImmutableSet<E>
-            implements Serializable {
-
+    static final class Set2<E> extends AbstractImmutableSet<E> {
         final E e0;
         final E e1;
 
-        Set12(E e0) {
-            this.e0 = Objects.requireNonNull(e0);
-            this.e1 = null;
-        }
-
-        Set12(E e0, E e1) {
+        Set2(E e0, E e1) {
             if (e0.equals(Objects.requireNonNull(e1))) { // implicit nullcheck of e0
                 throw new IllegalArgumentException("duplicate element: " + e0);
             }
@@ -468,7 +383,7 @@ final class ImmutableCollections {
 
         @Override
         public int size() {
-            return (e1 == null) ? 1 : 2;
+            return 2;
         }
 
         @Override
@@ -478,26 +393,26 @@ final class ImmutableCollections {
 
         @Override
         public int hashCode() {
-            return e0.hashCode() + (e1 == null ? 0 : e1.hashCode());
+            return e0.hashCode() + e1.hashCode();
         }
 
         @Override
         public Iterator<E> iterator() {
             return new Iterators.ImmutableIt<E>() {
-                private int idx = size();
+                private int idx = 0;
 
                 @Override
                 public boolean hasNext() {
-                    return idx > 0;
+                    return idx < 2;
                 }
 
                 @Override
                 public E next() {
-                    if (idx == 1) {
-                        idx = 0;
-                        return e0;
-                    } else if (idx == 2) {
+                    if (idx == 0) {
                         idx = 1;
+                        return e0;
+                    } else if (idx == 1) {
+                        idx = 2;
                         return e1;
                     } else {
                         throw new NoSuchElementException();
@@ -511,11 +426,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            if (e1 == null) {
-                return new ColSer(ColSer.IMM_SET, e0);
-            } else {
-                return new ColSer(ColSer.IMM_SET, e0, e1);
-            }
+            return new ColSer(ColSer.IMM_SET, e0, e1);
         }
     }
 
@@ -525,11 +436,7 @@ final class ImmutableCollections {
      * least one null is always present.
      * @param <E> the element type
      */
-    static final class SetN<E> extends AbstractImmutableSet<E>
-            implements Serializable {
-
-        static final Set<?> EMPTY_SET = new SetN<Object>();
-
+    static final class SetN<E> extends AbstractImmutableSet<E> {
         final E[] elements;
         private final int size;
 
@@ -556,8 +463,7 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            Objects.requireNonNull(o);
-            return size > 0 && probe(o) >= 0;
+            return probe(o) >= 0; // implicit nullcheck of o
         }
 
         @Override
@@ -632,16 +538,52 @@ final class ImmutableCollections {
 
     // ---------- Map Implementations ----------
 
-    @SuppressWarnings("unchecked")
-    static <K,V> Map<K,V> emptyMap() {
-        return (Map<K,V>) MapN.EMPTY_MAP;
-    }
-
     abstract static class AbstractImmutableMap<K,V> extends AbstractMap<K,V> implements Serializable {
         @Override public void clear() { throw uoe(); }
         @Override public V put(K key, V value) { throw uoe(); }
         @Override public void putAll(Map<? extends K,? extends V> m) { throw uoe(); }
         @Override public V remove(Object key) { throw uoe(); }
+    }
+
+    static final class Map0<K,V> extends AbstractImmutableMap<K,V> {
+        private static final Map0<Object, Object> INSTANCE = new Map0<Object, Object>();
+
+        @SuppressWarnings("unchecked")
+        static final <K, V> Map0<K, V> instance() {
+            return (Map0<K, V>) INSTANCE;
+        }
+
+        private Map0() { }
+
+        @Override
+        public Set<Map.Entry<K,V>> entrySet() {
+            return ImmutableCollections.Set0.instance();
+        }
+
+        @Override
+        public boolean containsKey(Object o) {
+            Objects.requireNonNull(o);
+            return false;
+        }
+
+        @Override
+        public boolean containsValue(Object o) {
+            Objects.requireNonNull(o);
+            return false;
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            throw new InvalidObjectException("not serial proxy");
+        }
+
+        private Object writeReplace() {
+            return new ColSer(ColSer.IMM_MAP);
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
     }
 
     static final class Map1<K,V> extends AbstractImmutableMap<K,V> {
@@ -655,7 +597,7 @@ final class ImmutableCollections {
 
         @Override
         public Set<Map.Entry<K,V>> entrySet() {
-            return Sets.of(new KeyValueHolder<K, V>(k0, v0));
+            return setOf((Map.Entry<K, V>) new KeyValueHolder<K, V>(k0, v0));
         }
 
         @Override
@@ -692,15 +634,12 @@ final class ImmutableCollections {
      * @param <V> the value type
      */
     static final class MapN<K,V> extends AbstractImmutableMap<K,V> {
-
-        static final Map<?,?> EMPTY_MAP = new MapN<Object, Object>();
-
         final Object[] table; // pairs of key, value
         final int size; // number of pairs
 
         MapN(Object... input) {
             if ((input.length & 1) != 0) { // implicit nullcheck of input
-                throw new InternalError("length is odd");
+                throw new AssertionError("length is odd");
             }
             size = input.length >> 1;
 
@@ -724,16 +663,14 @@ final class ImmutableCollections {
 
         @Override
         public boolean containsKey(Object o) {
-            Objects.requireNonNull(o);
-            return size > 0 && probe(o) >= 0;
+            return probe(o) >= 0; // implicit nullcheck of o
         }
 
         @Override
         public boolean containsValue(Object o) {
-            Objects.requireNonNull(o);
             for (int i = 1; i < table.length; i += 2) {
                 Object v = table[i];
-                if (v != null && o.equals(v)) {
+                if (v != null && o.equals(v)) { // implicit nullcheck of o
                     return true;
                 }
             }
@@ -755,10 +692,6 @@ final class ImmutableCollections {
         @Override
         @SuppressWarnings("unchecked")
         public V get(Object o) {
-            if (size == 0) {
-                Objects.requireNonNull(o);
-                return null;
-            }
             int i = probe(o);
             if (i >= 0) {
                 return (V) table[i + 1];
@@ -783,7 +716,7 @@ final class ImmutableCollections {
                 @Override
                 public Iterator<Map.Entry<K,V>> iterator() {
                     return new Iterators.ImmutableIt<Map.Entry<K,V>>() {
-                        private int idx = 0;
+                        int idx = 0;
 
                         @Override
                         public boolean hasNext() {
@@ -852,6 +785,36 @@ final class ImmutableCollections {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: "
                     + size);
+        }
+    }
+
+    static <E> List<E> listOf(E[] elements) { // streamsupport added
+        switch (elements.length) { // implicit null check of elements
+            case 0:
+                return List0.instance();
+            case 1:
+                return new ImmutableCollections.List1<E>(elements[0]);
+            case 2:
+                return new ImmutableCollections.List2<E>(elements[0], elements[1]);
+            default:
+                return new ImmutableCollections.ListN<E>(elements);
+        }
+    }
+
+    static <E> Set<E> setOf(E e1) { // streamsupport added
+        return new ImmutableCollections.Set1<E>(e1);
+    }
+
+    static <E> Set<E> setOf(E[] elements) { // streamsupport added
+        switch (elements.length) { // implicit null check of elements
+            case 0:
+                return ImmutableCollections.Set0.instance();
+            case 1:
+                return new ImmutableCollections.Set1<E>(elements[0]);
+            case 2:
+                return new ImmutableCollections.Set2<E>(elements[0], elements[1]);
+            default:
+                return new ImmutableCollections.SetN<E>(elements);
         }
     }
 
@@ -1002,12 +965,12 @@ final class ColSer implements Serializable {
             // ignore high order 24 bits
             switch (tag & 0xff) {
                 case IMM_LIST:
-                    return Lists.of(array);
+                    return ImmutableCollections.listOf(array);
                 case IMM_SET:
-                    return Sets.of(array);
+                    return ImmutableCollections.setOf(array);
                 case IMM_MAP:
                     if (array.length == 0) {
-                        return ImmutableCollections.emptyMap();
+                        return ImmutableCollections.Map0.instance();
                     } else if (array.length == 2) {
                         return new ImmutableCollections.Map1<Object, Object>(array[0], array[1]);
                     } else {

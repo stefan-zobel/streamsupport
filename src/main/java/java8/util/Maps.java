@@ -954,7 +954,7 @@ public final class Maps {
      * @since 9
      */
     public static <K, V> Map<K, V> of() {
-        return ImmutableCollections.Map0.instance();
+        return ImmutableCollections.emptyMap();
     }
 
     /**
@@ -1270,7 +1270,7 @@ public final class Maps {
      */
     public static <K, V> Map<K, V> ofEntries(Map.Entry<? extends K, ? extends V>... entries) {
         if (entries.length == 0) { // implicit null check of entries array
-            return ImmutableCollections.Map0.instance();
+            return ImmutableCollections.emptyMap();
         } else if (entries.length == 1) {
             // implicit null check of the array slot
             return new ImmutableCollections.Map1<K, V>(entries[0].getKey(),
