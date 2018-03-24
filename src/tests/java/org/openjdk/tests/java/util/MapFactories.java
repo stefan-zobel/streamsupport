@@ -413,6 +413,16 @@ public class MapFactories {
         Maps.ofEntries((Map.Entry<?, ?>[]) null);
     }
 
+    @Test(dataProvider="all", expectedExceptions=NullPointerException.class)
+    public void containsValueNullShouldThrowNPE(Map<Integer,String> act, Map<Integer,String> exp) {
+        act.containsValue(null);
+    }
+
+    @Test(dataProvider="all", expectedExceptions=NullPointerException.class)
+    public void containsKeyNullShouldThrowNPE(Map<Integer,String> act, Map<Integer,String> exp) {
+        act.containsKey(null);
+    }
+
     @Test(dataProvider="all")
     public void serialEquality(Map<Integer, String> act, Map<Integer, String> exp) {
         // assume that act.equals(exp) tested elsewhere
