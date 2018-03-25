@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
@@ -62,7 +63,7 @@ import java8.util.stream.StreamSupport;
  */
 @Test
 public final class Collection8Test extends JSR166TestCase {
-// CVS rev. 1.47
+// CVS rev. 1.48
 
     Collection8Test() {
     }
@@ -80,8 +81,9 @@ public final class Collection8Test extends JSR166TestCase {
 
     static Object bomb() {
         return new Object() {
-            public boolean equals(Object x) { throw new AssertionError(); }
-            public int hashCode() { throw new AssertionError(); }
+            @Override public boolean equals(Object x) { throw new AssertionError(); }
+            @Override public int hashCode() { throw new AssertionError(); }
+            @Override public String toString() { throw new AssertionError(); }
         };
     }
 
@@ -90,11 +92,11 @@ public final class Collection8Test extends JSR166TestCase {
     public void testEmptyMeansEmpty(String description, Supplier<CollectionImplementation> sci) throws Throwable {
         CollectionImplementation impl = sci.get();
         Collection<?> c = impl.emptyCollection();
-        emptyMeansEmpty(c);
+        emptyMeansEmpty(c, sci);
 
         if (c instanceof java.io.Serializable) {
             try {
-                emptyMeansEmpty(serialClonePossiblyFailing(c));
+                emptyMeansEmpty(serialClonePossiblyFailing(c), sci);
             } catch (java.io.NotSerializableException ex) {
                 // excusable when we have a serializable wrapper around
                 // a non-serializable collection, as can happen with:
@@ -108,14 +110,27 @@ public final class Collection8Test extends JSR166TestCase {
 
         Collection<?> clone = cloneableClone(c);
         if (clone != null)
-            emptyMeansEmpty(clone);
+            emptyMeansEmpty(clone, sci);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    void emptyMeansEmpty(Collection<?> c) throws InterruptedException {
+    void emptyMeansEmpty(Collection<?> c, Supplier<CollectionImplementation> sci) throws InterruptedException {
         assertTrue(c.isEmpty());
         assertEquals(0, c.size());
         assertEquals("[]", c.toString());
+        if (c instanceof List<?>) {
+            List x = (List) c;
+            assertEquals(1, x.hashCode());
+            assertEquals(x, Collections.emptyList());
+            assertEquals(Collections.emptyList(), x);
+            assertEquals(-1, x.indexOf(sci.get().makeElement(86)));
+            assertEquals(-1, x.lastIndexOf(sci.get().makeElement(99)));
+        }
+        else if (c instanceof Set<?>) {
+            assertEquals(0, c.hashCode());
+            assertEquals(c, Collections.emptySet());
+            assertEquals(Collections.emptySet(), c);
+        }
         {
             Object[] a = c.toArray();
             assertEquals(0, a.length);
@@ -284,6 +299,16 @@ public final class Collection8Test extends JSR166TestCase {
                 () -> d.removeLast(),
                 () -> d.pop(),
                 () -> d.descendingIterator().next());
+        }
+        if (c instanceof List) {
+            List<?> x = (List<?>) c;
+            assertThrows(
+                NoSuchElementException.class,
+                () -> x.iterator().next(),
+                () -> x.listIterator().next(),
+                () -> x.listIterator(0).next(),
+                () -> x.listIterator().previous(),
+                () -> x.listIterator(0).previous());
         }
     }
 
