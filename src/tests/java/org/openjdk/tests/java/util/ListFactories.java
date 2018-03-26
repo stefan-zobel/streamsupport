@@ -268,13 +268,13 @@ public class ListFactories {
         act.lastIndexOf(null);
     }
 
-    // List.of().subList views should not be Serializable
+    // Lists.of().subList views should not be Serializable
     @Test(dataProvider="sublists")
     public void isNotSerializable(List<String> act, List<String> exp) {
         assertFalse(act instanceof Serializable);
     }
 
-    // ... but List.of() should be
+    // ... but Lists.of() should be
     @Test(dataProvider="nonsublists")
     public void serialEquality(List<String> act, List<String> exp) {
         // assume that act.equals(exp) tested elsewhere
