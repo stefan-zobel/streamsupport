@@ -63,7 +63,7 @@ import java8.util.stream.StreamSupport;
  */
 @Test
 public final class Collection8Test extends JSR166TestCase {
-// CVS rev. 1.48
+// CVS rev. 1.49
 
     Collection8Test() {
     }
@@ -125,6 +125,10 @@ public final class Collection8Test extends JSR166TestCase {
             assertEquals(Collections.emptyList(), x);
             assertEquals(-1, x.indexOf(sci.get().makeElement(86)));
             assertEquals(-1, x.lastIndexOf(sci.get().makeElement(99)));
+            assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> x.get(0),
+                () -> x.set(0, sci.get().makeElement(42)));
         }
         else if (c instanceof Set<?>) {
             assertEquals(0, c.hashCode());
