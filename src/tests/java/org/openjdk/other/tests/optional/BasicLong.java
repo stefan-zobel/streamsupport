@@ -1,6 +1,5 @@
-package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,163 +20,114 @@ package org.openjdk.other.tests.optional;
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+package org.openjdk.other.tests.optional;
 
 /* @test
+ * @bug 8195649
  * @summary Basic functional test of OptionalLong
  * @author Mike Duigou
+ * @build ObscureException
  * @run testng BasicLong
  */
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import java8.lang.Longs;
 import java8.util.OptionalLong;
-import java8.util.function.LongConsumer;
-import java8.util.function.LongSupplier;
-import java8.util.function.Supplier;
-import java8.util.stream.LongStream;
 
 import static org.testng.Assert.*;
-
+import static org.testng695.Assert.assertThrows;
 import org.testng.annotations.Test;
 
 public class BasicLong {
+    static final long LONGVAL = 2_305_843_008_139_952_128L;
+    static final long UNEXPECTED = 0xFEEDBEEFCAFEBABEL;
 
-    @Test(groups = "unit")
-    public void testEmpty() {
-        OptionalLong empty = OptionalLong.empty();
-        OptionalLong present = OptionalLong.of(1);
-
-        // empty
-        assertTrue(empty.equals(empty));
+    /**
+     * Checks a block of assertions over an empty OptionalLong.
+     */
+    void checkEmpty(OptionalLong empty) {
         assertTrue(empty.equals(OptionalLong.empty()));
-        assertTrue(!empty.equals(present));
-        assertTrue(0 == empty.hashCode());
-        assertTrue(!empty.toString().isEmpty());
-        assertTrue(!empty.isPresent());
-        empty.ifPresent(new LongConsumer() {
-            @Override
-            public void accept(long v) {
-                fail();
-            }
-        });
-        assertEquals(2, empty.orElse(2));
-        assertEquals(2, empty.orElseGet(new LongSupplier() {
-            @Override
-            public long getAsLong() {
-                return 2;
-            }
-        }));
+        assertTrue(OptionalLong.empty().equals(empty));
+        assertFalse(empty.equals(OptionalLong.of(UNEXPECTED)));
+        assertFalse(OptionalLong.of(UNEXPECTED).equals(empty));
+        assertFalse(empty.equals("unexpected"));
+
+        assertFalse(empty.isPresent());
+        assertEquals(empty.hashCode(), 0);
+        assertEquals(empty.orElse(UNEXPECTED), UNEXPECTED);
+        assertEquals(empty.orElseGet(() -> UNEXPECTED), UNEXPECTED);
+
+        assertThrows(NoSuchElementException.class, () -> empty.getAsLong());
+        assertThrows(NoSuchElementException.class, () -> empty.orElseThrow());
+        assertThrows(ObscureException.class,       () -> empty.orElseThrow(ObscureException::new));
+
+        AtomicBoolean b = new AtomicBoolean();
+        empty.ifPresent(s -> b.set(true));
+        assertFalse(b.get());
+
+        AtomicBoolean b1 = new AtomicBoolean(false);
+        AtomicBoolean b2 = new AtomicBoolean(false);
+        empty.ifPresentOrElse(s -> b1.set(true), () -> b2.set(true));
+        assertFalse(b1.get());
+        assertTrue(b2.get());
+
+        assertEquals(empty.toString(), "OptionalLong.empty");
     }
 
-    @Test(expectedExceptions=NoSuchElementException.class)
-    public void testEmptyGet() {
-        OptionalLong empty = OptionalLong.empty();
+    /**
+     * Checks a block of assertions over an OptionalLong that is expected to
+     * have a particular value present.
+     */
+    void checkPresent(OptionalLong opt, long expected) {
+        assertFalse(opt.equals(OptionalLong.empty()));
+        assertFalse(OptionalLong.empty().equals(opt));
+        assertTrue(opt.equals(OptionalLong.of(expected)));
+        assertTrue(OptionalLong.of(expected).equals(opt));
+        assertFalse(opt.equals(OptionalLong.of(UNEXPECTED)));
+        assertFalse(OptionalLong.of(UNEXPECTED).equals(opt));
+        assertFalse(opt.equals("unexpected"));
 
-        long got = empty.getAsLong();
+        assertTrue(opt.isPresent());
+        assertEquals(opt.hashCode(), Longs.hashCode(expected));
+        assertEquals(opt.orElse(UNEXPECTED), expected);
+        assertEquals(opt.orElseGet(() -> UNEXPECTED), expected);
+
+        assertEquals(opt.getAsLong(), expected);
+        assertEquals(opt.orElseThrow(), expected);
+        assertEquals(opt.orElseThrow(ObscureException::new), expected);
+
+        AtomicBoolean b = new AtomicBoolean(false);
+        opt.ifPresent(s -> b.set(true));
+        assertTrue(b.get());
+
+        AtomicBoolean b1 = new AtomicBoolean(false);
+        AtomicBoolean b2 = new AtomicBoolean(false);
+        opt.ifPresentOrElse(s -> b1.set(true), () -> b2.set(true));
+        assertTrue(b1.get());
+        assertFalse(b2.get());
+
+        assertEquals(opt.toString(), "OptionalLong[" + expected + "]");
     }
 
-    @Test(expectedExceptions=NullPointerException.class)
-    public void testEmptyOrElseGetNull() {
-        OptionalLong empty = OptionalLong.empty();
-
-        long got = empty.orElseGet(null);
+    @Test
+    public void testEmpty() {
+        checkEmpty(OptionalLong.empty());
     }
 
-    @Test(expectedExceptions=NullPointerException.class)
-    public void testEmptyOrElseThrowNull() throws Throwable {
-        OptionalLong empty = OptionalLong.empty();
-
-        long got = empty.orElseThrow(null);
-    }
-
-    @Test(expectedExceptions=ObscureException.class)
-    public void testEmptyOrElseThrow() throws Exception {
-        OptionalLong empty = OptionalLong.empty();
-        long got = empty.orElseThrow(new Supplier<ObscureException>() {
-            @Override
-            public ObscureException get() {
-                return new ObscureException();
-            }
-        });
-    }
-
-    @Test(expectedExceptions=NoSuchElementException.class)
-    public void testEmptyOrElseThrowNoArg() throws Exception {
-        OptionalLong empty = OptionalLong.empty();
-
-        long got = empty.orElseThrow();
-    }
-
-    @Test(groups = "unit")
+    @Test
     public void testPresent() {
-        OptionalLong empty = OptionalLong.empty();
-        OptionalLong present = OptionalLong.of(1L);
-
-        // present
-        assertTrue(present.equals(present));
-        assertFalse(present.equals(OptionalLong.of(0L)));
-        assertTrue(present.equals(OptionalLong.of(1L)));
-        assertFalse(present.equals(empty));
-        assertTrue(Longs.hashCode(1) == present.hashCode());
-        assertFalse(present.toString().isEmpty());
-        assertTrue(-1 != present.toString().indexOf(Long.toString(present.getAsLong()).toString()));
-        assertTrue(-1 != present.toString().indexOf(Long.toString(present.orElseThrow()).toString()));
-        assertEquals(1L, present.getAsLong());
-        assertEquals(1L, present.orElseThrow());
-        try {
-            present.ifPresent(new LongConsumer() {
-                @Override
-                public void accept(long v) {
-                    throw new ObscureException();
-                }
-            });
-            fail();
-        } catch (ObscureException expected) {
-
-        }
-        assertEquals(1, present.orElse(2));
-        assertEquals(1, present.orElseGet(null));
-        assertEquals(1, present.orElseGet(new LongSupplier() {
-            @Override
-            public long getAsLong() {
-                return 2;
-            }
-        }));
-        assertEquals(1, present.orElseGet(new LongSupplier() {
-            @Override
-            public long getAsLong() {
-                return 3;
-            }
-        }));
-        assertEquals(1, present.<RuntimeException>orElseThrow(null));
-        assertEquals(1, present.<RuntimeException>orElseThrow(new Supplier<RuntimeException>() {
-            @Override
-            public RuntimeException get() {
-                return new ObscureException();
-            }
-        }));
+        checkPresent(OptionalLong.of(LONGVAL), LONGVAL);
     }
 
-    @Test(groups = "unit")
-    public void testStream() {
-        {
-            LongStream s = OptionalLong.empty().stream();
-
-            long[] es = s.toArray();
-            assertEquals(es.length, 0);
-        }
-
-        {
-            LongStream s = OptionalLong.of(42L).stream();
-
-            long[] es = s.toArray();
-            assertEquals(es.length, 1);
-            assertEquals(es[0], 42L);
-        }
+    @Test
+    public void testStreamEmpty() {
+        assertEquals(OptionalLong.empty().stream().toArray(), new long[] { });
     }
 
-    private static class ObscureException extends RuntimeException {
-
+    @Test
+    public void testStreamPresent() {
+        assertEquals(OptionalLong.of(LONGVAL).stream().toArray(), new long[] { LONGVAL });
     }
 }

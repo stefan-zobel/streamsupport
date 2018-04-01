@@ -1,6 +1,5 @@
-package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,165 +20,115 @@ package org.openjdk.other.tests.optional;
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+package org.openjdk.other.tests.optional;
 
 /* @test
+ * @bug 8195649
  * @summary Basic functional test of OptionalInt
  * @author Mike Duigou
+ * @build ObscureException
  * @run testng BasicInt
  */
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import java8.lang.Integers;
 import java8.util.OptionalInt;
-import java8.util.function.IntConsumer;
-import java8.util.function.IntSupplier;
-import java8.util.function.Supplier;
-import java8.util.stream.IntStream;
-
-import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
+import static org.testng695.Assert.assertThrows;
+import org.testng.annotations.Test;
 
 public class BasicInt {
 
-    @Test(groups = "unit")
-    public void testEmpty() {
-        OptionalInt empty = OptionalInt.empty();
-        OptionalInt present = OptionalInt.of(1);
+    static final int INTVAL = 33_550_336;
+    static final int UNEXPECTED = 0xCAFEBABE;
 
-        // empty
-        assertTrue(empty.equals(empty));
+    /**
+     * Checks a block of assertions over an empty OptionalInt.
+     */
+    void checkEmpty(OptionalInt empty) {
         assertTrue(empty.equals(OptionalInt.empty()));
-        assertTrue(!empty.equals(present));
-        assertTrue(0 == empty.hashCode());
-        assertTrue(!empty.toString().isEmpty());
-        assertTrue(!empty.isPresent());
-        empty.ifPresent(new IntConsumer() {
-            @Override
-            public void accept(int v) {
-                fail();
-            }
-        });
-        assertEquals(2, empty.orElse(2));
-        assertEquals(2, empty.orElseGet(new IntSupplier() {
-            @Override
-            public int getAsInt() {
-                return 2;
-            }
-        }));
+        assertTrue(OptionalInt.empty().equals(empty));
+        assertFalse(empty.equals(OptionalInt.of(UNEXPECTED)));
+        assertFalse(OptionalInt.of(UNEXPECTED).equals(empty));
+        assertFalse(empty.equals("unexpected"));
+
+        assertFalse(empty.isPresent());
+        assertEquals(empty.hashCode(), 0);
+        assertEquals(empty.orElse(UNEXPECTED), UNEXPECTED);
+        assertEquals(empty.orElseGet(() -> UNEXPECTED), UNEXPECTED);
+
+        assertThrows(NoSuchElementException.class, () -> empty.getAsInt());
+        assertThrows(NoSuchElementException.class, () -> empty.orElseThrow());
+        assertThrows(ObscureException.class,       () -> empty.orElseThrow(ObscureException::new));
+
+        AtomicBoolean b = new AtomicBoolean();
+        empty.ifPresent(s -> b.set(true));
+        assertFalse(b.get());
+
+        AtomicBoolean b1 = new AtomicBoolean(false);
+        AtomicBoolean b2 = new AtomicBoolean(false);
+        empty.ifPresentOrElse(s -> b1.set(true), () -> b2.set(true));
+        assertFalse(b1.get());
+        assertTrue(b2.get());
+
+        assertEquals(empty.toString(), "OptionalInt.empty");
     }
 
-    @Test(expectedExceptions=NoSuchElementException.class)
-    public void testEmptyGet() {
-        OptionalInt empty = OptionalInt.empty();
+    /**
+     * Checks a block of assertions over an OptionalInt that is expected to
+     * have a particular value present.
+     */
+    void checkPresent(OptionalInt opt, int expected) {
+        assertFalse(opt.equals(OptionalInt.empty()));
+        assertFalse(OptionalInt.empty().equals(opt));
+        assertTrue(opt.equals(OptionalInt.of(expected)));
+        assertTrue(OptionalInt.of(expected).equals(opt));
+        assertFalse(opt.equals(OptionalInt.of(UNEXPECTED)));
+        assertFalse(OptionalInt.of(UNEXPECTED).equals(opt));
+        assertFalse(opt.equals("unexpected"));
 
-        int got = empty.getAsInt();
+        assertTrue(opt.isPresent());
+        assertEquals(opt.hashCode(), Integers.hashCode(expected));
+        assertEquals(opt.orElse(UNEXPECTED), expected);
+        assertEquals(opt.orElseGet(() -> UNEXPECTED), expected);
+
+        assertEquals(opt.getAsInt(), expected);
+        assertEquals(opt.orElseThrow(), expected);
+        assertEquals(opt.orElseThrow(ObscureException::new), expected);
+
+        AtomicBoolean b = new AtomicBoolean(false);
+        opt.ifPresent(s -> b.set(true));
+        assertTrue(b.get());
+
+        AtomicBoolean b1 = new AtomicBoolean(false);
+        AtomicBoolean b2 = new AtomicBoolean(false);
+        opt.ifPresentOrElse(s -> b1.set(true), () -> b2.set(true));
+        assertTrue(b1.get());
+        assertFalse(b2.get());
+
+        assertEquals(opt.toString(), "OptionalInt[" + expected + "]");
     }
 
-    @Test(expectedExceptions=NullPointerException.class)
-    public void testEmptyOrElseGetNull() {
-        OptionalInt empty = OptionalInt.empty();
-
-        int got = empty.orElseGet(null);
+    @Test
+    public void testEmpty() {
+        checkEmpty(OptionalInt.empty());
     }
 
-    @Test(expectedExceptions=NullPointerException.class)
-    public void testEmptyOrElseThrowNull() throws Throwable {
-        OptionalInt empty = OptionalInt.empty();
-
-        int got = empty.orElseThrow(null);
-    }
-
-    @Test(expectedExceptions=ObscureException.class)
-    public void testEmptyOrElseThrow() throws Exception {
-        OptionalInt empty = OptionalInt.empty();
-        int got = empty.orElseThrow(new Supplier<ObscureException>() {
-            @Override
-            public ObscureException get() {
-                return new ObscureException();
-            }
-        });
-    }
-
-    @Test(expectedExceptions=NoSuchElementException.class)
-    public void testEmptyOrElseThrowNoArg() throws Exception {
-        OptionalInt empty = OptionalInt.empty();
-
-        int got = empty.orElseThrow();
-    }
-
-    @Test(groups = "unit")
+    @Test
     public void testPresent() {
-        OptionalInt empty = OptionalInt.empty();
-        OptionalInt present = OptionalInt.of(1);
-
-        // present
-        assertTrue(present.equals(present));
-        assertFalse(present.equals(OptionalInt.of(0)));
-        assertTrue(present.equals(OptionalInt.of(1)));
-        assertFalse(present.equals(empty));
-        assertTrue(Integers.hashCode(1) == present.hashCode());
-        assertFalse(present.toString().isEmpty());
-        assertTrue(-1 != present.toString().indexOf(Integer.toString(present.getAsInt()).toString()));
-        assertTrue(-1 != present.toString().indexOf(Integer.toString(present.orElseThrow()).toString()));
-        assertEquals(1, present.getAsInt());
-        assertEquals(1, present.orElseThrow());
-        try {
-            present.ifPresent(new IntConsumer() {
-                @Override
-                public void accept(int v) {
-                    throw new ObscureException();
-                }
-            });
-            fail();
-        } catch (ObscureException expected) {
-
-        }
-        assertEquals(1, present.orElse(2));
-        assertEquals(1, present.orElseGet(null));
-        assertEquals(1, present.orElseGet(new IntSupplier() {
-            @Override
-            public int getAsInt() {
-                return 2;
-            }
-        }));
-        assertEquals(1, present.orElseGet(new IntSupplier() {
-            @Override
-            public int getAsInt() {
-                return 3;
-            }
-        }));
-        assertEquals(1, present.<RuntimeException>orElseThrow(null));
-        assertEquals(1, present.<RuntimeException>orElseThrow(new Supplier<RuntimeException>() {
-            @Override
-            public RuntimeException get() {
-                return new ObscureException();
-            }
-        }));
+        checkPresent(OptionalInt.of(INTVAL), INTVAL);
     }
 
-    @Test(groups = "unit")
-    public void testStream() {
-        {
-            IntStream s = OptionalInt.empty().stream();
-            assertFalse(s.isParallel());
-
-            int[] es = s.toArray();
-            assertEquals(es.length, 0);
-        }
-
-        {
-            IntStream s = OptionalInt.of(42).stream();
-            assertFalse(s.isParallel());
-
-            int[] es = OptionalInt.of(42).stream().toArray();
-            assertEquals(es.length, 1);
-            assertEquals(es[0], 42);
-        }
+    @Test
+    public void testStreamEmpty() {
+        assertEquals(OptionalInt.empty().stream().toArray(), new int[] { });
     }
 
-    private static class ObscureException extends RuntimeException {
-
+    @Test
+    public void testStreamPresent() {
+        assertEquals(OptionalInt.of(INTVAL).stream().toArray(), new int[] { INTVAL });
     }
 }

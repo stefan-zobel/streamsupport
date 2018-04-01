@@ -1,6 +1,5 @@
-package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,398 +20,186 @@ package org.openjdk.other.tests.optional;
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+package org.openjdk.other.tests.optional;
 
 /* @test
+ * @bug 8195649
  * @summary Basic functional test of Optional
  * @author Mike Duigou
+ * @build ObscureException
  * @run testng Basic
  */
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import java8.util.Lists;
+import java8.util.Optional;
+import static java8.util.stream.Collectors.toList;
 
 import static org.testng.Assert.*;
-
-import java8.util.Optional;
-import java8.util.function.Consumer;
-import java8.util.function.Function;
-import java8.util.function.Predicate;
-import java8.util.function.Supplier;
-import java8.util.stream.Stream;
-
+import static org.testng695.Assert.assertThrows;
 import org.testng.annotations.Test;
 
 public class Basic {
 
-    @Test(groups = "unit")
-    public void testEmpty() {
-        Optional<Boolean> empty = Optional.empty();
-        Optional<String> presentEmptyString = Optional.of("");
-        Optional<Boolean> present = Optional.of(Boolean.TRUE);
-
-        // empty
-        assertTrue(empty.equals(empty));
+    /**
+     * Checks a block of assertions over an empty Optional.
+     */
+    void checkEmpty(Optional<String> empty) {
         assertTrue(empty.equals(Optional.empty()));
-        assertTrue(!empty.equals(present));
-        assertTrue(0 == empty.hashCode());
-        assertTrue(!empty.toString().isEmpty());
-        assertTrue(!empty.toString().equals(presentEmptyString.toString()));
-        assertTrue(!empty.isPresent());
-        empty.ifPresent(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean v) {
-                fail();
-            }
-        });
-        assertSame(null, empty.orElse(null));
-        RuntimeException orElse = new RuntimeException() { };
-        assertSame(Boolean.FALSE, empty.orElse(Boolean.FALSE));
-        assertSame(null, empty.orElseGet(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                return null;
-            }
-        }));
-        assertSame(Boolean.FALSE, empty.orElseGet(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                return Boolean.FALSE;
-            }
-        }));
+        assertTrue(Optional.empty().equals(empty));
+        assertFalse(empty.equals(Optional.of("unexpected")));
+        assertFalse(Optional.of("unexpected").equals(empty));
+        assertFalse(empty.equals("unexpected"));
+
+        assertFalse(empty.isPresent());
+        assertEquals(empty.hashCode(), 0);
+        assertEquals(empty.orElse("x"), "x");
+        assertEquals(empty.orElseGet(() -> "y"), "y");
+
+        assertThrows(NoSuchElementException.class, () -> empty.get());
+        assertThrows(NoSuchElementException.class, () -> empty.orElseThrow());
+        assertThrows(ObscureException.class,       () -> empty.orElseThrow(ObscureException::new));
+
+        AtomicBoolean b = new AtomicBoolean();
+        empty.ifPresent(s -> b.set(true));
+        assertFalse(b.get());
+
+        AtomicBoolean b1 = new AtomicBoolean(false);
+        AtomicBoolean b2 = new AtomicBoolean(false);
+        empty.ifPresentOrElse(s -> b1.set(true), () -> b2.set(true));
+        assertFalse(b1.get());
+        assertTrue(b2.get());
+
+        assertEquals(empty.toString(), "Optional.empty");
     }
 
-    @Test(expectedExceptions=NoSuchElementException.class)
-    public void testEmptyGet() {
-        Optional<Boolean> empty = Optional.empty();
+    /**
+     * Checks a block of assertions over an Optional that is expected to
+     * have a particular value present.
+     */
+    void checkPresent(Optional<String> opt, String expected) {
+        assertFalse(opt.equals(Optional.empty()));
+        assertFalse(Optional.empty().equals(opt));
+        assertTrue(opt.equals(Optional.of(expected)));
+        assertTrue(Optional.of(expected).equals(opt));
+        assertFalse(opt.equals(Optional.of("unexpected")));
+        assertFalse(Optional.of("unexpected").equals(opt));
+        assertFalse(opt.equals("unexpected"));
 
-        Boolean got = empty.get();
+        assertTrue(opt.isPresent());
+        assertEquals(opt.hashCode(), expected.hashCode());
+        assertEquals(opt.orElse("unexpected"), expected);
+        assertEquals(opt.orElseGet(() -> "unexpected"), expected);
+
+        assertEquals(opt.get(), expected);
+        assertEquals(opt.orElseThrow(), expected);
+        assertEquals(opt.orElseThrow(ObscureException::new), expected);
+
+        AtomicBoolean b = new AtomicBoolean(false);
+        opt.ifPresent(s -> b.set(true));
+        assertTrue(b.get());
+
+        AtomicBoolean b1 = new AtomicBoolean(false);
+        AtomicBoolean b2 = new AtomicBoolean(false);
+        opt.ifPresentOrElse(s -> b1.set(true), () -> b2.set(true));
+        assertTrue(b1.get());
+        assertFalse(b2.get());
+
+        assertEquals(opt.toString(), "Optional[" + expected + "]");
     }
 
-    @Test(expectedExceptions=NullPointerException.class)
-    public void testEmptyOrElseGetNull() {
-        Optional<Boolean> empty = Optional.empty();
-
-        Boolean got = empty.orElseGet(null);
+    @Test
+    public void testEmpty() {
+        checkEmpty(Optional.empty());
     }
 
-    @Test(expectedExceptions=NullPointerException.class)
-    public void testEmptyOrElseThrowNull() throws Throwable {
-        Optional<Boolean> empty = Optional.empty();
-
-        Boolean got = empty.orElseThrow(null);
+    @Test
+    public void testOfNull() {
+        assertThrows(NullPointerException.class, () -> Optional.of(null));
     }
 
-    @Test(expectedExceptions=ObscureException.class)
-    public void testEmptyOrElseThrow() throws Exception {
-        Optional<Boolean> empty = Optional.empty();
-
-        Boolean got = empty.orElseThrow(new Supplier<ObscureException>() {
-            @Override
-            public ObscureException get() {
-                return new ObscureException();
-            }
-        });
+    @Test
+    public void testOfPresent() {
+        checkPresent(Optional.of("xyzzy"), "xyzzy");
     }
 
-    @Test(expectedExceptions=NoSuchElementException.class)
-    public void testEmptyOrElseThrowNoArg() throws Exception {
-        Optional<Boolean> empty = Optional.empty();
-
-        Boolean got = empty.orElseThrow();
+    @Test
+    public void testOfNullableNull() {
+        checkEmpty(Optional.ofNullable(null));
     }
 
-    @Test(groups = "unit")
-    public void testPresent() {
-        Optional<Boolean> empty = Optional.empty();
-        Optional<String> presentEmptyString = Optional.of("");
-        Optional<Boolean> present = Optional.of(Boolean.TRUE);
-
-        // present
-        assertTrue(present.equals(present));
-        assertTrue(present.equals(Optional.of(Boolean.TRUE)));
-        assertTrue(!present.equals(empty));
-        assertTrue(Boolean.TRUE.hashCode() == present.hashCode());
-        assertTrue(!present.toString().isEmpty());
-        assertTrue(!present.toString().equals(presentEmptyString.toString()));
-        assertTrue(-1 != present.toString().indexOf(Boolean.TRUE.toString()));
-        assertSame(Boolean.TRUE, present.get());
-        assertSame(Boolean.TRUE, present.orElseThrow());
-        try {
-            present.ifPresent(new Consumer<Boolean>() {
-                @Override
-                public void accept(Boolean v) {
-                    throw new ObscureException();
-                }
-            });
-            fail();
-        } catch(ObscureException expected) {
-
-        }
-        assertSame(Boolean.TRUE, present.orElse(null));
-        assertSame(Boolean.TRUE, present.orElse(Boolean.FALSE));
-        assertSame(Boolean.TRUE, present.orElseGet(null));
-        assertSame(Boolean.TRUE, present.orElseGet(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                return null;
-            }
-        }));
-        assertSame(Boolean.TRUE, present.orElseGet(new Supplier<Boolean>() {
-            @Override
-            public Boolean get() {
-                return Boolean.FALSE;
-            }
-        }));
-        assertSame(Boolean.TRUE, present.<RuntimeException>orElseThrow( null));
-        assertSame(Boolean.TRUE, present.<RuntimeException>orElseThrow(new Supplier<RuntimeException>() {
-            @Override
-            public RuntimeException get() {
-                return new ObscureException();
-            }
-        }));
+    @Test
+    public void testOfNullablePresent() {
+        checkPresent(Optional.ofNullable("xyzzy"), "xyzzy");
     }
 
-    @Test(groups = "unit")
-    public void testOfNullable() {
-        Optional<String> instance = Optional.ofNullable(null);
-        assertFalse(instance.isPresent());
-
-        instance = Optional.ofNullable("Duke");
-        assertTrue(instance.isPresent());
-        assertEquals(instance.get(), "Duke");
-        assertEquals(instance.orElseThrow(), "Duke");
+    @Test
+    public void testFilterEmpty() {
+        checkEmpty(Optional.<String>empty().filter(s -> { fail(); return true; }));
     }
 
-    @Test(groups = "unit")
-    public void testFilter() {
-        // Null mapper function
-        Optional<String> empty = Optional.empty();
-        Optional<String> duke = Optional.of("Duke");
-
-        try {
-            Optional<String> result = empty.filter(null);
-            fail("Should throw NPE on null mapping function");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        Optional<String> result = empty.filter((Predicate<String>) new Predicate<String>() {
-            @Override
-            public boolean test(String s) {
-                return s.isEmpty();
-            }
-        });
-        assertFalse(result.isPresent());
-
-        result = duke.filter((Predicate<String>) new Predicate<String>() {
-            @Override
-            public boolean test(String s) {
-                return s.isEmpty();
-            }
-        });
-        assertFalse(result.isPresent());
-        result = duke.filter(new Predicate<String>() {
-            @Override
-            public boolean test(String s) {
-                return s.startsWith("D");
-            }
-        });
-        assertTrue(result.isPresent());
-        assertEquals(result.get(), "Duke");
-        assertEquals(result.orElseThrow(), "Duke");
-
-        Optional<String> emptyString = Optional.of("");
-        result = emptyString.filter((Predicate<String>) new Predicate<String>() {
-            @Override
-            public boolean test(String s) {
-                return s.isEmpty();
-            }
-        });
-        assertTrue(result.isPresent());
-        assertEquals(result.get(), "");
-        assertEquals(result.orElseThrow(), "");
+    @Test
+    public void testFilterFalse() {
+        checkEmpty(Optional.of("xyzzy").filter(s -> s.equals("plugh")));
     }
 
-    @Test(groups = "unit")
-    public void testMap() {
-        Optional<String> empty = Optional.empty();
-        Optional<String> duke = Optional.of("Duke");
-
-        // Null mapper function
-        try {
-            Optional<Boolean> b = empty.map(null);
-            fail("Should throw NPE on null mapping function");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        // Map an empty value
-        Optional<Boolean> b;
-        b = empty.map((Function<String, Boolean>) new Function<String, Boolean>() {
-            @Override
-            public Boolean apply(String s) {
-                return s.isEmpty();
-            }
-        });
-        assertFalse(b.isPresent());
-
-        // Map into null
-        b = empty.map(new Function<String, Boolean>() {
-            @Override
-            public Boolean apply(String n) {
-                return null;
-            }
-        });
-        assertFalse(b.isPresent());
-        b = duke.map(new Function<String, Boolean>() {
-            @Override
-            public Boolean apply(String s) {
-                return null;
-            }
-        });
-        assertFalse(b.isPresent());
-
-        // Map to value
-        Optional<Integer> l = duke.map((Function<String, Integer>) new Function<String, Integer>() {
-            @Override
-            public Integer apply(String s) {
-                return s.length();
-            }
-        });
-        assertEquals(l.get().intValue(), 4);
+    @Test
+    public void testFilterTrue() {
+        checkPresent(Optional.of("xyzzy").filter(s -> s.equals("xyzzy")), "xyzzy");
     }
 
-    @Test(groups = "unit")
-    public void testFlatMap() {
-        Optional<String> empty = Optional.empty();
-        Optional<String> duke = Optional.of("Duke");
-
-        // Null mapper function
-        try {
-            Optional<Boolean> b = empty.flatMap(null);
-            fail("Should throw NPE on null mapping function");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        // Map into null
-        try {
-            Optional<Boolean> b = duke.flatMap(new Function<String, Optional<Boolean>>() {
-                @Override
-                public Optional<Boolean> apply(String s) {
-                    return null;
-                }
-            });
-            fail("Should throw NPE when mapper return null");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        // Empty won't invoke mapper function
-        try {
-            Optional<Boolean> b;
-            b = empty.flatMap(new Function<String, Optional<Boolean>>() {
-                @Override
-                public Optional<Boolean> apply(String s) {
-                    return null;
-                }
-            });
-            assertFalse(b.isPresent());
-        } catch (NullPointerException npe) {
-            fail("Mapper function should not be invoked");
-        }
-
-        // Map an empty value
-        Optional<Integer> l = empty.flatMap(new Function<String, Optional<Integer>>() {
-            @Override
-            public Optional<Integer> apply(String s) {
-                return Optional.of(s.length());
-            }
-        });
-        assertFalse(l.isPresent());
-
-        // Map to value
-        final Optional<Integer> fixture = Optional.of(Integer.MAX_VALUE);
-        l = duke.flatMap(new Function<String, Optional<Integer>>() {
-            @Override
-            public Optional<Integer> apply(String s) {
-                return Optional.of(s.length());
-            }
-        });
-        assertTrue(l.isPresent());
-        assertEquals(l.get().intValue(), 4);
-        assertEquals(l.orElseThrow().intValue(), 4);
-
-        // Verify same instance
-        l = duke.flatMap(new Function<String, Optional<Integer>>() {
-            @Override
-            public Optional<Integer> apply(String s) {
-                return fixture;
-            }
-        });
-        assertSame(l, fixture);
+    @Test
+    public void testMapEmpty() {
+        checkEmpty(Optional.empty().map(s -> { fail(); return ""; }));
     }
 
-    @Test(groups = "unit")
-    public void testOr() {
-        Optional<String> empty = Optional.empty();
-        Optional<String> duke = Optional.of("Duke");
-
-        // Null supplier
-        try {
-            Optional<String> b = empty.or(null);
-            fail("Should throw NPE on null supplier");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        // Supply null
-        try {
-            Optional<String> b = empty.or(() -> null);
-            fail("Should throw NPE when supplier returns null");
-        } catch (NullPointerException npe) {
-            // expected
-        }
-
-        // Non-empty won't invoke supplier
-        try {
-            Optional<String> b = duke.or(() -> null);
-            assertTrue(b.isPresent());
-        } catch (NullPointerException npe) {
-            fail("Supplier should not be invoked");
-        }
-
-        // Supply for empty
-        Optional<String> suppliedDuke = empty.or(() -> duke);
-        assertTrue(suppliedDuke.isPresent());
-        assertSame(suppliedDuke, duke);
-
-        // Supply for non-empty
-        Optional<String> actualDuke = duke.or(() -> Optional.of("Other Duke"));
-        assertTrue(actualDuke.isPresent());
-        assertSame(actualDuke, duke);
+    @Test
+    public void testMapPresent() {
+        checkPresent(Optional.of("xyzzy").map(s -> s.replace("xyzzy", "plugh")), "plugh");
     }
 
-    @Test(groups = "unit")
-    public void testStream() {
-        {
-            Stream<String> s = Optional.<String>empty().stream();
-            assertFalse(s.isParallel());
-
-            Object[] es = s.toArray();
-            assertEquals(es.length, 0);
-        }
-
-        {
-            Stream<String> s = Optional.of("Duke").stream();
-            assertFalse(s.isParallel());
-
-            String[] es = s.toArray(String[]::new);
-            assertEquals(es.length, 1);
-            assertEquals(es[0], "Duke");
-        }
+    @Test
+    public void testFlatMapEmpty() {
+        checkEmpty(Optional.empty().flatMap(s -> { fail(); return Optional.of(""); }));
     }
 
-    private static class ObscureException extends RuntimeException {
+    @Test
+    public void testFlatMapPresentReturnEmpty() {
+        checkEmpty(Optional.of("xyzzy")
+                           .flatMap(s -> { assertEquals(s, "xyzzy"); return Optional.empty(); }));
+    }
 
+    @Test
+    public void testFlatMapPresentReturnPresent() {
+        checkPresent(Optional.of("xyzzy")
+                             .flatMap(s -> { assertEquals(s, "xyzzy"); return Optional.of("plugh"); }),
+                     "plugh");
+    }
+
+    @Test
+    public void testOrEmptyEmpty() {
+        checkEmpty(Optional.<String>empty().or(() -> Optional.empty()));
+    }
+
+    @Test
+    public void testOrEmptyPresent() {
+        checkPresent(Optional.<String>empty().or(() -> Optional.of("plugh")), "plugh");
+    }
+
+    @Test
+    public void testOrPresentDontCare() {
+        checkPresent(Optional.of("xyzzy").or(() -> { fail(); return Optional.of("plugh"); }), "xyzzy");
+    }
+
+    @Test
+    public void testStreamEmpty() {
+        assertEquals(Optional.empty().stream().collect(toList()), Lists.of());
+    }
+
+    @Test
+    public void testStreamPresent() {
+        assertEquals(Optional.of("xyzzy").stream().collect(toList()), Lists.of("xyzzy"));
     }
 }
