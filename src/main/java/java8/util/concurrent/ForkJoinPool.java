@@ -2173,15 +2173,18 @@ public class ForkJoinPool extends AbstractExecutorService {
                     if ((md & SMASK) + (int)(checkSum >> RC_SHIFT) > 0)
                         running = true;
                     else if (ws != null) {
-                        WorkQueue w; int b;
+                        WorkQueue w;
                         for (int i = 0; i < ws.length; ++i) {
                             if ((w = ws[i]) != null) {
-                                checkSum += (b = w.base) + w.id;
+                                int s = w.source, p = w.phase;
+                                int d = w.id, b = w.base;
                                 if (b != w.top ||
-                                    ((i & 1) == 1 && w.source >= 0)) {
+                                    ((d & 1) == 1 && (s >= 0 || p >= 0))) {
                                     running = true;
-                                    break;
+                                    break;     // working, scanning, or have work
                                 }
+                                checkSum += (((long) s << 48) + ((long) p << 32) +
+                                             ((long) b << 16) + (long) d);
                             }
                         }
                     }
@@ -2212,7 +2215,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                                 } catch (Throwable ignore) {
                                 }
                             }
-                            checkSum += w.base + w.id;
+                            checkSum += ((long) w.phase << 32) + w.base;
                         }
                     }
                 }
