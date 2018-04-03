@@ -28,7 +28,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 // Spliterator for java.util.concurrent.CopyOnWriteArrayList
 final class COWArrayListSpliterator {
-// CVS rev. 1.147
+// CVS rev. 1.149
     private COWArrayListSpliterator() {
     }
 
