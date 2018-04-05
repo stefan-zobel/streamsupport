@@ -67,11 +67,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Deque;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.PropertyPermission;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -178,7 +181,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.242
+// CVS rev. 1.243
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1820,6 +1823,44 @@ public class JSR166TestCase extends TestCase {
     static final int saturatedSize(ThreadPoolExecutor pool) {
         BlockingQueue<Runnable> q = pool.getQueue();
         return pool.getMaximumPoolSize() + q.size() + q.remainingCapacity();
+    }
+
+    void assertCollectionsEquals(Collection<?> x, Collection<?> y) {
+        assertEquals(x, y);
+        assertEquals(y, x);
+        assertEquals(x.isEmpty(), y.isEmpty());
+        assertEquals(x.size(), y.size());
+        if (x instanceof List) {
+            assertEquals(x.toString(), y.toString());
+        }
+        if (x instanceof List || x instanceof Set) {
+            assertEquals(x.hashCode(), y.hashCode());
+        }
+        if (x instanceof List || x instanceof Deque) {
+            assertTrue(Arrays.equals(x.toArray(), y.toArray()));
+            assertTrue(Arrays.equals(x.toArray(new Object[0]),
+                                     y.toArray(new Object[0])));
+        }
+    }
+
+    /**
+     * A weaker form of assertCollectionsEquals which does not insist
+     * that the two collections satisfy Object#equals(Object), since
+     * they may use identity semantics as Deques do.
+     */
+    void assertCollectionsEquivalent(Collection<?> x, Collection<?> y) {
+        if (x instanceof List || x instanceof Set)
+            assertCollectionsEquals(x, y);
+        else {
+            assertEquals(x.isEmpty(), y.isEmpty());
+            assertEquals(x.size(), y.size());
+            assertEquals(new HashSet(x), new HashSet(y));
+            if (x instanceof Deque) {
+                assertTrue(Arrays.equals(x.toArray(), y.toArray()));
+                assertTrue(Arrays.equals(x.toArray(new Object[0]),
+                                         y.toArray(new Object[0])));
+            }
+        }
     }
 
     private static final String NATIVE_OPT_ENABLED_P = java8.util.Spliterators.class.getName() + ".assume.oracle.collections.impl";
