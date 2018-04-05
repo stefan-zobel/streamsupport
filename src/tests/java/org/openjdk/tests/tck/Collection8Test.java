@@ -1033,6 +1033,27 @@ public final class Collection8Test extends JSR166TestCase {
         }
     }
 
+    @Test(dataProvider = "Source")
+    public void testObjectMethods(String description, Supplier<CollectionImplementation> sci) {
+        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+        Collection c = sci.get().emptyCollection();
+        for (int n = rnd.nextInt(3); n--> 0; )
+            c.add(sci.get().makeElement(rnd.nextInt()));
+        assertEquals(c, c);
+        if (c instanceof List) {
+            List<?> copy = new ArrayList(c);
+            assertEquals(copy, c);
+            assertEquals(c, copy);
+            assertEquals(copy.hashCode(), c.hashCode());
+        }
+        if (c instanceof Set) {
+            Set<?> copy = new HashSet(c);
+            assertEquals(copy, c);
+            assertEquals(c, copy);
+            assertEquals(copy.hashCode(), c.hashCode());
+        }
+    }
+
 //     public void testCollection8DebugFail() {
 //         fail(impl.klazz().getSimpleName());
 //     }
