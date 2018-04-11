@@ -181,7 +181,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.243
+// CVS rev. 1.244
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -443,6 +443,7 @@ public class JSR166TestCase extends TestCase {
     public static boolean atLeastJava8() { return JAVA_CLASS_VERSION >= 52.0; }
     public static boolean atLeastJava9()  { return JAVA_CLASS_VERSION >= 53.0; }
     public static boolean atLeastJava10() { return JAVA_CLASS_VERSION >= 54.0; }
+    public static boolean atLeastJava11() { return JAVA_CLASS_VERSION >= 55.0; }
 
     /**
      * Collects all JSR166 unit tests as one suite.
