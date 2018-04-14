@@ -9,7 +9,7 @@ SET JAVA9=F:/Java/jdk9.0.4+11-64bit/bin/java
 
 SET JAVA10=F:/Java/jdk10_2018-03-20_64bit/bin/java
 
-SET JAVA11=F:/Java/jdk11_ea+8-64bit/bin/java
+SET JAVA11=F:/Java/jdk11_ea+9-64bit/bin/java
 
 SET TEST_JAR=streamsupport-all-tests-1.6.2-SNAPSHOT.jar
 
