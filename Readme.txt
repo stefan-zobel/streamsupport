@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.6.1-stable" is the current stable release
+ - "1.6.2-stable" is the current stable release
 
 
 GENERAL
@@ -137,6 +137,15 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.6.2-stable (2018-04-15)
+ - JDK-8200520: ForkJoin tasks interrupted after shutdown
+ - JDK-8193128: Reduce number of classes returned by List/Set/Map.of()
+ - JDK-8195590: Misc. changes imported from jsr166 CVS 2018-02
+ - JDK-8197531: Misc. changes imported from jsr166 CVS 2018-04
+ - JDK-8191418: List.of().indexOf(null) doesn't throw NPE
+ - JDK-8195649: Reorganize tests for Optional
+ - Rename the j8.u.ImmutableCollections version of CollSer [#356]
 
 1.6.1-stable (2018-01-28)
  - JDK-8075939: flatMap() breaks short-circuiting of terminal Ops
