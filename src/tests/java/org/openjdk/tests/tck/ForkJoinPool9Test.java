@@ -31,7 +31,7 @@ public class ForkJoinPool9Test extends JSR166TestCase {
      * Check handling of common pool thread context class loader
      */
     public void testCommonPoolThreadContextClassLoader() throws Throwable {
-        if (!testImplementationDetails || isOpenJDKAndroid()) return;
+        if (!testImplementationDetails || isAndroid()) return;
 
         // Ensure common pool has at least one real thread
         String prop = System.getProperty(
@@ -70,7 +70,7 @@ public class ForkJoinPool9Test extends JSR166TestCase {
     }
 
     static ClassLoader getContextClassLoader(Thread thread) {
-        return (ClassLoader) U.getObject(thread, CCL_OFF);
+        return (CCL_OFF != 0L) ? (ClassLoader) U.getObject(thread, CCL_OFF) : null;
     }
 
     // Unsafe mechanics
@@ -78,8 +78,12 @@ public class ForkJoinPool9Test extends JSR166TestCase {
     private static final long CCL_OFF;
     static {
         try {
-            CCL_OFF = U.objectFieldOffset(Thread.class
-                    .getDeclaredField("contextClassLoader"));
+            if (!isAndroid()) {
+                CCL_OFF = U.objectFieldOffset(Thread.class
+                        .getDeclaredField("contextClassLoader"));
+            } else {
+                CCL_OFF = 0L;
+            }
         } catch (Exception e) {
             throw new Error(e);
         }

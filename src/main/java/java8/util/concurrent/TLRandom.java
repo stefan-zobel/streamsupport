@@ -176,7 +176,9 @@ import java.util.concurrent.atomic.AtomicLong;
     }
 
     static final void setContextClassLoader(Thread thread, ClassLoader ccl) {
-        U.putObject(thread, CCL, ccl);
+        if (!IS_ANDROID) {
+            U.putObject(thread, CCL, ccl);
+        }
     }
 
     // Static initialization
@@ -261,14 +263,16 @@ import java.util.concurrent.atomic.AtomicLong;
                 INHERITEDACCESSCONTROLCONTEXT = U
                         .objectFieldOffset(Thread.class
                                 .getDeclaredField(accFieldName));
+                CCL = U.objectFieldOffset(Thread.class
+                        .getDeclaredField("contextClassLoader"));
             } else {
                 // we don't need these offsets when on Android
                 THREADLOCALS = 0L;
                 INHERITABLETHREADLOCALS = 0L;
                 INHERITEDACCESSCONTROLCONTEXT = 0L;
+                CCL = 0L;
             }
             VALUE_OFF = U.objectFieldOffset(Integer.class.getDeclaredField("value"));
-            CCL = U.objectFieldOffset(Thread.class.getDeclaredField("contextClassLoader"));
         } catch (Exception e) {
             throw new ExceptionInInitializerError(e);
         }
