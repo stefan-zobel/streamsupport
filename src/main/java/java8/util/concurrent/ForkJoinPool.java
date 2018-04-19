@@ -25,7 +25,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
 
 import java8.util.Objects;
@@ -3391,7 +3390,7 @@ public class ForkJoinPool extends AbstractExecutorService {
     }
 
     static final class MemBar {
-        private static final AtomicInteger x = new AtomicInteger();
+        private static final Mock x = new Mock();
 
         static void loadFence() {
             U.getIntVolatile(x, OFF);
@@ -3411,7 +3410,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         private static final long OFF;
         static {
             try {
-                OFF = U.objectFieldOffset(AtomicInteger.class.getDeclaredField("value"));
+                OFF = U.objectFieldOffset(Mock.class.getDeclaredField("v"));
             } catch (Exception e) {
                 throw new ExceptionInInitializerError(e);
             }
