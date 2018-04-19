@@ -54,6 +54,7 @@ public class Basic {
         assertFalse(empty.equals("unexpected"));
 
         assertFalse(empty.isPresent());
+        assertTrue(empty.isEmpty());
         assertEquals(empty.hashCode(), 0);
         assertEquals(empty.orElse("x"), "x");
         assertEquals(empty.orElseGet(() -> "y"), "y");
@@ -89,6 +90,7 @@ public class Basic {
         assertFalse(opt.equals("unexpected"));
 
         assertTrue(opt.isPresent());
+        assertFalse(opt.isEmpty());
         assertEquals(opt.hashCode(), expected.hashCode());
         assertEquals(opt.orElse("unexpected"), expected);
         assertEquals(opt.orElseGet(() -> "unexpected"), expected);

@@ -55,6 +55,7 @@ public class BasicDouble {
         assertFalse(empty.equals("unexpected"));
 
         assertFalse(empty.isPresent());
+        assertTrue(empty.isEmpty());
         assertEquals(empty.hashCode(), 0);
         assertEquals(empty.orElse(UNEXPECTED), UNEXPECTED);
         assertEquals(empty.orElseGet(() -> UNEXPECTED), UNEXPECTED);
@@ -90,6 +91,7 @@ public class BasicDouble {
         assertFalse(opt.equals("unexpected"));
 
         assertTrue(opt.isPresent());
+        assertFalse(opt.isEmpty());
         assertEquals(opt.hashCode(), Doubles.hashCode(expected));
         assertEquals(opt.orElse(UNEXPECTED), expected);
         assertEquals(opt.orElseGet(() -> UNEXPECTED), expected);
