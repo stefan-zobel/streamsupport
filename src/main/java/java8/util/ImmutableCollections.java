@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -457,13 +457,8 @@ final class ImmutableCollections {
                 throw new IllegalArgumentException("duplicate element: " + e0);
             }
 
-            if (SALT >= 0) {
-                this.e0 = e0;
-                this.e1 = e1;
-            } else {
-                this.e0 = e1;
-                this.e1 = e0;
-            }
+            this.e0 = e0;
+            this.e1 = e1;
         }
 
         @Override
@@ -495,10 +490,10 @@ final class ImmutableCollections {
                 public E next() {
                     if (idx == 1) {
                         idx = 0;
-                        return e0;
+                        return SALT >= 0 || e1 == null ? e0 : e1;
                     } else if (idx == 2) {
                         idx = 1;
-                        return e1;
+                        return SALT >= 0 ? e1 : e0;
                     } else {
                         throw new NoSuchElementException();
                     }
@@ -560,29 +555,55 @@ final class ImmutableCollections {
             return size > 0 && probe(o) >= 0;
         }
 
+        private final class SetNIterator extends Iterators.ImmutableIt<E> implements Iterator<E> {
+
+            private int remaining;
+
+            private int idx;
+
+            SetNIterator() {
+                remaining = size();
+                if (remaining > 0) {
+                    idx = floorMod(SALT, elements.length);
+                }
+            }
+
+            @Override
+            public boolean hasNext() {
+                return remaining > 0;
+            }
+
+            private int nextIndex() {
+                int idx = this.idx;
+                if (SALT >= 0) {
+                    if (++idx >= elements.length) {
+                        idx = 0;
+                    }
+                } else {
+                    if (--idx < 0) {
+                        idx = elements.length - 1;
+                    }
+                }
+                return this.idx = idx;
+            }
+
+            @Override
+            public E next() {
+                if (hasNext()) {
+                    E element;
+                    // skip null elements
+                    while ((element = elements[nextIndex()]) == null) {}
+                    remaining--;
+                    return element;
+                } else {
+                    throw new NoSuchElementException();
+                }
+            }
+        }
+
         @Override
         public Iterator<E> iterator() {
-            return new Iterators.ImmutableIt<E>() {
-                private int idx = 0;
-
-                @Override
-                public boolean hasNext() {
-                    while (idx < elements.length) {
-                        if (elements[idx] != null)
-                            return true;
-                        idx++;
-                    }
-                    return false;
-                }
-
-                @Override
-                public E next() {
-                    if (!hasNext()) {
-                        throw new NoSuchElementException();
-                    }
-                    return elements[idx++];
-                }
-            };
+            return new SetNIterator();
         }
 
         @Override
@@ -601,7 +622,7 @@ final class ImmutableCollections {
         // Callers are relying on this method to perform an implicit nullcheck
         // of pe
         private int probe(Object pe) {
-            int idx = floorMod(pe.hashCode() ^ SALT, elements.length);
+            int idx = floorMod(pe.hashCode(), elements.length);
             while (true) {
                 E ee = elements[idx];
                 if (ee == null) {
@@ -772,6 +793,53 @@ final class ImmutableCollections {
             return size;
         }
 
+        class MapNIterator extends Iterators.ImmutableIt<Map.Entry<K,V>> implements Iterator<Map.Entry<K, V>> {
+
+            private int remaining;
+
+            private int idx;
+
+            MapNIterator() {
+                remaining = size();
+                if (remaining > 0) {
+                    idx = floorMod(SALT, table.length >> 1) << 1;
+                }
+            }
+
+            @Override
+            public boolean hasNext() {
+                return remaining > 0;
+            }
+
+            private int nextIndex() {
+                int idx = this.idx;
+                if (SALT >= 0) {
+                    if ((idx += 2) >= table.length) {
+                        idx = 0;
+                    }
+                } else {
+                    if ((idx -= 2) < 0) {
+                        idx = table.length - 2;
+                    }
+                }
+                return this.idx = idx;
+            }
+
+            @Override
+            public Map.Entry<K, V> next() {
+                if (hasNext()) {
+                    while (table[nextIndex()] == null) {}
+                    @SuppressWarnings("unchecked")
+                    Map.Entry<K, V> e =
+                            new KeyValueHolder<K, V>((K) table[idx], (V) table[idx+1]);
+                    remaining--;
+                    return e;
+                } else {
+                    throw new NoSuchElementException();
+                }
+            }
+        }
+
         @Override
         public Set<Map.Entry<K,V>> entrySet() {
             return new AbstractSet<Map.Entry<K,V>>() {
@@ -782,32 +850,7 @@ final class ImmutableCollections {
 
                 @Override
                 public Iterator<Map.Entry<K,V>> iterator() {
-                    return new Iterators.ImmutableIt<Map.Entry<K,V>>() {
-                        private int idx = 0;
-
-                        @Override
-                        public boolean hasNext() {
-                            while (idx < table.length) {
-                                if (table[idx] != null)
-                                    return true;
-                                idx += 2;
-                            }
-                            return false;
-                        }
-
-                        @Override
-                        public Map.Entry<K,V> next() {
-                            if (hasNext()) {
-                                @SuppressWarnings("unchecked")
-                                Map.Entry<K,V> e =
-                                    new KeyValueHolder<K, V>((K) table[idx], (V) table[idx + 1]);
-                                idx += 2;
-                                return e;
-                            } else {
-                                throw new NoSuchElementException();
-                            }
-                        }
-                    };
+                    return new MapNIterator();
                 }
             };
         }
@@ -817,7 +860,7 @@ final class ImmutableCollections {
         // Callers are relying on this method to perform an implicit nullcheck
         // of pk.
         private int probe(Object pk) {
-            int idx = floorMod(pk.hashCode() ^ SALT, table.length >> 1) << 1;
+            int idx = floorMod(pk.hashCode(), table.length >> 1) << 1;
             while (true) {
                 Object ek = table[idx];
                 if (ek == null) {
