@@ -8,8 +8,9 @@ package java8.util.concurrent.atomic;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import java8.util.function.LongBinaryOperator;
+import java8.util.concurrent.ThreadLocalRandom;
 import java8.util.function.DoubleBinaryOperator;
+import java8.util.function.LongBinaryOperator;
 
 /**
  * A package-local class holding common representation and mechanics
@@ -179,14 +180,6 @@ abstract class Striped64 extends Number {
         }
     }
 
-    private static int getInitializedProbe(Integer uncontended) {
-        try {
-            return ((Integer) GET_INIT_PROBE_METHOD.invoke(null, uncontended)).intValue();
-        } catch (Exception e) {
-            throw new Error(e);
-        }
-    }
-
     private static void setProbe(int probe) {
         try {
             SET_PROBE_METHOD.invoke(null, probe);
@@ -222,10 +215,10 @@ abstract class Striped64 extends Number {
      */
     final void longAccumulate(long x, LongBinaryOperator fn,
                               boolean wasUncontended) {
-
-        Integer uncontended = new Integer(0); // false
-        int h = getInitializedProbe(uncontended);
-        if (uncontended.intValue() == 1) {
+        int h;
+        if ((h = getProbe()) == 0) {
+            ThreadLocalRandom.current(); // force initialization
+            h = getProbe();
             wasUncontended = true;
         }
         boolean collide = false;                // True if last slot nonempty
@@ -308,10 +301,10 @@ abstract class Striped64 extends Number {
      */
     final void doubleAccumulate(double x, DoubleBinaryOperator fn,
                                 boolean wasUncontended) {
-
-        Integer uncontended = new Integer(0); // false
-        int h = getInitializedProbe(uncontended);
-        if (uncontended.intValue() == 1) {
+        int h;
+        if ((h = getProbe()) == 0) {
+            ThreadLocalRandom.current(); // force initialization
+            h = getProbe();
             wasUncontended = true;
         }
         boolean collide = false;                // True if last slot nonempty
@@ -391,7 +384,6 @@ abstract class Striped64 extends Number {
     private static final long BASE;
     private static final long CELLSBUSY;
     private static final Method GET_PROBE_METHOD;
-    private static final Method GET_INIT_PROBE_METHOD;
     private static final Method SET_PROBE_METHOD;
 
     static {
@@ -404,14 +396,10 @@ abstract class Striped64 extends Number {
             Method getProbe = tlrk
                     .getDeclaredMethod("getThreadLocalRandomProbe");
             getProbe.setAccessible(true);
-            Method getInitProbe = tlrk.getDeclaredMethod("getInitializedProbe",
-                    Integer.class);
-            getInitProbe.setAccessible(true);
             Method setProbe = tlrk.getDeclaredMethod(
                     "setThreadLocalRandomProbe", int.class);
             setProbe.setAccessible(true);
             GET_PROBE_METHOD = getProbe;
-            GET_INIT_PROBE_METHOD = getInitProbe;
             SET_PROBE_METHOD = setProbe;
         } catch (Exception e) {
             throw new ExceptionInInitializerError(e);
