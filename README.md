@@ -77,4 +77,4 @@ Android developers using the Android Studio 3.x toolchain should have a look at 
 
 ## LICENSE
 
-GNU General Public License, version 2, with the Classpath Exception
+GNU General Public License, version 2, [with the Classpath Exception](https://github.com/stefan-zobel/streamsupport/blob/master/GPL_ClasspathException)
