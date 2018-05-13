@@ -33,7 +33,7 @@ import java8.util.function.Consumer;
 
 // Spliterator for java.util.PriorityQueue
 final class PQueueSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.121
+// CVS rev. 1.128
     private final PriorityQueue<E> pq;
     private int index;            // current index, modified on advance/split
     private int fence;            // -1 until first use
@@ -75,10 +75,10 @@ final class PQueueSpliterator<E> implements Spliterator<E> {
         Objects.requireNonNull(action);
         PriorityQueue<E> q = pq;
         if (fence < 0) { fence = getSize(q); expectedModCount = getModCount(q); }
-        Object[] a = getQueue(q);
+        Object[] es = getQueue(q);
         int i, hi; E e;
         for (i = index, index = hi = fence; i < hi; i++) {
-            if ((e = (E) a[i]) == null) {
+            if ((e = (E) es[i]) == null) {
                 break;      // must be CME
             }
             action.accept(e);
