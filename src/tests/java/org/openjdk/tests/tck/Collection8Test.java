@@ -63,7 +63,7 @@ import java8.util.stream.StreamSupport;
  */
 @Test
 public final class Collection8Test extends JSR166TestCase {
-// CVS rev. 1.51
+// CVS rev. 1.52
 
     Collection8Test() {
     }
@@ -1058,6 +1058,29 @@ public final class Collection8Test extends JSR166TestCase {
             assertCollectionsEquivalent(c, serialClone);
         } catch (java.io.NotSerializableException acceptable) {}
     }
+
+    //JDK-8202685: Improve ArrayList replaceAll
+    // Can't possibly work because it depends on Java 11 ArrayList/Vector replaceAll()
+    // implementation and doesn't work with the List default implementation anyway
+//    @Test(dataProvider = "Source")
+//    public void testReplaceAllIsNotStructuralModification(String description, Supplier<CollectionImplementation> sci) {
+//        Collection<?> c = sci.get().emptyCollection();
+//        if (!(c instanceof List))
+//            return;
+//        List<Object> list = (List) c;
+//        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+//        for (int n = rnd.nextInt(2, 10); n--> 0; )
+//            list.add(sci.get().makeElement(rnd.nextInt()));
+//        ArrayList<?> copy = new ArrayList<Object>(list);
+//        int size = list.size(), half = size / 2;
+//        Iterator<?> it = list.iterator();
+//        for (int i = 0; i < half; i++)
+//            assertEquals(it.next(), copy.get(i));
+//        java8.util.Lists.replaceAll(list, n -> n);
+//        // ConcurrentModificationException must not be thrown here.
+//        for (int i = half; i < size; i++)
+//            assertEquals(it.next(), copy.get(i));
+//    }
 
 //     public void testCollection8DebugFail() {
 //         fail(impl.klazz().getSimpleName());
