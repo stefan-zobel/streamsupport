@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.6.2-stable" is the current stable release
+ - "1.6.3-stable" is the current stable release
 
 
 GENERAL
@@ -73,7 +73,10 @@ GENERAL
    component and j8.u.c.CompletionException has moved to streamsupport-cfuture
    (the only place where it is used).
    streamsupport-literal is no longer maintained but the 1.6.0 version can
-   still be used since it doesn't have any dependencies on other artifacts.  
+   still be used since it doesn't have any dependencies on other artifacts.
+
+ - Release 1.6.3 fixes some streamsupport issues with the Android P developer
+   preview 
 
 
 
@@ -137,6 +140,11 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.6.3-stable (2018-05-14)
+ - Compatibility with Android P preview rev. 3 [#365]
+ - JDK-8184693: Add Optional.isEmpty
+ - JDK-8201650: Move randomized iteration order to iterators
 
 1.6.2-stable (2018-04-15)
  - JDK-8200520: ForkJoin tasks interrupted after shutdown
