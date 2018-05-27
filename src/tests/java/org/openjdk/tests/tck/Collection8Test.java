@@ -63,7 +63,7 @@ import java8.util.stream.StreamSupport;
  */
 @Test
 public final class Collection8Test extends JSR166TestCase {
-// CVS rev. 1.54
+// CVS rev. 1.56
 
     Collection8Test() {
     }
