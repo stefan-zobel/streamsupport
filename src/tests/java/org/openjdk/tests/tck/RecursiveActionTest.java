@@ -28,7 +28,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class RecursiveActionTest extends JSR166TestCase {
-// CVS rev. 1.53
+// CVS rev. 1.54
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -366,8 +366,8 @@ public class RecursiveActionTest extends JSR166TestCase {
                 fibActions[4].cancel(true);
                 fibActions[5].completeExceptionally(new FJException());
 
-                for (int i = 0; i < fibActions.length; i++)
-                    fibActions[i].fork();
+                for (FibAction fibAction : fibActions)
+                    fibAction.fork();
 
                 sq.put(fibActions);
 
