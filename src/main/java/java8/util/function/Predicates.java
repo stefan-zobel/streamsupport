@@ -112,6 +112,22 @@ public final class Predicates {
                 : object -> targetRef.equals(object);
     }
 
+    /**
+     * Returns a predicate that is the negation of the supplied predicate.
+     *
+     * @param <T>     the type of arguments to the specified predicate
+     * @param target  predicate to negate
+     *
+     * @return a predicate that negates the results of the supplied
+     *         predicate
+     * @throws NullPointerException if target is null
+     *
+     * @since 11
+     */
+    public static <T> Predicate<T> not(Predicate<? super T> target) {
+        return negate(target);
+    }
+
     private Predicates() {
     }
 }
