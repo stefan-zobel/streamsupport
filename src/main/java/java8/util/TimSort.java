@@ -60,7 +60,7 @@ import java.util.Comparator;
  * @author Josh Bloch
  */
 class TimSort<T> {
-// CVS rev. 1.7
+// CVS rev. 1.8
     /**
      * This is the minimum sized sequence that will be merged.  Shorter
      * sequences will be lengthened by calling binarySort.  If the entire
@@ -336,7 +336,7 @@ class TimSort<T> {
      * @param a the array in which a run is to be counted and possibly reversed
      * @param lo index of the first element in the run
      * @param hi index after the last element that may be contained in the run.
-              It is required that {@code lo < hi}.
+     *        It is required that {@code lo < hi}.
      * @param c the comparator to used for the sort
      * @return  the length of the run beginning at the specified position in
      *          the specified array
