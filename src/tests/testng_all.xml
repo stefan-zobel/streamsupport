@@ -86,6 +86,7 @@
       <class name="org.openjdk.other.tests.forkjoin.SubmissionTest"/>
       <class name="org.openjdk.other.tests.function.BasicTest"/>
       <class name="org.openjdk.other.tests.function.BiFunctionTest"/>
+      <class name="org.openjdk.other.tests.function.PredicateNotTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.FillableStringTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.MapTest"/>
       <class name="org.openjdk.other.tests.java.util.stream.CollectionAndMapModifyStreamTest"/>
