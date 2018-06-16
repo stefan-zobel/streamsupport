@@ -114,6 +114,8 @@ public final class Predicates {
 
     /**
      * Returns a predicate that is the negation of the supplied predicate.
+     * This is accomplished by returning result of the calling
+     * {@code target.negate()}.
      *
      * @param <T>     the type of arguments to the specified predicate
      * @param target  predicate to negate
@@ -125,6 +127,7 @@ public final class Predicates {
      * @since 11
      */
     public static <T> Predicate<T> not(Predicate<? super T> target) {
+        Objects.requireNonNull(target);
         return negate(target);
     }
 
