@@ -63,7 +63,7 @@ import java8.util.stream.StreamSupport;
  */
 @Test
 public final class Collection8Test extends JSR166TestCase {
-// CVS rev. 1.56
+// CVS rev. 1.57
 
     Collection8Test() {
     }
@@ -212,7 +212,7 @@ public final class Collection8Test extends JSR166TestCase {
 //                () -> c.containsAll(null),
 //                () -> c.retainAll(null),
 //                () -> c.removeAll(null),
-//                () -> c.toArray(null));
+//                () -> c.toArray((Object[])null));
 
         if (!impl.permitsNulls()) {
             assertThrows(
