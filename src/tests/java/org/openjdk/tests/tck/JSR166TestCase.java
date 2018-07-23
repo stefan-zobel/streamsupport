@@ -181,7 +181,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.244
+// CVS rev. 1.245
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1330,9 +1330,11 @@ public class JSR166TestCase extends TestCase {
      */
     <T> void checkTimedGet(Future<T> f, T expectedValue, long timeoutMillis) {
         long startTime = System.nanoTime();
+        T actual = null;
         try {
-            assertEquals(expectedValue, f.get(timeoutMillis, MILLISECONDS));
+            actual = f.get(timeoutMillis, MILLISECONDS);
         } catch (Throwable fail) { threadUnexpectedException(fail); }
+        assertEquals(expectedValue, actual);
         if (millisElapsedSince(startTime) > timeoutMillis/2)
             throw new AssertionError("timed get did not return promptly");
     }
