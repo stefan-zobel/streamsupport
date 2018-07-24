@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CountedCompleterTest extends JSR166TestCase {
-// CVS rev. 1.36
+// CVS rev. 1.37
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -119,10 +119,13 @@ public class CountedCompleterTest extends JSR166TestCase {
 
         assertFalse(a.cancel(false));
         assertFalse(a.cancel(true));
+        Object v1 = null, v2 = null;
         try {
-            assertNull(a.get());
-            assertNull(a.get(randomTimeout(), randomTimeUnit()));
+            v1 = a.get();
+            v2 = a.get(randomTimeout(), randomTimeUnit());
         } catch (Throwable fail) { threadUnexpectedException(fail); }
+        assertNull(v1);
+        assertNull(v2);
     }
 
     void checkCancelled(CountedCompleter<?> a) {
