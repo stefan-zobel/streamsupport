@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinTaskTest extends JSR166TestCase {
-// CVS rev. 1.55
+// CVS rev. 1.56
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -98,18 +98,18 @@ public class ForkJoinTaskTest extends JSR166TestCase {
         checkCompletedNormally(a, null);
     }
 
-    <T> void checkCompletedNormally(ForkJoinTask<T> a, T expected) {
+    <T> void checkCompletedNormally(ForkJoinTask<T> a, T expectedValue) {
         assertTrue(a.isDone());
         assertFalse(a.isCancelled());
         assertTrue(a.isCompletedNormally());
         assertFalse(a.isCompletedAbnormally());
         assertNull(a.getException());
-        assertSame(expected, a.getRawResult());
+        assertSame(expectedValue, a.getRawResult());
 
         {
             Thread.currentThread().interrupt();
             long startTime = System.nanoTime();
-            assertSame(expected, a.join());
+            assertSame(expectedValue, a.join());
             assertTrue(millisElapsedSince(startTime) < LONG_DELAY_MS);
             Thread.interrupted();
         }
@@ -124,10 +124,13 @@ public class ForkJoinTaskTest extends JSR166TestCase {
 
         assertFalse(a.cancel(false));
         assertFalse(a.cancel(true));
+        T v1 = null, v2 = null;
         try {
-            assertSame(expected, a.get());
-            assertSame(expected, a.get(randomTimeout(), randomTimeUnit()));
+            v1 = a.get();
+            v2 = a.get(randomTimeout(), randomTimeUnit());
         } catch (Throwable fail) { threadUnexpectedException(fail); }
+        assertSame(expectedValue, v1);
+        assertSame(expectedValue, v2);
     }
 
     void checkCancelled(ForkJoinTask<?> a) {
