@@ -54,7 +54,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.196
+// CVS rev. 1.197
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -85,17 +85,17 @@ public class CompletableFutureTest extends JSR166TestCase {
         catch (Throwable fail) { threadUnexpectedException(fail); }
     }
 
-    <T> void checkCompletedNormally(CompletableFuture<T> f, T value) {
-        checkTimedGet(f, value);
+    <T> void checkCompletedNormally(CompletableFuture<T> f, T expectedValue) {
+        checkTimedGet(f, expectedValue);
 
-        assertEquals(value, f.join());
-        assertEquals(value, f.getNow(null));
+        assertEquals(expectedValue, f.join());
+        assertEquals(expectedValue, f.getNow(null));
 
         T result = null;
         try {
             result = f.get();
         } catch (Throwable fail) { threadUnexpectedException(fail); }
-        assertEquals(value, result);
+        assertEquals(expectedValue, result);
 
         assertTrue(f.isDone());
         assertFalse(f.isCancelled());
