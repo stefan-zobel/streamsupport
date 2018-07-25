@@ -26,7 +26,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
-// CVS rev. 1.27
+// CVS rev. 1.28
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -1010,7 +1010,9 @@ public class SubmissionPublisherTest extends JSR166TestCase {
             public void onComplete() {}
         }
         pub.subscribe(new Sub());
-        CompletableFuture.runAsync(() -> pub.submit(Boolean.TRUE));
+        checkTimedGet(
+            CompletableFuture.runAsync(() -> pub.submit(Boolean.TRUE)),
+            null);
         await(finished);
     }
 }
