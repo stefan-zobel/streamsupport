@@ -36,7 +36,7 @@ import java.util.Map.Entry;
 import java8.util.function.Consumer;
 
 final class HMSpliterators {
-// CVS rev. 1.6
+// CVS rev. 1.7
 
     private HMSpliterators() {
     }
