@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -448,13 +448,8 @@ public final class Lists {
      * @throws NullPointerException if coll is null, or if it contains any nulls
      * @since 10
      */
-    @SuppressWarnings("unchecked")
     public static <E> List<E> copyOf(Collection<? extends E> coll) {
-        if (coll instanceof ImmutableCollections.AbstractImmutableList) {
-            return (List<E>) coll;
-        } else {
-            return (List<E>) Lists.of(coll.toArray());
-        }
+        return ImmutableCollections.listCopy(coll);
     }
 
     private Lists() {
