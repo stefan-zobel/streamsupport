@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -329,6 +329,24 @@ public class ListFactories {
 
         assertNotSame(orig, copy1);
         assertSame(copy1, copy2);
+    }
+
+    @Test
+    public void copyOfSubList() {
+        List<Integer> orig = Lists.of(0, 1, 2, 3);
+        List<Integer> sub = orig.subList(0, 3);
+        List<Integer> copy = Lists.copyOf(sub);
+
+        assertNotSame(sub, copy);
+    }
+
+    @Test
+    public void copyOfSubSubList() {
+        List<Integer> orig = Lists.of(0, 1, 2, 3);
+        List<Integer> sub = orig.subList(0, 3).subList(0, 2);
+        List<Integer> copy = Lists.copyOf(sub);
+
+        assertNotSame(sub, copy);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
