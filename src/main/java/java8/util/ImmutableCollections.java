@@ -210,17 +210,21 @@ final class ImmutableCollections {
 
         private final List<E> list;
         private final int size;
-
+        private final boolean isListIterator;
         private int cursor;
 
         ListItr(List<E> list, int size) {
-            this(list, size, 0);
+            this.list = list;
+            this.size = size;
+            this.cursor = 0;
+            isListIterator = false;
         }
 
         ListItr(List<E> list, int size, int index) {
             this.list = list;
             this.size = size;
             this.cursor = index;
+            isListIterator = true;
         }
 
         public boolean hasNext() {
@@ -243,10 +247,16 @@ final class ImmutableCollections {
         }
 
         public boolean hasPrevious() {
+            if (!isListIterator) {
+                throw uoe();
+            }
             return cursor != 0;
         }
 
         public E previous() {
+            if (!isListIterator) {
+                throw uoe();
+            }
             try {
                 int i = cursor - 1;
                 E previous = list.get(i);
@@ -258,10 +268,16 @@ final class ImmutableCollections {
         }
 
         public int nextIndex() {
+            if (!isListIterator) {
+                throw uoe();
+            }
             return cursor;
         }
 
         public int previousIndex() {
+            if (!isListIterator) {
+                throw uoe();
+            }
             return cursor - 1;
         }
 
