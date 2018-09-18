@@ -2362,26 +2362,102 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         return uniExceptionallyStage(null, fn);
     }
 
+    /**
+     * Returns a new CompletionStage that, when this stage completes
+     * exceptionally, is executed with this stage's exception as the
+     * argument to the supplied function, using this stage's default
+     * asynchronous execution facility.  Otherwise, if this stage
+     * completes normally, then the returned stage also completes
+     * normally with the same value.
+     *
+     * <p><b>Implementation Requirements:</b><br> The default
+     * implementation invokes the {@link #toCompletableFuture} version.
+     *
+     * @param fn the function to use to compute the value of the
+     * returned CompletionStage if this CompletionStage completed
+     * exceptionally
+     * @return the new CompletionStage
+     * @since 12
+     */
     public CompletableFuture<T> exceptionallyAsync(
         Function<Throwable, ? extends T> fn) {
         return uniExceptionallyStage(defaultExecutor(), fn);
     }
 
+    /**
+     * Returns a new CompletionStage that, when this stage completes
+     * exceptionally, is executed with this stage's exception as the
+     * argument to the supplied function, using the supplied
+     * Executor.  Otherwise, if this stage completes normally, then
+     * the returned stage also completes normally with the same value.
+     *
+     * <p><b>Implementation Requirements:</b><br> The default
+     * implementation invokes the {@link #toCompletableFuture} version.
+     *
+     * @param fn the function to use to compute the value of the
+     * returned CompletionStage if this CompletionStage completed
+     * exceptionally
+     * @param executor the executor to use for asynchronous execution
+     * @return the new CompletionStage
+     * @since 12
+     */
     public CompletableFuture<T> exceptionallyAsync(
         Function<Throwable, ? extends T> fn, Executor executor) {
         return uniExceptionallyStage(screenExecutor(executor), fn);
     }
 
+    /**
+     * Returns a new CompletionStage that, when this stage completes
+     * exceptionally, is composed using the results of the supplied
+     * function applied to this stage's exception.
+     *
+     * <p><b>Implementation Requirements:</b><br> The default
+     * implementation invokes the {@link #toCompletableFuture} version.
+     *
+     * @param fn the function to use to compute the returned
+     * CompletionStage if this CompletionStage completed exceptionally
+     * @return the new CompletionStage
+     * @since 12
+     */
     public CompletableFuture<T> exceptionallyCompose(
         Function<Throwable, ? extends CompletionStage<T>> fn) {
         return uniComposeExceptionallyStage(null, fn);
     }
 
+    /**
+     * Returns a new CompletionStage that, when this stage completes
+     * exceptionally, is composed using the results of the supplied
+     * function applied to this stage's exception, using this
+     * stage's default asynchronous execution facility.
+     *
+     * <p><b>Implementation Requirements:</b><br> The default
+     * implementation invokes the {@link #toCompletableFuture} version.
+     *
+     * @param fn the function to use to compute the returned
+     * CompletionStage if this CompletionStage completed exceptionally
+     * @return the new CompletionStage
+     * @since 12
+     */
     public CompletableFuture<T> exceptionallyComposeAsync(
         Function<Throwable, ? extends CompletionStage<T>> fn) {
         return uniComposeExceptionallyStage(defaultExecutor(), fn);
     }
 
+    /**
+     * Returns a new CompletionStage that, when this stage completes
+     * exceptionally, is composed using the results of the supplied
+     * function applied to this stage's exception, using the
+     * supplied Executor.
+     *
+     * <p><b>Implementation Requirements:</b><br> The default
+     * implementation invokes the {@link #toCompletableFuture} version.
+     *
+     * @param fn the function to use to compute the returned
+     * CompletionStage if this CompletionStage completed exceptionally
+     * @param executor the executor to use for asynchronous execution
+     * @return the new CompletionStage
+     * @since 12
+     */
     public CompletableFuture<T> exceptionallyComposeAsync(
         Function<Throwable, ? extends CompletionStage<T>> fn,
         Executor executor) {
