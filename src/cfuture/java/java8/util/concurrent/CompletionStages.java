@@ -6,14 +6,16 @@
 package java8.util.concurrent;
 
 import java.util.concurrent.Executor;
+import java8.util.function.BiFunction;
 import java8.util.function.Function;
+import java8.util.function.Functions;
 
 /**
  * A place for static default implementations of the new Java 12
  * default interface methods in the {@link CompletionStage} interface. 
  */
 public final class CompletionStages {
-// CVS rev. 1.41
+// CVS rev. 1.44
 
     /**
      * Returns a new CompletionStage that, when {@code thisStage} completes
@@ -24,8 +26,9 @@ public final class CompletionStages {
      * normally with the same value.
      *
      * <p><b>Implementation Requirements:</b><br> The default
-     * implementation invokes the {@link CompletionStage#toCompletableFuture}
-     * version.
+     * implementation invokes {@link CompletionStage#handle}, relaying to
+     * {@link CompletionStage#handleAsync} on exception, then
+     * {@link CompletionStage#thenCompose} for result.
      *
      * @param <T> the CompletionStage's element type
      * @param thisStage the CompletionStage to decorate
@@ -36,9 +39,19 @@ public final class CompletionStages {
      * @since 12
      */
     public static <T> CompletionStage<T> exceptionallyAsync
-        (CompletionStage<T> thisStage,
-         Function<Throwable, ? extends T> fn) {
-        return thisStage.toCompletableFuture().exceptionallyAsync(fn);
+        (final CompletionStage<T> thisStage,
+         final Function<Throwable, ? extends T> fn) {
+        return thisStage.handle(new BiFunction<T, Throwable, CompletionStage<T>>() {
+            @Override
+            public CompletionStage<T> apply(T r, Throwable ex) {
+                return (ex == null) ? thisStage : thisStage.<T>handleAsync(new BiFunction<T, Throwable, T>() {
+                    @Override
+                    public T apply(T r1, Throwable ex1) {
+                        return fn.apply(ex1);
+                    }
+                });
+            }
+        }).thenCompose(Functions.<CompletionStage<T>>identity());
     }
 
     /**
@@ -49,8 +62,9 @@ public final class CompletionStages {
      * the returned stage also completes normally with the same value.
      *
      * <p><b>Implementation Requirements:</b><br> The default
-     * implementation invokes the {@link CompletionStage#toCompletableFuture}
-     * version.
+     * implementation invokes {@link CompletionStage#handle}, relaying to
+     * {@link CompletionStage#handleAsync} on exception, then
+     * {@link CompletionStage#thenCompose} for result.
      *
      * @param <T> the CompletionStage's element type
      * @param thisStage the CompletionStage to decorate
@@ -62,11 +76,21 @@ public final class CompletionStages {
      * @since 12
      */
     public static <T> CompletionStage<T> exceptionallyAsync
-        (CompletionStage<T> thisStage,
-         Function<Throwable, ? extends T> fn,
-         Executor executor) {
-        return thisStage.toCompletableFuture().exceptionallyAsync(fn, executor);
-    }        
+        (final CompletionStage<T> thisStage,
+         final Function<Throwable, ? extends T> fn,
+         final Executor executor) {
+        return thisStage.handle(new BiFunction<T, Throwable, CompletionStage<T>>() {
+            @Override
+            public CompletionStage<T> apply(T r, Throwable ex) {
+                return (ex == null) ? thisStage : thisStage.<T>handleAsync(new BiFunction<T, Throwable, T>() {
+                    @Override
+                    public T apply(T r1, Throwable ex1) {
+                        return fn.apply(ex1);
+                    }
+                }, executor);
+            }
+        }).thenCompose(Functions.<CompletionStage<T>>identity());
+    }
 
     /**
      * Returns a new CompletionStage that, when {@code thisStage} completes
@@ -74,8 +98,9 @@ public final class CompletionStages {
      * function applied to {@code thisStage}'s exception.
      *
      * <p><b>Implementation Requirements:</b><br> The default
-     * implementation invokes the {@link CompletionStage#toCompletableFuture}
-     * version.
+     * implementation invokes {@link CompletionStage#handle}, invoking the
+     * given function on exception, then {@link CompletionStage#thenCompose}
+     * for result.
      *
      * @param <T> the CompletionStage's element type
      * @param thisStage the CompletionStage to compose with
@@ -86,9 +111,14 @@ public final class CompletionStages {
      * @since 12
      */
     public static <T> CompletionStage<T> exceptionallyCompose
-        (CompletionStage<T> thisStage,
-         Function<Throwable, ? extends CompletionStage<T>> fn) {
-        return thisStage.toCompletableFuture().exceptionallyCompose(fn);
+        (final CompletionStage<T> thisStage,
+         final Function<Throwable, ? extends CompletionStage<T>> fn) {
+        return thisStage.handle(new BiFunction<T, Throwable, CompletionStage<T>>() {
+            @Override
+            public CompletionStage<T> apply(T r, Throwable ex) {
+                return (ex == null) ? thisStage : fn.apply(ex);
+            }
+        }).thenCompose(Functions.<CompletionStage<T>>identity());
     }
 
     /**
@@ -98,8 +128,9 @@ public final class CompletionStages {
      * {@code thisStage}'s default asynchronous execution facility.
      *
      * <p><b>Implementation Requirements:</b><br> The default
-     * implementation invokes the {@link CompletionStage#toCompletableFuture}
-     * version.
+     * implementation invokes {@link CompletionStage#handle}, relaying to
+     * {@link CompletionStage#handleAsync} on exception, then
+     * {@link CompletionStage#thenCompose} for result.
      *
      * @param <T> the CompletionStage's element type
      * @param thisStage the CompletionStage to compose with
@@ -110,9 +141,20 @@ public final class CompletionStages {
      * @since 12
      */
     public static <T> CompletionStage<T> exceptionallyComposeAsync
-        (CompletionStage<T> thisStage,
-         Function<Throwable, ? extends CompletionStage<T>> fn) {
-        return thisStage.toCompletableFuture().exceptionallyComposeAsync(fn);
+        (final CompletionStage<T> thisStage,
+         final Function<Throwable, ? extends CompletionStage<T>> fn) {
+        return thisStage.handle(new BiFunction<T, Throwable, CompletionStage<T>>() {
+            @Override
+            public CompletionStage<T> apply(T r, Throwable ex) {
+                return (ex == null) ? thisStage
+                        : thisStage.handleAsync(new BiFunction<T, Throwable, CompletionStage<T>>() {
+                            @Override
+                            public CompletionStage<T> apply(T r1, Throwable ex1) {
+                                return fn.apply(ex1);
+                            }
+                        }).thenCompose(Functions.<CompletionStage<T>>identity());
+            }
+        }).thenCompose(Functions.<CompletionStage<T>>identity());
     }
 
     /**
@@ -122,8 +164,9 @@ public final class CompletionStages {
      * supplied Executor.
      *
      * <p><b>Implementation Requirements:</b><br> The default
-     * implementation invokes the {@link CompletionStage#toCompletableFuture}
-     * version.
+     * implementation invokes {@link CompletionStage#handle}, relaying to
+     * {@link CompletionStage#handleAsync} on exception, then
+     * {@link CompletionStage#thenCompose} for result.
      *
      * @param <T> the CompletionStage's element type
      * @param thisStage the CompletionStage to compose with
@@ -135,10 +178,21 @@ public final class CompletionStages {
      * @since 12
      */
     public static <T> CompletionStage<T> exceptionallyComposeAsync
-        (CompletionStage<T> thisStage,
-         Function<Throwable, ? extends CompletionStage<T>> fn,
-         Executor executor) {
-        return thisStage.toCompletableFuture().exceptionallyComposeAsync(fn, executor);
+        (final CompletionStage<T> thisStage,
+         final Function<Throwable, ? extends CompletionStage<T>> fn,
+         final Executor executor) {
+        return thisStage.handle(new BiFunction<T, Throwable, CompletionStage<T>>() {
+            @Override
+            public CompletionStage<T> apply(T r, Throwable ex) {
+                return (ex == null) ? thisStage
+                        : thisStage.handleAsync(new BiFunction<T, Throwable, CompletionStage<T>>() {
+                            @Override
+                            public CompletionStage<T> apply(T r1, Throwable ex1) {
+                                return fn.apply(ex1);
+                            }
+                        }, executor).thenCompose(Functions.<CompletionStage<T>>identity());
+            }
+        }).thenCompose(Functions.<CompletionStage<T>>identity());
     }
 
     private CompletionStages() {}
