@@ -123,7 +123,7 @@ import java8.util.function.Supplier;
  * @since 1.8
  */
 public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
-// CVS rev. 1.215
+// CVS rev. 1.219
     /*
      * Overview:
      *
@@ -1046,30 +1046,24 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     private CompletableFuture<T> uniComposeExceptionallyStage(
         Executor e, Function<Throwable, ? extends CompletionStage<T>> f) {
-        if (f == null) throw new NullPointerException();
+        Objects.requireNonNull(f);
         CompletableFuture<T> d = newIncompleteFuture();
         Object r, s; Throwable x;
         if ((r = result) == null)
             unipush(new UniComposeExceptionally<T>(e, d, this, f));
-        else if (e == null) {
-            if ((r instanceof AltResult) && (x = ((AltResult) r).ex) != null) {
-                try {
+        else if (!(r instanceof AltResult) || (x = ((AltResult) r).ex) == null)
+            d.internalComplete(r);
+        else
+            try {
+                if (e != null)
+                    e.execute(new UniComposeExceptionally<T>(null, d, this, f));
+                else {
                     CompletableFuture<T> g = f.apply(x).toCompletableFuture();
                     if ((s = g.result) != null)
                         d.result = encodeRelay(s);
-                    else {
+                    else
                         g.unipush(new UniRelay<T,T>(d, g));
-                    }
-                } catch (Throwable ex) {
-                    d.result = encodeThrowable(ex);
                 }
-            }
-            else
-                d.internalComplete(r);
-        }
-        else
-            try {
-                e.execute(new UniComposeExceptionally<T>(null, d, this, f));
             } catch (Throwable ex) {
                 d.result = encodeThrowable(ex);
             }
@@ -1164,32 +1158,29 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         Object r, s; Throwable x;
         if ((r = result) == null)
             unipush(new UniCompose<T,V>(e, d, this, f));
-        else if (e == null) {
+        else {
             if (r instanceof AltResult) {
-                if ((x = ((AltResult)r).ex) != null) {
+                if ((x = ((AltResult) r).ex) != null) {
                     d.result = encodeThrowable(x, r);
                     return d;
                 }
                 r = null;
             }
             try {
-                @SuppressWarnings("unchecked") T t = (T) r;
-                CompletableFuture<V> g = f.apply(t).toCompletableFuture();
-                if ((s = g.result) != null)
-                    d.result = encodeRelay(s);
+                if (e != null)
+                    e.execute(new UniCompose<T,V>(null, d, this, f));
                 else {
-                    g.unipush(new UniRelay<V,V>(d, g));
+                    @SuppressWarnings("unchecked") T t = (T) r;
+                    CompletableFuture<V> g = f.apply(t).toCompletableFuture();
+                    if ((s = g.result) != null)
+                        d.result = encodeRelay(s);
+                    else
+                        g.unipush(new UniRelay<V,V>(d, g));
                 }
             } catch (Throwable ex) {
                 d.result = encodeThrowable(ex);
             }
         }
-        else
-            try {
-                e.execute(new UniCompose<T,V>(null, d, this, f));
-            } catch (Throwable ex) {
-                d.result = encodeThrowable(ex);
-            }
         return d;
     }
 
