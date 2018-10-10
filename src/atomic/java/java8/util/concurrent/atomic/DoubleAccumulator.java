@@ -52,7 +52,7 @@ import java8.util.function.DoubleBinaryOperator;
  * @author Doug Lea
  */
 public class DoubleAccumulator extends Striped64 implements Serializable {
-// CVS rev. 1.41
+// CVS rev. 1.42
     private static final long serialVersionUID = 7249069246863182397L;
 
     private final DoubleBinaryOperator function;

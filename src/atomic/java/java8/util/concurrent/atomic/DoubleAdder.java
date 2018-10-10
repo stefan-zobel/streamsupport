@@ -32,7 +32,7 @@ import java.io.Serializable;
  * @author Doug Lea
  */
 public class DoubleAdder extends Striped64 implements Serializable {
-// CVS rev. 1.21
+// CVS rev. 1.22
     private static final long serialVersionUID = 7249069246863182397L;
 
     /*
