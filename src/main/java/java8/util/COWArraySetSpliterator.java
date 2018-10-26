@@ -29,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 // Spliterator for java.util.concurrent.CopyOnWriteArraySet
 final class COWArraySetSpliterator {
-
+// CVS rev. 1.74
     private COWArraySetSpliterator() {
     }
 
