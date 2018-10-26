@@ -26,7 +26,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
-// CVS rev. 1.28
+// CVS rev. 1.29
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -992,7 +992,11 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * cvs update -D '2017-11-25' src/main/java/util/concurrent/SubmissionPublisher.java && ant -Djsr166.expensiveTests=true -Djsr166.tckTestClass=SubmissionPublisherTest -Djsr166.methodFilter=testMissedSignal tck; cvs update -A src/main/java/util/concurrent/SubmissionPublisher.java
      */
     public void testMissedSignal_8187947() throws Exception {
-        final int N = expensiveTests ? (1 << 20) : (1 << 10);
+        final int N =
+            ((ForkJoinPool.getCommonPoolParallelism() < 2) // JDK-8212899
+             ? (1 << 5)
+             : (1 << 10))
+            * (expensiveTests ? (1 << 10) : 1);
         final CountDownLatch finished = new CountDownLatch(1);
         final SubmissionPublisher<Boolean> pub = new SubmissionPublisher<>();
         class Sub implements Subscriber<Boolean> {
