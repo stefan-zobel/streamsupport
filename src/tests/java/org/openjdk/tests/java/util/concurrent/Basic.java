@@ -60,7 +60,7 @@ import org.testng.annotations.Test;
 import java8.util.concurrent.Phaser;
 import java8.util.concurrent.CompletableFuture;
 import java8.util.concurrent.CompletionException;
-import jdk.testlibrary.Utils;
+import jdk.test.lib.Utils;
 
 public class Basic {
     static final long LONG_DELAY_MS = Utils.adjustTimeout(10_000);

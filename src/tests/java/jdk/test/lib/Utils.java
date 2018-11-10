@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -20,16 +20,11 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
-package jdk.testlibrary;
+package jdk.test.lib;
 
 /**
  * Common library for various test helper functions.
- *
- * @deprecated This class is deprecated. Use the one from
- *             {@code <root>/test/lib/share/classes/jdk/test/lib}
  */
-@Deprecated
 public final class Utils {
     /**
     * Returns the value of 'test.timeout.factor' system property
