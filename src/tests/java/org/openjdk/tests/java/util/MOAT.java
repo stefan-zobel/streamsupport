@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -98,6 +98,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import java8.lang.Integers;
+import java8.util.J8Arrays;
 import java8.util.Lists;
 import java8.util.Maps;
 import java8.util.Objects;
@@ -339,6 +340,7 @@ public class MOAT {
         equal(c.toString(),"[]");
         equal(c.toArray().length, 0);
         equal(c.toArray(new Object[0]).length, 0);
+        equal(J8Arrays.toArray((Collection<Object>) c, Object[]::new).length, 0);
         check(c.toArray(new Object[]{42})[0] == null);
 
         Object[] a = new Object[1]; a[0] = Boolean.TRUE;
@@ -614,6 +616,13 @@ public class MOAT {
                 int i = 0; for (Integer j : c) check(a[i++] == j);
                 check((size <= c.size()) || (a[c.size()] == null));
                 check(a.getClass() == Integer[].class);
+            }
+
+            {
+                Integer[] a = J8Arrays.toArray(c, Integer[]::new);
+                equal(c.size(), a.length);
+                check(a.getClass() == Integer[].class);
+                check(Arrays.equals(c.toArray(new Integer[0]), a));
             }
 
             check(c.equals(c));
