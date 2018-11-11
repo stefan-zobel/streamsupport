@@ -25,6 +25,7 @@
 package java8.util;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Comparator;
 
 import java8.util.concurrent.ForkJoinPool;
@@ -1509,6 +1510,48 @@ public final class J8Arrays {
         if (fromIndex < toIndex)
             new ArrayPrefixHelpers.IntCumulateTask
                     (null, op, array, fromIndex, toIndex).invoke();
+    }
+
+    /**
+     * Returns an array containing all of the elements in the passed collection,
+     * using the provided {@code generator} function to allocate the returned array.
+     *
+     * <p>If the passed collection makes any guarantees as to what order its elements
+     * are returned by its iterator, this method must return the elements in
+     * the same order.
+     *
+     * <p><b>API Note:</b><br>
+     * This method acts as a bridge between array-based and collection-based APIs.
+     * It allows creation of an array of a particular runtime type. Use
+     * {@link Collection#toArray()} to create an array whose runtime type is
+     * {@code Object[]}, or use {@link Collection#toArray(Object[]) Collection.toArray(T[])}
+     * to reuse an existing array.
+     *
+     * <p>Suppose {@code x} is a collection known to contain only strings.
+     * The following code can be used to dump the collection into a newly
+     * allocated array of {@code String}:
+     *
+     * <pre>
+     *     String[] y = J8Arrays.toArray(x, String[]::new);</pre>
+     *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation calls the generator function with zero
+     * and then passes the resulting array to {@link Collection#toArray(Object[])
+     * Collection.toArray(T[])}.
+     *
+     * @param <T> the component type of the array to contain the collection
+     * @param col the collection to work on
+     * @param generator a function which produces a new array of the desired
+     *                  type and the provided length
+     * @return an array containing all of the elements in the passed collection
+     * @throws ArrayStoreException if the runtime type of any element in the
+     *         passed collection is not assignable to the {@linkplain Class#getComponentType
+     *         runtime component type} of the generated array
+     * @throws NullPointerException if the collection or the generator function is null
+     * @since 11
+     */
+    public static <T> T[] toArray(Collection<T> col, IntFunction<T[]> generator) {
+        return col.toArray(generator.apply(0));
     }
 
     /**
