@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.6.3-stable" is the current stable release
+ - "1.7.0-stable" is the current stable release
 
 
 GENERAL
@@ -76,7 +76,11 @@ GENERAL
    still be used since it doesn't have any dependencies on other artifacts.
 
  - Release 1.6.3 fixes some streamsupport issues with the Android P developer
-   preview 
+   preview
+
+ - Release 1.7.0 completes the Java 11 port and adds a couple of new methods
+   from Java 12, especially a new merging Collector (JDK-8205461) and new
+   exception handling methods for CompletableFuture (JDK-8210971).
 
 
 
@@ -140,6 +144,23 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.7.0-stable (2018-11-11)
+ - Completed Java 11 port, new methods from Java 12
+ - JDK-8205461: Create a merging Collector
+ - JDK-8210971: CompletionStage / CompletableFuture exception methods
+ - JDK-8060192: Add A[] Collection.toArray(IntFunction<A[]>)
+ - JDK-8050818: Predicate::not
+ - JDK-8203670: Don't use ListIterator for ImmutableCollections iterator()
+ - JDK-8203184: List.copyOf() fails to copy sublists
+ - JDK-8207003: Misc. changes imported from jsr166 CVS 2018-09
+ - JDK-8203681: Misc. changes imported from jsr166 CVS 2018-06
+ - JDK-8203864: Execution error in Timsort
+ - JDK-8210347: Combine Set.contains() and Set.add() calls
+ - JDK-8212899: SubmissionPublisherTest timed out waiting
+ - JDK-8204172: Predicate::not should explicitly mention NPE
+ - Test on Java 12 early-access [#379]
+ - Test with latest Java 8 / Java 11 JRE public builds [#387]
 
 1.6.3-stable (2018-05-14)
  - Compatibility with Android P preview rev. 3 [#365]

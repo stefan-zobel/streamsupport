@@ -19,7 +19,7 @@ For ease of use, the default methods for most of the functional interfaces were 
 in the redefined interfaces (keeping them single method interfaces) - the missing default (and static) methods can
 always be found in the corresponding companion class.
 
-The current stable release is `streamsupport-1.6.3`.
+The current stable release is `streamsupport-1.7.0`.
 
 Want also lambdas? https://github.com/orfjackal/retrolambda
 
@@ -44,7 +44,7 @@ Please give feedback [here](https://github.com/stefan-zobel/streamsupport/issues
 
 ```gradle
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.6.3'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.7.0'
 }
 ```
 
@@ -55,7 +55,7 @@ dependencies {
 <dependency>
     <groupId>net.sourceforge.streamsupport</groupId>
     <artifactId>streamsupport</artifactId>
-    <version>1.6.3</version>
+    <version>1.7.0</version>
 </dependency>
 ```
 
