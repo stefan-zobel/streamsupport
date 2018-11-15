@@ -91,7 +91,7 @@ public final class StreamSupport {
      *     additional <em>fail-fast</em> behavior.
      * <li>Otherwise, the default implementation creates a spliterator from
      *     the list's {@code Iterator}.  The spliterator inherits the
-     *     <em>fail-fast</em> of the list's iterator.
+     *     <em>fail-fast</em> properties of the list's iterator.
      * </ul>
      *
      * <p>
@@ -166,7 +166,7 @@ public final class StreamSupport {
      *     additional <em>fail-fast</em> behavior.
      * <li>Otherwise, the default implementation creates a spliterator from
      *     the list's {@code Iterator}.  The spliterator inherits the
-     *     <em>fail-fast</em> of the list's iterator.
+     *     <em>fail-fast</em> properties of the list's iterator.
      * </ul>
      *
      * <p>
