@@ -346,7 +346,7 @@ public final class RefStreams {
      * @return a new sequential {@code Stream}
      * @since 9
      */
-    public static <T, S extends T> Stream<T> iterate(S seed, Predicate<S> hasNext, UnaryOperator<S> next) {
+    public static <T, S extends T> Stream<T> iterate(S seed, Predicate<? super S> hasNext, UnaryOperator<S> next) {
         Objects.requireNonNull(next);
         Objects.requireNonNull(hasNext);
         Spliterator<T> spliterator = new Spliterators.AbstractSpliterator<T>(Long.MAX_VALUE, 
