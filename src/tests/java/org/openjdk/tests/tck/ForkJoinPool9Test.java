@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPool9Test extends JSR166TestCase {
-// CVS rev. 1.5
+// CVS rev. 1.6
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -53,8 +53,9 @@ public class ForkJoinPool9Test extends JSR166TestCase {
                 if (haveSecurityManager)
                     assertThrows(
                         SecurityException.class,
-                        () -> System.getProperty("foo"),
-                        () -> Thread.currentThread().setContextClassLoader(null));
+                        () -> System.getProperty("foo")/*,
+                        // 8215359: InnocuousForkJoinWorkerThread.setContextClassLoader needlessly throws
+                        () -> Thread.currentThread().setContextClassLoader(null)*/);
 
                 // TODO ?
 //                 if (haveSecurityManager
