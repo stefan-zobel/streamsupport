@@ -26,7 +26,7 @@ import java.security.ProtectionDomain;
  * @author Doug Lea
  */
 public class ForkJoinWorkerThread extends Thread {
-// CVS rev. 1.76
+// CVS rev. 1.78
     /*
      * ForkJoinWorkerThreads are managed by ForkJoinPools and perform
      * ForkJoinTasks. For explanation, see the internal documentation
@@ -211,7 +211,8 @@ public class ForkJoinWorkerThread extends Thread {
 
         @Override // paranoically
         public void setContextClassLoader(ClassLoader cl) {
-            throw new SecurityException("setContextClassLoader");
+            if (cl != null && ClassLoader.getSystemClassLoader() != cl)
+                throw new SecurityException("setContextClassLoader");
         }
     }
 }
