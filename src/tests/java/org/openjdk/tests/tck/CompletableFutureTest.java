@@ -55,7 +55,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.218
+// CVS rev. 1.220
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -937,17 +937,19 @@ public class CompletableFutureTest extends JSR166TestCase {
         for (boolean createIncomplete : new boolean[] { true, false })
         for (Integer v1 : new Integer[] { 1, null })
     {
+        final AtomicInteger ran = new AtomicInteger(0);
         final CompletableFuture<Integer> f = new CompletableFuture<>();
         if (!createIncomplete) assertTrue(f.complete(v1));
         final CompletableFuture<Integer> g = m.exceptionally
             (f, (Throwable t) -> {
-                threadFail("should not be called");
-                return null;            // unreached
+                ran.getAndIncrement();
+                throw new AssertionError("should not be called");
             });
         if (createIncomplete) assertTrue(f.complete(v1));
 
         checkCompletedNormally(g, v1);
         checkCompletedNormally(f, v1);
+        assertEquals(0, ran.get());
     }}
 
     /**
@@ -4862,18 +4864,21 @@ public class CompletableFutureTest extends JSR166TestCase {
         for (boolean createIncomplete : new boolean[] { true, false })
         for (Integer v1 : new Integer[] { 1, null })
     {
+        final AtomicInteger ran = new AtomicInteger(0);
         final CompletableFuture<Integer> f = new CompletableFuture<>();
         final DelegatedCompletionStage<Integer> d =
             new DelegatedCompletionStage<Integer>(f);
         if (!createIncomplete) assertTrue(f.complete(v1));
         final CompletionStage<Integer> g = d.exceptionallyAsync
             ((Throwable t) -> {
-                threadFail("should not be called");
-                return null;            // unreached
+                ran.getAndIncrement();
+                throw new AssertionError("should not be called");
             });
         if (createIncomplete) assertTrue(f.complete(v1));
 
         checkCompletedNormally(g.toCompletableFuture(), v1);
+        checkCompletedNormally(f, v1);
+        assertEquals(0, ran.get());
     }}
 
     /**
@@ -4899,6 +4904,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         if (createIncomplete) f.completeExceptionally(ex);
 
         checkCompletedNormally(g.toCompletableFuture(), v1);
+        checkCompletedExceptionally(f, ex);
         assertEquals(1, ran.get());
     }}
 
