@@ -22,7 +22,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class RecursiveTaskTest extends JSR166TestCase {
-// CVS rev. 1.39
+// CVS rev. 1.40
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -212,7 +212,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 return n;
             FibTask f1 = new FibTask(n - 1);
             f1.fork();
-            return (new FibTask(n - 2)).compute() + f1.join();
+            return new FibTask(n - 2).compute() + f1.join();
         }
         public Integer computePublic() {
             return compute();
@@ -235,7 +235,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 throw new FJException();
             FailingFibTask f1 = new FailingFibTask(n - 1);
             f1.fork();
-            return (new FibTask(n - 2)).computePublic() + f1.join();
+            return new FibTask(n - 2).compute() + f1.join();
         }
     }
 

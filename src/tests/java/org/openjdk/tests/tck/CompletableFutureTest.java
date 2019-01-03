@@ -55,7 +55,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.214
+// CVS rev. 1.215
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -3125,30 +3125,30 @@ public class CompletableFutureTest extends JSR166TestCase {
         case 0:
             assertTrue(f.complete(v1));
             assertTrue(g.completeExceptionally(ex));
-            h = m.thenCompose(f, (x -> g));
+            h = m.thenCompose(f, x -> g);
             break;
         case 1:
             assertTrue(f.complete(v1));
-            h = m.thenCompose(f, (x -> g));
+            h = m.thenCompose(f, x -> g);
             assertTrue(g.completeExceptionally(ex));
             break;
         case 2:
             assertTrue(g.completeExceptionally(ex));
             assertTrue(f.complete(v1));
-            h = m.thenCompose(f, (x -> g));
+            h = m.thenCompose(f, x -> g);
             break;
         case 3:
             assertTrue(g.completeExceptionally(ex));
-            h = m.thenCompose(f, (x -> g));
+            h = m.thenCompose(f, x -> g);
             assertTrue(f.complete(v1));
             break;
         case 4:
-            h = m.thenCompose(f, (x -> g));
+            h = m.thenCompose(f, x -> g);
             assertTrue(f.complete(v1));
             assertTrue(g.completeExceptionally(ex));
             break;
         case 5:
-            h = m.thenCompose(f, (x -> g));
+            h = m.thenCompose(f, x -> g);
             assertTrue(f.complete(v1));
             assertTrue(g.completeExceptionally(ex));
             break;
@@ -3240,30 +3240,30 @@ public class CompletableFutureTest extends JSR166TestCase {
         case 0:
             assertTrue(f.completeExceptionally(ex0));
             assertTrue(g.completeExceptionally(ex));
-            h = m.exceptionallyCompose(f, (x -> g));
+            h = m.exceptionallyCompose(f, x -> g);
             break;
         case 1:
             assertTrue(f.completeExceptionally(ex0));
-            h = m.exceptionallyCompose(f, (x -> g));
+            h = m.exceptionallyCompose(f, x -> g);
             assertTrue(g.completeExceptionally(ex));
             break;
         case 2:
             assertTrue(g.completeExceptionally(ex));
             assertTrue(f.completeExceptionally(ex0));
-            h = m.exceptionallyCompose(f, (x -> g));
+            h = m.exceptionallyCompose(f, x -> g);
             break;
         case 3:
             assertTrue(g.completeExceptionally(ex));
-            h = m.exceptionallyCompose(f, (x -> g));
+            h = m.exceptionallyCompose(f, x -> g);
             assertTrue(f.completeExceptionally(ex0));
             break;
         case 4:
-            h = m.exceptionallyCompose(f, (x -> g));
+            h = m.exceptionallyCompose(f, x -> g);
             assertTrue(f.completeExceptionally(ex0));
             assertTrue(g.completeExceptionally(ex));
             break;
         case 5:
-            h = m.exceptionallyCompose(f, (x -> g));
+            h = m.exceptionallyCompose(f, x -> g);
             assertTrue(f.completeExceptionally(ex0));
             assertTrue(g.completeExceptionally(ex));
             break;
