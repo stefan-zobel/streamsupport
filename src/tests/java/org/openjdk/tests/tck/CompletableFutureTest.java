@@ -55,7 +55,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.216
+// CVS rev. 1.217
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -966,7 +966,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         final CompletableFuture<Integer> g = m.exceptionally
             (f, (Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertSame(t, ex);
+                assertSame(t, ex);
                 a.getAndIncrement();
                 return v1;
             });
@@ -992,7 +992,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         final CompletableFuture<Integer> g = m.exceptionally
             (f, (Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertSame(t, ex1);
+                assertSame(t, ex1);
                 a.getAndIncrement();
                 throw ex2;
             });
@@ -1019,8 +1019,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertSame(result, v1);
-                threadAssertNull(t);
+                assertSame(result, v1);
+                assertNull(t);
                 a.getAndIncrement();
             });
         if (createIncomplete) assertTrue(f.complete(v1));
@@ -1046,8 +1046,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertNull(result);
-                threadAssertSame(t, ex);
+                assertNull(result);
+                assertSame(t, ex);
                 a.getAndIncrement();
             });
         if (createIncomplete) f.completeExceptionally(ex);
@@ -1073,8 +1073,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertNull(result);
-                threadAssertTrue(t instanceof CancellationException);
+                assertNull(result);
+                assertTrue(t instanceof CancellationException);
                 a.getAndIncrement();
             });
         if (createIncomplete) assertTrue(f.cancel(mayInterruptIfRunning));
@@ -1101,8 +1101,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertSame(result, v1);
-                threadAssertNull(t);
+                assertSame(result, v1);
+                assertNull(t);
                 a.getAndIncrement();
                 throw ex;
             });
@@ -1132,8 +1132,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertSame(t, ex1);
-                threadAssertNull(result);
+                assertSame(t, ex1);
+                assertNull(result);
                 a.getAndIncrement();
                 throw ex2;
             });
@@ -1164,8 +1164,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertSame(result, v1);
-                threadAssertNull(t);
+                assertSame(result, v1);
+                assertNull(t);
                 a.getAndIncrement();
                 return inc(v1);
             });
@@ -1193,8 +1193,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertNull(result);
-                threadAssertSame(t, ex);
+                assertNull(result);
+                assertSame(t, ex);
                 a.getAndIncrement();
                 return v1;
             });
@@ -1222,8 +1222,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertNull(result);
-                threadAssertTrue(t instanceof CancellationException);
+                assertNull(result);
+                assertTrue(t instanceof CancellationException);
                 a.getAndIncrement();
                 return v1;
             });
@@ -1251,8 +1251,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertSame(result, v1);
-                threadAssertNull(t);
+                assertSame(result, v1);
+                assertNull(t);
                 a.getAndIncrement();
                 throw ex;
             });
@@ -1282,8 +1282,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             (f,
              (Integer result, Throwable t) -> {
                 m.checkExecutionMode();
-                threadAssertNull(result);
-                threadAssertSame(ex1, t);
+                assertNull(result);
+                assertSame(ex1, t);
                 a.getAndIncrement();
                 throw ex2;
             });
@@ -4892,7 +4892,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         if (!createIncomplete) f.completeExceptionally(ex);
         final CompletionStage<Integer> g = d.exceptionallyAsync
             ((Throwable t) -> {
-                threadAssertSame(t, ex);
+                assertSame(t, ex);
                 a.getAndIncrement();
                 return v1;
             });
@@ -4919,7 +4919,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         if (!createIncomplete) f.completeExceptionally(ex1);
         final CompletionStage<Integer> g = d.exceptionallyAsync
             ((Throwable t) -> {
-                threadAssertSame(t, ex1);
+                assertSame(t, ex1);
                 a.getAndIncrement();
                 throw ex2;
             });
