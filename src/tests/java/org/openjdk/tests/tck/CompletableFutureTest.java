@@ -55,7 +55,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.215
+// CVS rev. 1.216
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -3654,13 +3654,7 @@ public class CompletableFutureTest extends JSR166TestCase {
 
             final CompletableFuture<Integer> complete = CompletableFuture.completedFuture(v);
             final CompletableFuture<Integer> incomplete = new CompletableFuture<>();
-    
-//          List<CompletableFuture<?>> futures = new ArrayList<>();
-    
-            List<CompletableFuture<Integer>> srcs = new ArrayList<>();
-            srcs.add(complete);
-            srcs.add(incomplete);
-    
+
             List<CompletableFuture<?>> fs = new ArrayList<>();
             fs.add(incomplete.thenRunAsync(() -> {}, e));
             fs.add(incomplete.thenAcceptAsync(z -> {}, e));
