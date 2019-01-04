@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2019, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,9 +30,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -346,6 +348,30 @@ final class ImmutableCollections {
                 throw outOfBounds(index);
             }
         }
+
+        @Override
+        public Object[] toArray() {
+            Object[] array = new Object[size];
+            for (int i = 0; i < size; i++) {
+                array[i] = get(i);
+            }
+            return array;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T[] toArray(T[] a) {
+            T[] array = a.length >= size ? a :
+                    (T[]) Array
+                            .newInstance(a.getClass().getComponentType(), size);
+            for (int i = 0; i < size; i++) {
+                array[i] = (T) get(i);
+            }
+            if (array.length > size) {
+                array[size] = null; // null-terminate
+            }
+            return array;
+        }
     }
 
     static final class List12<E> extends AbstractImmutableList<E>
@@ -390,6 +416,31 @@ final class ImmutableCollections {
                 return new ColSer(ColSer.IMM_LIST, e0, e1);
             }
         }
+
+        @Override
+        public Object[] toArray() {
+            if (e1 == null) {
+                return new Object[] { e0 };
+            } else {
+                return new Object[] { e0, e1 };
+            }
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T[] toArray(T[] a) {
+            int size = e1 == null ? 1 : 2;
+            T[] array = a.length >= size ? a :
+                    (T[]) Array.newInstance(a.getClass().getComponentType(), size);
+            array[0] = (T) e0;
+            if (size == 2) {
+                array[1] = (T) e1;
+            }
+            if (array.length > size) {
+                array[size] = null; // null-terminate
+            }
+            return array;
+        }
     }
 
     static final class ListN<E> extends AbstractImmutableList<E>
@@ -430,6 +481,26 @@ final class ImmutableCollections {
 
         private Object writeReplace() {
             return new ColSer(ColSer.IMM_LIST, elements);
+        }
+
+        @Override
+        public Object[] toArray() {
+            return Arrays.copyOf(elements, elements.length);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T[] toArray(T[] a) {
+            int size = elements.length;
+            if (a.length < size) {
+                // Make a new array of a's runtime type, but my contents:
+                return (T[]) Arrays.copyOf(elements, size, a.getClass());
+            }
+            System.arraycopy(elements, 0, a, 0, size);
+            if (a.length > size) {
+                a[size] = null; // null-terminate
+            }
+            return a;
         }
     }
 
@@ -538,6 +609,38 @@ final class ImmutableCollections {
                 return new ColSer(ColSer.IMM_SET, e0, e1);
             }
         }
+
+        @Override
+        public Object[] toArray() {
+            if (e1 == null) {
+                return new Object[] { e0 };
+            } else if (SALT >= 0) {
+                return new Object[] { e1, e0 };
+            } else {
+                return new Object[] { e0, e1 };
+            }
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T[] toArray(T[] a) {
+            int size = e1 == null ? 1 : 2;
+            T[] array = a.length >= size ? a :
+                    (T[]) Array.newInstance(a.getClass().getComponentType(), size);
+            if (size == 1) {
+                array[0] = (T) e0;
+            } else if (SALT >= 0) {
+                array[0] = (T) e1;
+                array[1] = (T) e0;
+            } else {
+                array[0] = (T) e0;
+                array[1] = (T) e1;
+            }
+            if (array.length > size) {
+                array[size] = null; // null-terminate
+            }
+            return array;
+        }
     }
 
     /**
@@ -615,7 +718,7 @@ final class ImmutableCollections {
 
             @Override
             public E next() {
-                if (hasNext()) {
+                if (remaining > 0) {
                     E element;
                     // skip null elements
                     while ((element = elements[nextIndex()]) == null) {}
@@ -674,6 +777,31 @@ final class ImmutableCollections {
                 }
             }
             return new ColSer(ColSer.IMM_SET, array);
+        }
+
+        @Override
+        public Object[] toArray() {
+            Object[] array = new Object[size];
+            Iterator<E> it = iterator();
+            for (int i = 0; i < size; i++) {
+                array[i] = it.next();
+            }
+            return array;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T[] toArray(T[] a) {
+            T[] array = a.length >= size ? a :
+                    (T[]) Array.newInstance(a.getClass().getComponentType(), size);
+            Iterator<E> it = iterator();
+            for (int i = 0; i < size; i++) {
+                array[i] = (T) it.next();
+            }
+            if (array.length > size) {
+                array[size] = null; // null-terminate
+            }
+            return array;
         }
     }
 
@@ -853,8 +981,9 @@ final class ImmutableCollections {
 
             @Override
             public Map.Entry<K, V> next() {
-                if (hasNext()) {
-                    while (table[nextIndex()] == null) {}
+                if (remaining > 0) {
+                    int idx;
+                    while (table[idx = nextIndex()] == null) {}
                     @SuppressWarnings("unchecked")
                     Map.Entry<K, V> e =
                             new KeyValueHolder<K, V>((K) table[idx], (V) table[idx+1]);
