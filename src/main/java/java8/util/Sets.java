@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -75,8 +75,9 @@ public final class Sets {
      *
      * @since 9
      */
+    @SuppressWarnings("unchecked")
     public static <E> Set<E> of() {
-        return ImmutableCollections.emptySet();
+        return (Set<E>) ImmutableCollections.SetN.EMPTY_SET;
     }
 
     /**
@@ -317,7 +318,9 @@ public final class Sets {
     public static <E> Set<E> of(E... elements) {
         switch (elements.length) { // implicit null check of elements
             case 0:
-                return ImmutableCollections.emptySet();
+                @SuppressWarnings("unchecked")
+                Set<E> set = (Set<E>) ImmutableCollections.SetN.EMPTY_SET;
+                return set;
             case 1:
                 return new ImmutableCollections.Set12<E>(elements[0]);
             case 2:
