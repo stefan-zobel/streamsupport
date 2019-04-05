@@ -396,6 +396,11 @@ final class ImmutableCollections {
         }
 
         @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
         public E get(int index) {
             if (index == 0) {
                 return e0;
@@ -462,7 +467,7 @@ final class ImmutableCollections {
 
         @Override
         public boolean isEmpty() {
-            return size() == 0;
+            return elements.length == 0;
         }
 
         @Override
@@ -561,6 +566,11 @@ final class ImmutableCollections {
         @Override
         public int size() {
             return (e1 == null) ? 1 : 2;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
         }
 
         @Override
@@ -676,6 +686,11 @@ final class ImmutableCollections {
         @Override
         public int size() {
             return size;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return size == 0;
         }
 
         @Override
@@ -848,6 +863,16 @@ final class ImmutableCollections {
             return o.equals(v0); // implicit nullcheck of o
         }
 
+        @Override
+        public int size() {
+            return 1;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             throw new InvalidObjectException("not serial proxy");
         }
@@ -950,6 +975,11 @@ final class ImmutableCollections {
         @Override
         public int size() {
             return size;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return size == 0;
         }
 
         class MapNIterator extends Iterators.ImmutableIt<Map.Entry<K,V>> implements Iterator<Map.Entry<K, V>> {
