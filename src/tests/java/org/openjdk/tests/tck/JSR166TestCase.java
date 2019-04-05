@@ -189,7 +189,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.252
+// CVS rev. 1.253
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1682,8 +1682,7 @@ public class JSR166TestCase extends TestCase {
         if (o instanceof Collection) {
             assertThrows(
                 UnsupportedOperationException.class,
-                new Runnable() { public void run() {
-                        ((Collection<?>) o).add(null);}});
+                () -> ((Collection<?>) o).add(null));
         }
     }
 
@@ -1743,8 +1742,8 @@ public class JSR166TestCase extends TestCase {
     }
 
     public void assertThrows(Class<? extends Throwable> expectedExceptionClass,
-                             Runnable... throwingActions) {
-        for (Runnable throwingAction : throwingActions) {
+                             Action... throwingActions) {
+        for (Action throwingAction : throwingActions) {
             boolean threw = false;
             try { throwingAction.run(); }
             catch (Throwable t) {

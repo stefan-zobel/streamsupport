@@ -15,7 +15,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ThreadLocalRandom8Test extends JSR166TestCase {
-// CVS rev. 1.12
+// CVS rev. 1.13
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -41,15 +41,14 @@ public class ThreadLocalRandom8Test extends JSR166TestCase {
      */
     public void testBadStreamSize() {
         ThreadLocalRandom r = ThreadLocalRandom.current();
-        Runnable[] throwingActions = {
+        assertThrows(
+            IllegalArgumentException.class,
             () -> r.ints(-1L),
             () -> r.ints(-1L, 2, 3),
             () -> r.longs(-1L),
             () -> r.longs(-1L, -1L, 1L),
             () -> r.doubles(-1L),
-            () -> r.doubles(-1L, .5, .6),
-        };
-        assertThrows(IllegalArgumentException.class, throwingActions);
+            () -> r.doubles(-1L, .5, .6));
     }
 
     /**
@@ -58,15 +57,14 @@ public class ThreadLocalRandom8Test extends JSR166TestCase {
      */
     public void testBadStreamBounds() {
         ThreadLocalRandom r = ThreadLocalRandom.current();
-        Runnable[] throwingActions = {
+        assertThrows(
+            IllegalArgumentException.class,
             () -> r.ints(2, 1),
             () -> r.ints(10, 42, 42),
             () -> r.longs(-1L, -1L),
             () -> r.longs(10, 1L, -2L),
             () -> r.doubles(0.0, 0.0),
-            () -> r.doubles(10, .5, .4),
-        };
-        assertThrows(IllegalArgumentException.class, throwingActions);
+            () -> r.doubles(10, .5, .4));
     }
 
     /**

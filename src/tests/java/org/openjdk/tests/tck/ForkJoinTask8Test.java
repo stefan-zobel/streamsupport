@@ -23,7 +23,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinTask8Test extends JSR166TestCase {
-// CVS rev. 1.32
+// CVS rev. 1.33
     /*
      * Testing notes: This differs from ForkJoinTaskTest mainly by
      * defining a version of BinaryAsyncAction that uses JDK8 task
@@ -911,14 +911,13 @@ public class ForkJoinTask8Test extends JSR166TestCase {
         RecursiveAction a = new CheckedRecursiveAction() {
             protected void realCompute() {
                 AsyncFib nul = null;
-                Runnable[] throwingActions = {
+                assertThrows(
+                    NullPointerException.class,
                     () -> invokeAll(nul),
                     () -> invokeAll(nul, nul),
                     () -> invokeAll(new AsyncFib(8), new AsyncFib(9), nul),
                     () -> invokeAll(new AsyncFib(8), nul, new AsyncFib(9)),
-                    () -> invokeAll(nul, new AsyncFib(8), new AsyncFib(9)),
-                };
-                assertThrows(NullPointerException.class, throwingActions);
+                    () -> invokeAll(nul, new AsyncFib(8), new AsyncFib(9)));
             }};
         testInvokeOnPool(pool, a);
     }

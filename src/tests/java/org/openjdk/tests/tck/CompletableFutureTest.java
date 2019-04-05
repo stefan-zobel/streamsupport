@@ -55,7 +55,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.220
+// CVS rev. 1.221
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -3446,7 +3446,9 @@ public class CompletableFutureTest extends JSR166TestCase {
         CompletableFuture<Integer> nullFuture = (CompletableFuture<Integer>)null;
         ThreadExecutor exec = new ThreadExecutor();
 
-        Runnable[] throwingActions = {
+        assertThrows(
+            NullPointerException.class,
+
             () -> CompletableFuture.supplyAsync(null),
             () -> CompletableFuture.supplyAsync(null, exec),
             () -> CompletableFuture.supplyAsync(new IntegerSupplier(ExecutionMode.SYNC, 42), null),
@@ -3549,10 +3551,8 @@ public class CompletableFutureTest extends JSR166TestCase {
             () -> f.completeOnTimeout(42, 1L, null),
 
             () -> CompletableFuture.failedFuture(null),
-            () -> CompletableFuture.failedStage(null),
-        };
+            () -> CompletableFuture.failedStage(null));
 
-        assertThrows(NullPointerException.class, throwingActions);
         assertEquals(0, exec.count.get());
     }
 
