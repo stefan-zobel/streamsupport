@@ -1074,16 +1074,12 @@ final class ImmutableCollections {
     }
 
     private static int floorMod(int x, int y) {
-        return x - floorDiv(x, y) * y;
-    }
-
-    private static int floorDiv(int x, int y) {
-        int r = x / y;
-        // if the signs are different and modulo not zero, round down
-        if ((x ^ y) < 0 && (r * y != x)) {
-            r--;
+        int mod = x % y;
+        // if the signs are different and modulo not zero, adjust result
+        if ((mod ^ y) < 0 && mod != 0) {
+            mod += y;
         }
-        return r;
+        return mod;
     }
 }
 
