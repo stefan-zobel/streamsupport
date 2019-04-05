@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2019, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -52,7 +52,7 @@ import static org.testng.Assert.assertTrue;
 
 /*
  * @test
- * @bug 8048330
+ * @bug 8048330 8221924
  * @summary Test convenience static factory methods on Map.
  * @run testng MapFactories
  */
@@ -421,6 +421,11 @@ public class MapFactories {
     @Test(dataProvider="all", expectedExceptions=NullPointerException.class)
     public void containsKeyNullShouldThrowNPE(Map<Integer,String> act, Map<Integer,String> exp) {
         act.containsKey(null);
+    }
+
+    @Test(dataProvider="all", expectedExceptions=NullPointerException.class)
+    public void getNullShouldThrowNPE(Map<Integer,String> act, Map<Integer,String> exp) {
+        act.get(null);
     }
 
     @Test(dataProvider="all")
