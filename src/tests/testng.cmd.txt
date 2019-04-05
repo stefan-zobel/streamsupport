@@ -13,7 +13,7 @@ SET JAVA11=F:/Java/jdk11.0.2+7-openjdk/bin/java
 
 SET JAVA12=F:/Java/jdk12-2019-03-19-openjdk+33/bin/java
 
-SET JAVA13=F:/Java/jdk13_ea+14/bin/java
+SET JAVA13=F:/Java/jdk13_ea+15/bin/java
 
 SET TEST_JAR=streamsupport-all-tests-1.7.1-SNAPSHOT.jar
 
