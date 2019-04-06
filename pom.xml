@@ -36,7 +36,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.8.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -60,7 +60,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.1.1</version>
 				<configuration>
 					<excludes>
 						<!-- exclude j.u.Random compilation stub -->
@@ -78,8 +78,7 @@
 							<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
 							<Bundle-SymbolicName>${project.groupId}</Bundle-SymbolicName>
 							<Bundle-Version>${project.version}</Bundle-Version>
-							<Export-Package>java8.lang;java8.util;java8.util.concurrent;java8.util.f
-unction;java8.util.stream</Export-Package>
+							<Export-Package>java8.lang;java8.util;java8.util.concurrent;java8.util.function;java8.util.stream</Export-Package>
 							<Import-Package>sun.misc;resolution:=optional</Import-Package>
 						</manifestEntries>
 					</archive>
@@ -88,7 +87,7 @@ unction;java8.util.stream</Export-Package>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.0.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -101,7 +100,7 @@ unction;java8.util.stream</Export-Package>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -121,7 +120,7 @@ unction;java8.util.stream</Export-Package>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>animal-sniffer-maven-plugin</artifactId>
-				<version>1.15</version>
+				<version>1.17</version>
 				<configuration>
 					<signature>
 						<groupId>org.codehaus.mojo.signature</groupId>
