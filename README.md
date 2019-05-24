@@ -19,7 +19,16 @@ For ease of use, the default methods for most of the functional interfaces were 
 in the redefined interfaces (keeping them single method interfaces) - the missing default (and static) methods can
 always be found in the corresponding companion class.
 
-The current stable release is `streamsupport-1.7.0`.
+The streamsupport API lives in the packages `java8.util.*` and `java8.lang` respectively. So, it's not possible to
+simply import the `java.util.stream` package in your code - you'd rather have to use `java8.util.stream` instead
+(see [Readme.txt](https://github.com/stefan-zobel/streamsupport/blob/master/Readme.txt) for details). While that
+is fine as long as you have full control over your source code there is the other common scenario of using a binary
+3rd party dependency that has been compiled against the standard Java 8 `java.util.stream` API. In the latter case
+bytecode rewriting via [ProGuard](https://github.com/Guardsquare/proguard) might be an option. ProGuard supports
+most Java 8 language features and the latest release can also replace the standard Java 8 stream API by the the
+streamsupport backport (cf. the Proguard [documentation](https://www.guardsquare.com/en/products/proguard/manual/gradleplugin), especially the section titled "Java 8 stream API support").
+
+The current stable release of streamsupport is `streamsupport-1.7.0`.
 
 Want also lambdas? https://github.com/orfjackal/retrolambda
 
