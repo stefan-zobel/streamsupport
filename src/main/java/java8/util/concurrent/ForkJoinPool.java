@@ -2766,13 +2766,13 @@ public class ForkJoinPool extends AbstractExecutorService {
     }
 
     /**
-     * Returns an estimate of the total number of tasks stolen from
-     * one thread's work queue by another. The reported value
-     * underestimates the actual total number of steals when the pool
-     * is not quiescent. This value may be useful for monitoring and
-     * tuning fork/join programs: in general, steal counts should be
-     * high enough to keep threads busy, but low enough to avoid
-     * overhead and contention across threads.
+     * Returns an estimate of the total number of completed tasks that
+     * were executed by a thread other than their submitter. The
+     * reported value underestimates the actual total number of steals
+     * when the pool is not quiescent. This value may be useful for
+     * monitoring and tuning fork/join programs: in general, steal
+     * counts should be high enough to keep threads busy, but low
+     * enough to avoid overhead and contention across threads.
      *
      * @return the number of steals
      */
