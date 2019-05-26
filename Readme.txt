@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.7.0-stable" is the current stable release
+ - "1.7.1-stable" is the current stable release
 
 
 GENERAL
@@ -82,6 +82,9 @@ GENERAL
    from Java 12, especially a new merging Collector (JDK-8205461) and new
    exception handling methods for CompletableFuture (JDK-8210971).
 
+ - Release 1.7.1 completes the Java 12 port and adds some improvements and
+   bug fixes from Java 13.
+
 
 
 KNOWN PROBLEMS
@@ -144,6 +147,22 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.7.1-stable (2019-05-26)
+ - Completed Java 12 port, integrated improvements from Java 13
+ - JDK-8215995: Add toArray() methods to immutable collections
+ - JDK-8221921: Implement size() / isEmpty() in immutable collections
+ - JDK-8214761: Bug in parallel Kahan summation
+ - JDK-8221924: Unmodifiable Map with one entry returns null
+ - JDK-8221981: Simplify Map/List/Set.of() implementation
+ - JDK-8221980: Simplify Optional implementation
+ - JDK-8215359: setContextClassLoader() needlessly throws
+ - JDK-8211283: Misc. changes imported from jsr166 CVS 2018-11
+ - JDK-8219138: Misc. changes imported from jsr166 CVS 2019-05
+ - JDK-8223112: Clarify semantics of java.util.Objects.equals
+ - JDK-8223379: Clarify ForkJoinPool.getStealCount() Javadoc
+ - JDK-8213238: Erroneous Javadoc in MatchOps.MatchKind
+ - Test on Java 13 (early access) [#396]
 
 1.7.0-stable (2018-11-11)
  - Completed Java 11 port, new methods from Java 12
