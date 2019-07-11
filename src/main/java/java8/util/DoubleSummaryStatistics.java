@@ -58,6 +58,8 @@ import java8.util.stream.Collector;
  * implementation of {@link java8.util.stream.Stream#collect Stream.collect()}
  * provides the necessary partitioning, isolation, and merging of results for
  * safe and efficient parallel execution.
+ * 
+ * <p>This implementation does not check for overflow of the count.
  * @since 1.8
  */
 public class DoubleSummaryStatistics implements DoubleConsumer {
