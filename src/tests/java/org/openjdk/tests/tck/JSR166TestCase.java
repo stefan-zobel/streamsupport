@@ -189,7 +189,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.254
+// CVS rev. 1.255
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -291,8 +291,9 @@ public class JSR166TestCase extends TestCase {
             // Avoid spurious reports with enormous runsPerTest.
             // A single test case run should never take more than 1 second.
             // But let's cap it at the high end too ...
-            final int timeoutMinutes =
-                Math.min(15, Math.max(runsPerTest / 60, 1));
+            final int timeoutMinutesMin = Math.max(runsPerTest / 60, 1)
+                * Math.max((int) delayFactor, 1);
+            final int timeoutMinutes = Math.min(15, timeoutMinutesMin);
             for (TestCase lastTestCase = currentTestCase;;) {
                 try { MINUTES.sleep(timeoutMinutes); }
                 catch (InterruptedException unexpected) { break; }
