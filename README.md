@@ -70,7 +70,24 @@ dependencies {
 ```
 
 
+### Example usage
+
+```java
+import java.util.List;
+import java8.util.stream.IntStreams;
+import java8.util.stream.StreamSupport;
+import static java8.util.stream.Collectors.toList;
+
+List<Integer> list = IntStreams.of(1, 2, 3, 4).boxed()
+        .collect(toList());
+
+List<Integer> incremented = StreamSupport.stream(list)
+        .map(i -> i + 1)
+        .collect(toList());
+```
+
 ### Forks
+
 
 Android developers using the Android Studio 3.x toolchain should have a look at the `streamsupport` forks:
 
