@@ -189,7 +189,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.255
+// CVS rev. 1.256
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -578,6 +578,13 @@ public class JSR166TestCase extends TestCase {
      * Returns a random non-null TimeUnit.
      */
     static TimeUnit randomTimeUnit() { return RANDOM_TIMEUNIT; }
+
+    /**
+     * Returns a random boolean; a "coin flip".
+     */
+    static boolean randomBoolean() {
+        return ThreadLocalRandom.current().nextBoolean();
+    }
 
     /**
      * Returns the shortest timed delay. This can be scaled up for
