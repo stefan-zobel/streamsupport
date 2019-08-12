@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinTaskTest extends JSR166TestCase {
-// CVS rev. 1.56
+// CVS rev. 1.57
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -522,6 +522,8 @@ public class ForkJoinTaskTest extends JSR166TestCase {
                 AsyncFib f = new AsyncFib(8);
                 assertSame(f, f.fork());
                 helpQuiesce();
+                while (!f.isDone()) // wait out race
+                    ;
                 assertEquals(21, f.number);
                 assertEquals(0, getQueuedTaskCount());
                 checkCompletedNormally(f);
