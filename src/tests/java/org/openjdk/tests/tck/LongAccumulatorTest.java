@@ -18,7 +18,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class LongAccumulatorTest extends JSR166TestCase {
-// CVS rev. 1.9
+// CVS rev. 1.10
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -130,7 +130,7 @@ public class LongAccumulatorTest extends JSR166TestCase {
             = new LongAccumulator((x, y) -> x + y, 0L);
         final int nThreads = ThreadLocalRandom.current().nextInt(1, 5);
         final Phaser phaser = new Phaser(nThreads + 1);
-        final int incs = 1_000_000;
+        final int incs = expensiveTests ? 1_000_000 : 100_000;
         final long total = nThreads * incs/2L * (incs - 1); // Gauss
         final Runnable task = () -> {
             phaser.arriveAndAwaitAdvance();

@@ -18,7 +18,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class DoubleAccumulatorTest extends JSR166TestCase {
-// CVS rev. 1.8
+// CVS rev. 1.9
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -136,7 +136,7 @@ public class DoubleAccumulatorTest extends JSR166TestCase {
             = new DoubleAccumulator((x, y) -> x + y, 0.0);
         final int nThreads = ThreadLocalRandom.current().nextInt(1, 5);
         final Phaser phaser = new Phaser(nThreads + 1);
-        final int incs = 1_000_000;
+        final int incs = expensiveTests ? 1_000_000 : 100_000;
         final double total = nThreads * incs/2.0 * (incs - 1); // Gauss
         final Runnable task = () -> {
             phaser.arriveAndAwaitAdvance();

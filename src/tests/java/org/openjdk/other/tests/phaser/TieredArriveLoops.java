@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
 import java8.util.concurrent.Phaser;
 
 public class TieredArriveLoops {
-    final long testDurationMillisDefault = 10L * 1000L;
+    final long testDurationMillisDefault = 10_000L;
     final long testDurationMillis;
     final long quittingTimeNanos;
 
