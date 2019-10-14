@@ -189,7 +189,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.256
+// CVS rev. 1.260
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -585,6 +585,12 @@ public class JSR166TestCase extends TestCase {
     static boolean randomBoolean() {
         return ThreadLocalRandom.current().nextBoolean();
     }
+    /**
+     * Returns a random element from given choices.
+     */
+    <T> T chooseRandomly(T... choices) {
+        return choices[ThreadLocalRandom.current().nextInt(choices.length)];
+    }
 
     /**
      * Returns the shortest timed delay. This can be scaled up for
@@ -642,8 +648,8 @@ public class JSR166TestCase extends TestCase {
      */
     public void threadRecordFailure(Throwable t) {
         System.err.println(t);
-        dumpTestThreads();
-        threadFailure.compareAndSet(null, t);
+        if (threadFailure.compareAndSet(null, t))
+            dumpTestThreads();
     }
 
     @BeforeMethod
@@ -1327,6 +1333,20 @@ public class JSR166TestCase extends TestCase {
     }
 
     /**
+     * Spin-waits up to LONG_DELAY_MS milliseconds for the current thread to
+     * be interrupted.  Clears the interrupt status before returning.
+     */
+    void awaitInterrupted() {
+        for (long startTime = 0L; !Thread.interrupted(); ) {
+            if (startTime == 0L)
+                startTime = System.nanoTime();
+            else if (millisElapsedSince(startTime) > LONG_DELAY_MS)
+                fail("timed out waiting for thread interrupt");
+            Thread.yield();
+        }
+    }
+
+    /**
      * Returns the number of milliseconds since time given by
      * startNanoTime, which must have been previously returned from a
      * call to {@link System#nanoTime()}.
@@ -1374,11 +1394,12 @@ public class JSR166TestCase extends TestCase {
             t.join(timeoutMillis);
         } catch (InterruptedException fail) {
             threadUnexpectedException(fail);
-        } finally {
-            if (t.getState() != Thread.State.TERMINATED) {
-                t.interrupt();
-                threadFail("timed out waiting for thread to terminate");
-            }
+        }
+        Thread.State state;
+        if ((state = t.getState()) != Thread.State.TERMINATED) {
+            t.interrupt();
+            threadFail("timed out waiting for thread to terminate; "
+                    + "state=" + state);
         }
     }
 
