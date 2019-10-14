@@ -22,7 +22,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class PhaserTest extends JSR166TestCase {
-// CVS rev. 1.47
+// CVS rev. 1.50
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -458,7 +458,7 @@ public class PhaserTest extends JSR166TestCase {
     /**
      * awaitAdvanceInterruptibly blocks interruptibly
      */
-    public void testAwaitAdvanceInterruptibly_interruptible() throws InterruptedException {
+    public void testAwaitAdvanceInterruptibly_Interruptible() throws InterruptedException {
         final Phaser phaser = new Phaser(1);
         final CountDownLatch pleaseInterrupt = new CountDownLatch(2);
 
@@ -483,14 +483,14 @@ public class PhaserTest extends JSR166TestCase {
             public void realRun() throws TimeoutException {
                 Thread.currentThread().interrupt();
                 try {
-                    phaser.awaitAdvanceInterruptibly(0, 2*LONG_DELAY_MS, MILLISECONDS);
+                    phaser.awaitAdvanceInterruptibly(0, randomTimeout(), randomTimeUnit());
                     shouldThrow();
                 } catch (InterruptedException success) {}
                 assertFalse(Thread.interrupted());
 
                 pleaseInterrupt.countDown();
                 try {
-                    phaser.awaitAdvanceInterruptibly(0, 2*LONG_DELAY_MS, MILLISECONDS);
+                    phaser.awaitAdvanceInterruptibly(0, LONGER_DELAY_MS, MILLISECONDS);
                     shouldThrow();
                 } catch (InterruptedException success) {}
                 assertFalse(Thread.interrupted());
@@ -498,8 +498,8 @@ public class PhaserTest extends JSR166TestCase {
 
         await(pleaseInterrupt);
         assertState(phaser, 0, 1, 1);
-        assertThreadBlocks(t1, Thread.State.WAITING);
-        assertThreadBlocks(t2, Thread.State.TIMED_WAITING);
+        if (randomBoolean()) assertThreadBlocks(t1, Thread.State.WAITING);
+        if (randomBoolean()) assertThreadBlocks(t2, Thread.State.TIMED_WAITING);
         t1.interrupt();
         t2.interrupt();
         awaitTermination(t1);
