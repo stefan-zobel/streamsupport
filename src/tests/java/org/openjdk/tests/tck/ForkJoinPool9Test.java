@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPool9Test extends JSR166TestCase {
-// CVS rev. 1.6
+// CVS rev. 1.5 / 1.6
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -40,34 +40,31 @@ public class ForkJoinPool9Test extends JSR166TestCase {
 
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         boolean haveSecurityManager = (System.getSecurityManager() != null);
-        CountDownLatch taskStarted = new CountDownLatch(1);
+        CountDownLatch runInCommonPoolStarted = new CountDownLatch(1);
         Runnable runInCommonPool = () -> {
-            taskStarted.countDown();
+            runInCommonPoolStarted.countDown();
             assertTrue(ForkJoinTask.inForkJoinPool());
-            assertSame(ForkJoinPool.commonPool(),
-                       ForkJoinTask.getPool());
-                assertSame(systemClassLoader,
-                           Thread.currentThread().getContextClassLoader());
-                assertSame(systemClassLoader,
-                           getContextClassLoader(Thread.currentThread()));
-                if (haveSecurityManager)
-                    assertThrows(
-                        SecurityException.class,
-                        () -> System.getProperty("foo")/*,
-                        // 8215359: InnocuousForkJoinWorkerThread.setContextClassLoader needlessly throws
-                        () -> Thread.currentThread().setContextClassLoader(null)*/);
+            assertSame(ForkJoinPool.commonPool(), ForkJoinTask.getPool());
+            assertSame(systemClassLoader, Thread.currentThread().getContextClassLoader());
+            assertSame(systemClassLoader, getContextClassLoader(Thread.currentThread()));
+            if (haveSecurityManager)
+                assertThrows(
+                    SecurityException.class,
+                    () -> System.getProperty("foo")/*,
+                    // 8215359: InnocuousForkJoinWorkerThread.setContextClassLoader needlessly throws
+                    () -> Thread.currentThread().setContextClassLoader(null)*/);
 
-                // TODO ?
-//                 if (haveSecurityManager
-//                     && Thread.currentThread().getClass().getSimpleName()
-//                     .equals("InnocuousForkJoinWorkerThread"))
-//                     assertThrows(SecurityException.class, /* ?? */);
-            };
-            Future<?> f = ForkJoinPool.commonPool().submit(runInCommonPool);
-            // Ensure runInCommonPool is truly running in the common pool,
-            // by giving this thread no opportunity to "help" on get().
-            await(taskStarted);
-            assertNull(f.get());
+            // TODO ?
+//          if (haveSecurityManager
+//              && Thread.currentThread().getClass().getSimpleName()
+//                  .equals("InnocuousForkJoinWorkerThread"))
+//              assertThrows(SecurityException.class, /* ?? */);
+        };
+        Future<?> f = ForkJoinPool.commonPool().submit(runInCommonPool);
+        // Ensure runInCommonPool is truly running in the common pool,
+        // by giving this thread no opportunity to "help" on get().
+        await(runInCommonPoolStarted);
+        assertNull(f.get());
     }
 
     static ClassLoader getContextClassLoader(Thread thread) {
