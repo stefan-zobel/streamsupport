@@ -1033,7 +1033,7 @@ public class JSR166TestCase extends TestCase {
             return false;
         if (name.startsWith("ForkJoinPool.commonPool-worker")
             && (lockName = info.getLockName()) != null
-            && lockName.startsWith("java.util.concurrent.ForkJoinPool"))
+            && lockName.startsWith("java8.util.concurrent.ForkJoinPool"))
             return false;
         return true;
     }
