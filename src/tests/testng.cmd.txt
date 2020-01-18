@@ -3,19 +3,21 @@ SET JAVA6=F:/Java/sun-jdk1.6.0_45-64bit/bin/java
 
 SET JAVA7=F:/Java/sun-jdk1.7.0_80-64bit/bin/java
 
-SET JAVA8=F:/Java/jdk1.8.0_232-openjdk-64bit/bin/java
+SET JAVA8=F:/Java/jdk1.8.0_242-zulu-64bit/bin/java
 
 SET JAVA9=F:/Java/jdk9.0.4+11/bin/java
 
 SET JAVA10=F:/Java/jdk10.0.2+13/bin/java
 
-SET JAVA11=F:/Java/jdk11.0.5+10-openjdk/bin/java
+SET JAVA11=F:/Java/jdk11.0.6+10-zulu/bin/java
 
 SET JAVA12=F:/Java/jdk12.0.2+10-openjdk/bin/java
 
-SET JAVA13=F:/Java/jdk13.0.1+9-openjdk/bin/java
+SET JAVA13=F:/Java/jdk13.0.2+6-zulu/bin/java
 
-SET JAVA14=F:/Java/jdk14_ea+20/bin/java
+SET JAVA14=F:/Java/jdk14_ea+32/bin/java
+
+SET JAVA15=F:/Java/jdk15_ea+6/bin/java
 
 SET TEST_JAR=streamsupport-all-tests-1.7.2-SNAPSHOT.jar
 
