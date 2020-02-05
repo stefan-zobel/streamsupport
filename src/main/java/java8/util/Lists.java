@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -182,7 +182,7 @@ public final class Lists {
      */
     @SuppressWarnings("unchecked")
     public static <E> List<E> of() {
-        return (List<E>) ImmutableCollections.ListN.EMPTY_LIST;
+        return (List<E>) ImmutableCollections.EMPTY_LIST;
     }
 
     /**
@@ -424,7 +424,7 @@ public final class Lists {
         switch (elements.length) { // implicit null check of elements
             case 0:
                 @SuppressWarnings("unchecked")
-                List<E> list = (List<E>) ImmutableCollections.ListN.EMPTY_LIST;
+                List<E> list = (List<E>) ImmutableCollections.EMPTY_LIST;
                 return list;
             case 1:
                 return new ImmutableCollections.List12<E>(elements[0]);

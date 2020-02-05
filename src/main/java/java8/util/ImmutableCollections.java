@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, 2019, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -60,9 +60,30 @@ final class ImmutableCollections {
      * will vary between JVM runs.
      */
     static final int SALT;
+
+    /**
+     * For set and map iteration, we will iterate in "reverse" stochastically,
+     * decided at bootstrap time.
+     */
+    static final boolean REVERSE;
+
+    static final Object EMPTY;
+
+    static final ListN<?> EMPTY_LIST;
+
+    static final SetN<?> EMPTY_SET;
+
+    static final MapN<?, ?> EMPTY_MAP;
+
     static {
-        long nt = System.nanoTime();
-        SALT = (int) ((nt >>> 32) ^ nt);
+        long color = 0x243F_6A88_85A3_08D3L; // pi slice
+        long seed = System.nanoTime();
+        SALT = (int)((color * seed) >> 16);  // avoid LSB and MSB
+        REVERSE = SALT >= 0;
+        EMPTY = new Object();
+        EMPTY_LIST = new ListN<>();
+        EMPTY_SET = new SetN<>();
+        EMPTY_MAP = new MapN<>();
     }
 
     /** No instances. */
@@ -373,11 +394,13 @@ final class ImmutableCollections {
             implements Serializable {
 
         private final E e0;
-        private final E e1;
+        private final Object e1;
 
         List12(E e0) {
             this.e0 = Objects.requireNonNull(e0);
-            this.e1 = null;
+            // Use EMPTY as a sentinel for an unused element: not using null
+            // enable constant folding optimizations over single-element lists
+            this.e1 = EMPTY;
         }
 
         List12(E e0, E e1) {
@@ -387,7 +410,7 @@ final class ImmutableCollections {
 
         @Override
         public int size() {
-            return e1 != null ? 2 : 1;
+            return e1 != EMPTY ? 2 : 1;
         }
 
         @Override
@@ -396,11 +419,12 @@ final class ImmutableCollections {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public E get(int index) {
             if (index == 0) {
                 return e0;
-            } else if (index == 1 && e1 != null) {
-                return e1;
+            } else if (index == 1 && e1 != EMPTY) {
+                return (E) e1;
             }
             throw outOfBounds(index);
         }
@@ -410,7 +434,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            if (e1 == null) {
+            if (e1 == EMPTY) {
                 return new ColSer(ColSer.IMM_LIST, e0);
             } else {
                 return new ColSer(ColSer.IMM_LIST, e0, e1);
@@ -419,7 +443,7 @@ final class ImmutableCollections {
 
         @Override
         public Object[] toArray() {
-            if (e1 == null) {
+            if (e1 == EMPTY) {
                 return new Object[] { e0 };
             } else {
                 return new Object[] { e0, e1 };
@@ -429,7 +453,7 @@ final class ImmutableCollections {
         @Override
         @SuppressWarnings("unchecked")
         public <T> T[] toArray(T[] a) {
-            int size = e1 == null ? 1 : 2;
+            int size = size();
             T[] array = a.length >= size ? a :
                     (T[]) Array.newInstance(a.getClass().getComponentType(), size);
             array[0] = (T) e0;
@@ -445,8 +469,6 @@ final class ImmutableCollections {
 
     static final class ListN<E> extends AbstractImmutableList<E>
             implements Serializable {
-
-        static final List<?> EMPTY_LIST = new ListN<Object>();
 
         private final E[] elements;
 
@@ -537,11 +559,13 @@ final class ImmutableCollections {
             implements Serializable {
 
         final E e0;
-        final E e1;
+        final Object e1;
 
         Set12(E e0) {
             this.e0 = Objects.requireNonNull(e0);
-            this.e1 = null;
+            // Use EMPTY as a sentinel for an unused element: not using null
+            // enable constant folding optimizations over single-element sets
+            this.e1 = EMPTY;
         }
 
         Set12(E e0, E e1) {
@@ -555,7 +579,7 @@ final class ImmutableCollections {
 
         @Override
         public int size() {
-            return (e1 == null) ? 1 : 2;
+            return (e1 == EMPTY) ? 1 : 2;
         }
 
         @Override
@@ -565,15 +589,16 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            return o.equals(e0) || o.equals(e1); // implicit nullcheck of o
+            return o.equals(e0) || e1.equals(o); // implicit nullcheck of o
         }
 
         @Override
         public int hashCode() {
-            return e0.hashCode() + (e1 == null ? 0 : e1.hashCode());
+            return e0.hashCode() + (e1 == EMPTY ? 0 : e1.hashCode());
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Iterator<E> iterator() {
             return new Iterators.ImmutableIt<E>() {
                 private int idx = size();
@@ -587,10 +612,10 @@ final class ImmutableCollections {
                 public E next() {
                     if (idx == 1) {
                         idx = 0;
-                        return SALT >= 0 || e1 == null ? e0 : e1;
+                        return (REVERSE || e1 == EMPTY) ? e0 : (E) e1;
                     } else if (idx == 2) {
                         idx = 1;
-                        return SALT >= 0 ? e1 : e0;
+                        return REVERSE ? (E) e1 : e0;
                     } else {
                         throw new NoSuchElementException();
                     }
@@ -603,7 +628,7 @@ final class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            if (e1 == null) {
+            if (e1 == EMPTY) {
                 return new ColSer(ColSer.IMM_SET, e0);
             } else {
                 return new ColSer(ColSer.IMM_SET, e0, e1);
@@ -612,9 +637,9 @@ final class ImmutableCollections {
 
         @Override
         public Object[] toArray() {
-            if (e1 == null) {
+            if (e1 == EMPTY) {
                 return new Object[] { e0 };
-            } else if (SALT >= 0) {
+            } else if (REVERSE) {
                 return new Object[] { e1, e0 };
             } else {
                 return new Object[] { e0, e1 };
@@ -624,12 +649,12 @@ final class ImmutableCollections {
         @Override
         @SuppressWarnings("unchecked")
         public <T> T[] toArray(T[] a) {
-            int size = e1 == null ? 1 : 2;
+            int size = size();
             T[] array = a.length >= size ? a :
                     (T[]) Array.newInstance(a.getClass().getComponentType(), size);
             if (size == 1) {
                 array[0] = (T) e0;
-            } else if (SALT >= 0) {
+            } else if (REVERSE) {
                 array[0] = (T) e1;
                 array[1] = (T) e0;
             } else {
@@ -652,9 +677,8 @@ final class ImmutableCollections {
     static final class SetN<E> extends AbstractImmutableSet<E>
             implements Serializable {
 
-        static final Set<?> EMPTY_SET = new SetN<Object>();
-
         final E[] elements;
+
         private final int size;
 
         @SuppressWarnings("unchecked")
@@ -709,7 +733,7 @@ final class ImmutableCollections {
 
             private int nextIndex() {
                 int idx = this.idx;
-                if (SALT >= 0) {
+                if (REVERSE) {
                     if (++idx >= elements.length) {
                         idx = 0;
                     }
@@ -883,9 +907,8 @@ final class ImmutableCollections {
      */
     static final class MapN<K,V> extends AbstractImmutableMap<K,V> {
 
-        static final Map<?,?> EMPTY_MAP = new MapN<Object, Object>();
-
         final Object[] table; // pairs of key, value
+
         final int size; // number of pairs
 
         MapN(Object... input) {
@@ -987,7 +1010,7 @@ final class ImmutableCollections {
 
             private int nextIndex() {
                 int idx = this.idx;
-                if (SALT >= 0) {
+                if (REVERSE) {
                     if ((idx += 2) >= table.length) {
                         idx = 0;
                     }
@@ -1073,7 +1096,7 @@ final class ImmutableCollections {
         }
     }
 
-    private static int floorMod(int x, int y) {
+    static int floorMod(int x, int y) {
         int mod = x % y;
         // if the signs are different and modulo not zero, adjust result
         if ((mod ^ y) < 0 && mod != 0) {
@@ -1221,7 +1244,7 @@ final class ColSer implements Serializable {
                     return Sets.of(array);
                 case IMM_MAP:
                     if (array.length == 0) {
-                        return ImmutableCollections.MapN.EMPTY_MAP;
+                        return ImmutableCollections.EMPTY_MAP;
                     } else if (array.length == 2) {
                         return new ImmutableCollections.Map1<Object, Object>(array[0], array[1]);
                     } else {
