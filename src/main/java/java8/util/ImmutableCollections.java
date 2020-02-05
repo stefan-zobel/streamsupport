@@ -59,7 +59,7 @@ final class ImmutableCollections {
      * it needs to vary sufficiently from one run to the next so that iteration order
      * will vary between JVM runs.
      */
-    static final int SALT;
+    static final long SALT32L;
 
     /**
      * For set and map iteration, we will iterate in "reverse" stochastically,
@@ -76,10 +76,18 @@ final class ImmutableCollections {
     static final MapN<?, ?> EMPTY_MAP;
 
     static {
-        long color = 0x243F_6A88_85A3_08D3L; // pi slice
+        // to generate a reasonably random and well-mixed SALT, use an arbitrary
+        // value (a slice of pi), multiply with the System.nanoTime, then pick
+        // the mid 32-bits from the product. By picking a SALT value in the
+        // [0 ... 0xFFFF_FFFFL == 2^32-1] range, we ensure that for any positive
+        // int N, (SALT32L * N) >> 32 is a number in the [0 ... N-1] range. This
+        // property will be used to avoid more expensive modulo-based
+        // calculations.
+        long color = 0x243F_6A88_85A3_08D3L; // slice of pi
         long seed = System.nanoTime();
-        SALT = (int)((color * seed) >> 16);  // avoid LSB and MSB
-        REVERSE = SALT >= 0;
+        SALT32L = (int)((color * seed) >> 16) & 0xFFFF_FFFFL;
+        // use the lowest bit to determine if we should reverse iteration
+        REVERSE = (SALT32L & 1) == 0;
         EMPTY = new Object();
         EMPTY_LIST = new ListN<>();
         EMPTY_SET = new SetN<>();
@@ -601,7 +609,7 @@ final class ImmutableCollections {
         @SuppressWarnings("unchecked")
         public Iterator<E> iterator() {
             return new Iterators.ImmutableIt<E>() {
-                private int idx = size();
+                private int idx = (e1 == EMPTY) ? 1 : 2;
 
                 @Override
                 public boolean hasNext() {
@@ -679,7 +687,7 @@ final class ImmutableCollections {
 
         final E[] elements;
 
-        private final int size;
+        final int size;
 
         @SuppressWarnings("unchecked")
         SetN(E... input) {
@@ -720,10 +728,10 @@ final class ImmutableCollections {
             private int idx;
 
             SetNIterator() {
-                remaining = size();
-                if (remaining > 0) {
-                    idx = floorMod(SALT, elements.length);
-                }
+                remaining = size;
+                // pick starting index in the [0 .. element.length-1] range
+                // randomly based on SALT32L
+                idx = (int) ((SALT32L * elements.length) >>> 32);
             }
 
             @Override
@@ -731,26 +739,25 @@ final class ImmutableCollections {
                 return remaining > 0;
             }
 
-            private int nextIndex() {
-                int idx = this.idx;
-                if (REVERSE) {
-                    if (++idx >= elements.length) {
-                        idx = 0;
-                    }
-                } else {
-                    if (--idx < 0) {
-                        idx = elements.length - 1;
-                    }
-                }
-                return this.idx = idx;
-            }
-
             @Override
             public E next() {
                 if (remaining > 0) {
                     E element;
-                    // skip null elements
-                    while ((element = elements[nextIndex()]) == null) {}
+                    int idx = this.idx;
+                    int len = elements.length;
+                    // step to the next element; skip null elements
+                    do {
+                        if (REVERSE) {
+                            if (++idx >= len) {
+                                idx = 0;
+                            }
+                        } else {
+                            if (--idx < 0) {
+                                idx = len - 1;
+                            }
+                        }
+                    } while ((element = elements[idx]) == null);
+                    this.idx = idx;
                     remaining--;
                     return element;
                 } else {
@@ -997,10 +1004,10 @@ final class ImmutableCollections {
             private int idx;
 
             MapNIterator() {
-                remaining = size();
-                if (remaining > 0) {
-                    idx = floorMod(SALT, table.length >> 1) << 1;
-                }
+                remaining = size;
+                // pick starting index in the [0 .. table.length-1] range
+                // randomly based on SALT32L, then multiply by two
+                idx = (int) ((SALT32L * (table.length >> 1)) >>> 32) << 1;
             }
 
             @Override
