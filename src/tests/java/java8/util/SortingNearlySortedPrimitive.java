@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import java8.util.DualPivotQuicksort;
 import java8.util.StringJoiner;
 import java8.util.function.IntFunction;
 import java8.util.stream.IntStreams;
@@ -199,7 +200,7 @@ public class SortingNearlySortedPrimitive {
     }
 
     private void sortAndAssert(int[] array) {
-        DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
+        DualPivotQuicksort.sort(array, 1, 0, array.length);
         for (int i = 1; i < array.length; i++) {
             if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
@@ -208,7 +209,7 @@ public class SortingNearlySortedPrimitive {
     }
 
     private void sortAndAssert(char[] array) {
-        DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
+        DualPivotQuicksort.sort(array, 1, 0, array.length);
         for (int i = 1; i < array.length; i++) {
             if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
@@ -217,7 +218,7 @@ public class SortingNearlySortedPrimitive {
     }
 
     private void sortAndAssert(short[] array) {
-        DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
+        DualPivotQuicksort.sort(array, 1, 0, array.length);
         for (int i = 1; i < array.length; i++) {
             if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
@@ -226,7 +227,7 @@ public class SortingNearlySortedPrimitive {
     }
 
     private void sortAndAssert(double[] array) {
-        DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
+        DualPivotQuicksort.sort(array, 1, 0, array.length);
         for (int i = 1; i < array.length; i++) {
             if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
@@ -235,7 +236,7 @@ public class SortingNearlySortedPrimitive {
     }
 
     private void sortAndAssert(float[] array) {
-        DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
+        DualPivotQuicksort.sort(array, 1, 0, array.length);
         for (int i = 1; i < array.length; i++) {
             if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
@@ -244,7 +245,7 @@ public class SortingNearlySortedPrimitive {
     }
 
     private void sortAndAssert(long[] array) {
-        DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
+        DualPivotQuicksort.sort(array, 1, 0, array.length);
         for (int i = 1; i < array.length; i++) {
             if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
