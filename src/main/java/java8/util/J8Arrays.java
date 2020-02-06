@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2019, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -330,12 +330,347 @@ public final class J8Arrays {
     }
 
     /**
-     * The minimum array length below which a parallel sorting
-     * algorithm will not further partition the sorting task. Using
-     * smaller sizes typically results in memory contention across
-     * tasks that makes parallel speedups unlikely.
+     * Sorts the specified array into ascending numerical order.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     *
+     * @since 1.8
      */
-    private static final int MIN_ARRAY_SORT_GRAN = 1 << 13;
+    public static void parallelSort(byte[] a) {
+        DualPivotQuicksort.sort(a, 0, a.length);
+    }
+
+    /**
+     * Sorts the specified range of the array into ascending numerical order.
+     * The range to be sorted extends from the index {@code fromIndex},
+     * inclusive, to the index {@code toIndex}, exclusive. If
+     * {@code fromIndex == toIndex}, the range to be sorted is empty.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     * @param fromIndex the index of the first element, inclusive, to be sorted
+     * @param toIndex the index of the last element, exclusive, to be sorted
+     *
+     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(byte[] a, int fromIndex, int toIndex) {
+        rangeCheck(a.length, fromIndex, toIndex);
+        DualPivotQuicksort.sort(a, fromIndex, toIndex);
+    }
+
+    /**
+     * Sorts the specified array into ascending numerical order.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(char[] a) {
+        DualPivotQuicksort.sort(a, 0, a.length);
+    }
+
+    /**
+     * Sorts the specified range of the array into ascending numerical order.
+     * The range to be sorted extends from the index {@code fromIndex},
+     * inclusive, to the index {@code toIndex}, exclusive. If
+     * {@code fromIndex == toIndex}, the range to be sorted is empty.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     * @param fromIndex the index of the first element, inclusive, to be sorted
+     * @param toIndex the index of the last element, exclusive, to be sorted
+     *
+     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(char[] a, int fromIndex, int toIndex) {
+        rangeCheck(a.length, fromIndex, toIndex);
+        DualPivotQuicksort.sort(a, fromIndex, toIndex);
+    }
+
+    /**
+     * Sorts the specified array into ascending numerical order.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(short[] a) {
+        DualPivotQuicksort.sort(a, 0, a.length);
+    }
+
+    /**
+     * Sorts the specified range of the array into ascending numerical order.
+     * The range to be sorted extends from the index {@code fromIndex},
+     * inclusive, to the index {@code toIndex}, exclusive. If
+     * {@code fromIndex == toIndex}, the range to be sorted is empty.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     * @param fromIndex the index of the first element, inclusive, to be sorted
+     * @param toIndex the index of the last element, exclusive, to be sorted
+     *
+     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(short[] a, int fromIndex, int toIndex) {
+        rangeCheck(a.length, fromIndex, toIndex);
+        DualPivotQuicksort.sort(a, fromIndex, toIndex);
+    }
+
+    /**
+     * Sorts the specified array into ascending numerical order.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(int[] a) {
+        DualPivotQuicksort.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
+    }
+
+    /**
+     * Sorts the specified range of the array into ascending numerical order.
+     * The range to be sorted extends from the index {@code fromIndex},
+     * inclusive, to the index {@code toIndex}, exclusive. If
+     * {@code fromIndex == toIndex}, the range to be sorted is empty.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     * @param fromIndex the index of the first element, inclusive, to be sorted
+     * @param toIndex the index of the last element, exclusive, to be sorted
+     *
+     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(int[] a, int fromIndex, int toIndex) {
+        rangeCheck(a.length, fromIndex, toIndex);
+        DualPivotQuicksort.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
+    }
+
+    /**
+     * Sorts the specified array into ascending numerical order.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(long[] a) {
+        DualPivotQuicksort.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
+    }
+
+    /**
+     * Sorts the specified range of the array into ascending numerical order.
+     * The range to be sorted extends from the index {@code fromIndex},
+     * inclusive, to the index {@code toIndex}, exclusive. If
+     * {@code fromIndex == toIndex}, the range to be sorted is empty.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     * @param fromIndex the index of the first element, inclusive, to be sorted
+     * @param toIndex the index of the last element, exclusive, to be sorted
+     *
+     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(long[] a, int fromIndex, int toIndex) {
+        rangeCheck(a.length, fromIndex, toIndex);
+        DualPivotQuicksort.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
+    }
+
+    /**
+     * Sorts the specified array into ascending numerical order.
+     *
+     * <p>The {@code <} relation does not provide a total order on all float
+     * values: {@code -0.0f == 0.0f} is {@code true} and a {@code Float.NaN}
+     * value compares neither less than, greater than, nor equal to any value,
+     * even itself. This method uses the total order imposed by the method
+     * {@link Float#compareTo}: {@code -0.0f} is treated as less than value
+     * {@code 0.0f} and {@code Float.NaN} is considered greater than any
+     * other value and all {@code Float.NaN} values are considered equal.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(float[] a) {
+        DualPivotQuicksort.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
+    }
+
+    /**
+     * Sorts the specified range of the array into ascending numerical order.
+     * The range to be sorted extends from the index {@code fromIndex},
+     * inclusive, to the index {@code toIndex}, exclusive. If
+     * {@code fromIndex == toIndex}, the range to be sorted is empty.
+     *
+     * <p>The {@code <} relation does not provide a total order on all float
+     * values: {@code -0.0f == 0.0f} is {@code true} and a {@code Float.NaN}
+     * value compares neither less than, greater than, nor equal to any value,
+     * even itself. This method uses the total order imposed by the method
+     * {@link Float#compareTo}: {@code -0.0f} is treated as less than value
+     * {@code 0.0f} and {@code Float.NaN} is considered greater than any
+     * other value and all {@code Float.NaN} values are considered equal.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     * @param fromIndex the index of the first element, inclusive, to be sorted
+     * @param toIndex the index of the last element, exclusive, to be sorted
+     *
+     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(float[] a, int fromIndex, int toIndex) {
+        rangeCheck(a.length, fromIndex, toIndex);
+        DualPivotQuicksort.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
+    }
+
+    /**
+     * Sorts the specified array into ascending numerical order.
+     *
+     * <p>The {@code <} relation does not provide a total order on all double
+     * values: {@code -0.0d == 0.0d} is {@code true} and a {@code Double.NaN}
+     * value compares neither less than, greater than, nor equal to any value,
+     * even itself. This method uses the total order imposed by the method
+     * {@link Double#compareTo}: {@code -0.0d} is treated as less than value
+     * {@code 0.0d} and {@code Double.NaN} is considered greater than any
+     * other value and all {@code Double.NaN} values are considered equal.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(double[] a) {
+        DualPivotQuicksort.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
+    }
+
+    /**
+     * Sorts the specified range of the array into ascending numerical order.
+     * The range to be sorted extends from the index {@code fromIndex},
+     * inclusive, to the index {@code toIndex}, exclusive. If
+     * {@code fromIndex == toIndex}, the range to be sorted is empty.
+     *
+     * <p>The {@code <} relation does not provide a total order on all double
+     * values: {@code -0.0d == 0.0d} is {@code true} and a {@code Double.NaN}
+     * value compares neither less than, greater than, nor equal to any value,
+     * even itself. This method uses the total order imposed by the method
+     * {@link Double#compareTo}: {@code -0.0d} is treated as less than value
+     * {@code 0.0d} and {@code Double.NaN} is considered greater than any
+     * other value and all {@code Double.NaN} values are considered equal.
+     *
+     * <p><b>Implementation Note:</b><br> The sorting algorithm is a Dual-Pivot Quicksort by
+     * Vladimir Yaroslavskiy, Jon Bentley and Josh Bloch. This algorithm
+     * offers O(n log(n)) performance on all data sets, and is typically
+     * faster than traditional (one-pivot) Quicksort implementations.
+     *
+     * @param a the array to be sorted
+     * @param fromIndex the index of the first element, inclusive, to be sorted
+     * @param toIndex the index of the last element, exclusive, to be sorted
+     *
+     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
+     *
+     * @since 1.8
+     */
+    public static void parallelSort(double[] a, int fromIndex, int toIndex) {
+        rangeCheck(a.length, fromIndex, toIndex);
+        DualPivotQuicksort.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
+    }
+
+    /**
+     * Checks that {@code fromIndex} and {@code toIndex} are in
+     * the range and throws an exception if they aren't.
+     */
+    private static void rangeCheck(int arrayLength, int fromIndex, int toIndex) {
+        if (fromIndex > toIndex) {
+            throw new IllegalArgumentException(
+                    "fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ")");
+        }
+        if (fromIndex < 0) {
+            throw new ArrayIndexOutOfBoundsException(fromIndex);
+        }
+        if (toIndex > arrayLength) {
+            throw new ArrayIndexOutOfBoundsException(toIndex);
+        }
+    }
 
     /**
      * A comparator that implements the natural ordering of a group of
@@ -355,532 +690,18 @@ public final class J8Arrays {
     static final class NaturalOrder implements Comparator<Object> {
         @SuppressWarnings("unchecked")
         public int compare(Object first, Object second) {
-            return ((Comparable<Object>)first).compareTo(second);
+            return ((Comparable<Object>) first).compareTo(second);
         }
         static final NaturalOrder INSTANCE = new NaturalOrder();
     }
 
     /**
-     * Sorts the specified array into ascending numerical order.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(byte[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(byte[]) Arrays.sort} method. The algorithm requires a
-     * working space no greater than the size of the original array. The
-     * {@link ForkJoinPool#commonPool() ForkJoin common pool} is used to
-     * execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     *
-     * @since 1.8
+     * The minimum array length below which a parallel sorting
+     * algorithm will not further partition the sorting task. Using
+     * smaller sizes typically results in memory contention across
+     * tasks that makes parallel speedups unlikely.
      */
-    public static void parallelSort(byte[] a) {
-        int n = a.length, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, 0, n - 1);
-        else
-            new ArraysParallelSortHelpers.FJByte.Sorter
-                (null, a, new byte[n], 0, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified range of the array into ascending numerical order.
-     * The range to be sorted extends from the index {@code fromIndex},
-     * inclusive, to the index {@code toIndex}, exclusive. If
-     * {@code fromIndex == toIndex}, the range to be sorted is empty.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(byte[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(byte[]) Arrays.sort} method. The algorithm requires a working
-     * space no greater than the size of the specified range of the original
-     * array. The {@link ForkJoinPool#commonPool() ForkJoin common pool} is
-     * used to execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     * @param fromIndex the index of the first element, inclusive, to be sorted
-     * @param toIndex the index of the last element, exclusive, to be sorted
-     *
-     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
-     * @throws ArrayIndexOutOfBoundsException
-     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(byte[] a, int fromIndex, int toIndex) {
-        rangeCheck(a.length, fromIndex, toIndex);
-        int n = toIndex - fromIndex, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, fromIndex, toIndex - 1);
-        else
-            new ArraysParallelSortHelpers.FJByte.Sorter
-                (null, a, new byte[n], fromIndex, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified array into ascending numerical order.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(char[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(char[]) Arrays.sort} method. The algorithm requires a
-     * working space no greater than the size of the original array. The
-     * {@link ForkJoinPool#commonPool() ForkJoin common pool} is used to
-     * execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(char[] a) {
-        int n = a.length, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, 0, n - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJChar.Sorter
-                (null, a, new char[n], 0, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified range of the array into ascending numerical order.
-     * The range to be sorted extends from the index {@code fromIndex},
-     * inclusive, to the index {@code toIndex}, exclusive. If
-     * {@code fromIndex == toIndex}, the range to be sorted is empty.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(char[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(char[]) Arrays.sort} method. The algorithm requires a working
-     * space no greater than the size of the specified range of the original
-     * array. The {@link ForkJoinPool#commonPool() ForkJoin common pool} is
-     * used to execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     * @param fromIndex the index of the first element, inclusive, to be sorted
-     * @param toIndex the index of the last element, exclusive, to be sorted
-     *
-     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
-     * @throws ArrayIndexOutOfBoundsException
-     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(char[] a, int fromIndex, int toIndex) {
-        rangeCheck(a.length, fromIndex, toIndex);
-        int n = toIndex - fromIndex, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJChar.Sorter
-                (null, a, new char[n], fromIndex, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified array into ascending numerical order.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(short[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(short[]) Arrays.sort} method. The algorithm requires a
-     * working space no greater than the size of the original array. The
-     * {@link ForkJoinPool#commonPool() ForkJoin common pool} is used to
-     * execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(short[] a) {
-        int n = a.length, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, 0, n - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJShort.Sorter
-                (null, a, new short[n], 0, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified range of the array into ascending numerical order.
-     * The range to be sorted extends from the index {@code fromIndex},
-     * inclusive, to the index {@code toIndex}, exclusive. If
-     * {@code fromIndex == toIndex}, the range to be sorted is empty.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(short[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(short[]) Arrays.sort} method. The algorithm requires a working
-     * space no greater than the size of the specified range of the original
-     * array. The {@link ForkJoinPool#commonPool() ForkJoin common pool} is
-     * used to execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     * @param fromIndex the index of the first element, inclusive, to be sorted
-     * @param toIndex the index of the last element, exclusive, to be sorted
-     *
-     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
-     * @throws ArrayIndexOutOfBoundsException
-     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(short[] a, int fromIndex, int toIndex) {
-        rangeCheck(a.length, fromIndex, toIndex);
-        int n = toIndex - fromIndex, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJShort.Sorter
-                (null, a, new short[n], fromIndex, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified array into ascending numerical order.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(int[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(int[]) Arrays.sort} method. The algorithm requires a
-     * working space no greater than the size of the original array. The
-     * {@link ForkJoinPool#commonPool() ForkJoin common pool} is used to
-     * execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(int[] a) {
-        int n = a.length, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, 0, n - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJInt.Sorter
-                (null, a, new int[n], 0, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified range of the array into ascending numerical order.
-     * The range to be sorted extends from the index {@code fromIndex},
-     * inclusive, to the index {@code toIndex}, exclusive. If
-     * {@code fromIndex == toIndex}, the range to be sorted is empty.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(int[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(int[]) Arrays.sort} method. The algorithm requires a working
-     * space no greater than the size of the specified range of the original
-     * array. The {@link ForkJoinPool#commonPool() ForkJoin common pool} is
-     * used to execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     * @param fromIndex the index of the first element, inclusive, to be sorted
-     * @param toIndex the index of the last element, exclusive, to be sorted
-     *
-     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
-     * @throws ArrayIndexOutOfBoundsException
-     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(int[] a, int fromIndex, int toIndex) {
-        rangeCheck(a.length, fromIndex, toIndex);
-        int n = toIndex - fromIndex, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJInt.Sorter
-                (null, a, new int[n], fromIndex, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified array into ascending numerical order.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(long[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(long[]) Arrays.sort} method. The algorithm requires a
-     * working space no greater than the size of the original array. The
-     * {@link ForkJoinPool#commonPool() ForkJoin common pool} is used to
-     * execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(long[] a) {
-        int n = a.length, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, 0, n - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJLong.Sorter
-                (null, a, new long[n], 0, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified range of the array into ascending numerical order.
-     * The range to be sorted extends from the index {@code fromIndex},
-     * inclusive, to the index {@code toIndex}, exclusive. If
-     * {@code fromIndex == toIndex}, the range to be sorted is empty.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(long[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(long[]) Arrays.sort} method. The algorithm requires a working
-     * space no greater than the size of the specified range of the original
-     * array. The {@link ForkJoinPool#commonPool() ForkJoin common pool} is
-     * used to execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     * @param fromIndex the index of the first element, inclusive, to be sorted
-     * @param toIndex the index of the last element, exclusive, to be sorted
-     *
-     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
-     * @throws ArrayIndexOutOfBoundsException
-     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(long[] a, int fromIndex, int toIndex) {
-        rangeCheck(a.length, fromIndex, toIndex);
-        int n = toIndex - fromIndex, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJLong.Sorter
-                (null, a, new long[n], fromIndex, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified array into ascending numerical order.
-     *
-     * <p>The {@code <} relation does not provide a total order on all float
-     * values: {@code -0.0f == 0.0f} is {@code true} and a {@code Float.NaN}
-     * value compares neither less than, greater than, nor equal to any value,
-     * even itself. This method uses the total order imposed by the method
-     * {@link Float#compareTo}: {@code -0.0f} is treated as less than value
-     * {@code 0.0f} and {@code Float.NaN} is considered greater than any
-     * other value and all {@code Float.NaN} values are considered equal.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(float[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(float[]) Arrays.sort} method. The algorithm requires a
-     * working space no greater than the size of the original array. The
-     * {@link ForkJoinPool#commonPool() ForkJoin common pool} is used to
-     * execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(float[] a) {
-        int n = a.length, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, 0, n - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJFloat.Sorter
-                (null, a, new float[n], 0, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified range of the array into ascending numerical order.
-     * The range to be sorted extends from the index {@code fromIndex},
-     * inclusive, to the index {@code toIndex}, exclusive. If
-     * {@code fromIndex == toIndex}, the range to be sorted is empty.
-     *
-     * <p>The {@code <} relation does not provide a total order on all float
-     * values: {@code -0.0f == 0.0f} is {@code true} and a {@code Float.NaN}
-     * value compares neither less than, greater than, nor equal to any value,
-     * even itself. This method uses the total order imposed by the method
-     * {@link Float#compareTo}: {@code -0.0f} is treated as less than value
-     * {@code 0.0f} and {@code Float.NaN} is considered greater than any
-     * other value and all {@code Float.NaN} values are considered equal.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(float[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(float[]) Arrays.sort} method. The algorithm requires a working
-     * space no greater than the size of the specified range of the original
-     * array. The {@link ForkJoinPool#commonPool() ForkJoin common pool} is
-     * used to execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     * @param fromIndex the index of the first element, inclusive, to be sorted
-     * @param toIndex the index of the last element, exclusive, to be sorted
-     *
-     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
-     * @throws ArrayIndexOutOfBoundsException
-     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(float[] a, int fromIndex, int toIndex) {
-        rangeCheck(a.length, fromIndex, toIndex);
-        int n = toIndex - fromIndex, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJFloat.Sorter
-                (null, a, new float[n], fromIndex, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified array into ascending numerical order.
-     *
-     * <p>The {@code <} relation does not provide a total order on all double
-     * values: {@code -0.0d == 0.0d} is {@code true} and a {@code Double.NaN}
-     * value compares neither less than, greater than, nor equal to any value,
-     * even itself. This method uses the total order imposed by the method
-     * {@link Double#compareTo}: {@code -0.0d} is treated as less than value
-     * {@code 0.0d} and {@code Double.NaN} is considered greater than any
-     * other value and all {@code Double.NaN} values are considered equal.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(double[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(double[]) Arrays.sort} method. The algorithm requires a
-     * working space no greater than the size of the original array. The
-     * {@link ForkJoinPool#commonPool() ForkJoin common pool} is used to
-     * execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(double[] a) {
-        int n = a.length, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, 0, n - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJDouble.Sorter
-                (null, a, new double[n], 0, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
-
-    /**
-     * Sorts the specified range of the array into ascending numerical order.
-     * The range to be sorted extends from the index {@code fromIndex},
-     * inclusive, to the index {@code toIndex}, exclusive. If
-     * {@code fromIndex == toIndex}, the range to be sorted is empty.
-     *
-     * <p>The {@code <} relation does not provide a total order on all double
-     * values: {@code -0.0d == 0.0d} is {@code true} and a {@code Double.NaN}
-     * value compares neither less than, greater than, nor equal to any value,
-     * even itself. This method uses the total order imposed by the method
-     * {@link Double#compareTo}: {@code -0.0d} is treated as less than value
-     * {@code 0.0d} and {@code Double.NaN} is considered greater than any
-     * other value and all {@code Double.NaN} values are considered equal.
-     *
-     * <p><b>Implementation Note:</b><br> The sorting algorithm is a parallel sort-merge that breaks the
-     * array into sub-arrays that are themselves sorted and then merged. When
-     * the sub-array length reaches a minimum granularity, the sub-array is
-     * sorted using the appropriate {@link java.util.Arrays#sort(double[]) Arrays.sort}
-     * method. If the length of the specified array is less than the minimum
-     * granularity, then it is sorted using the appropriate {@link
-     * java.util.Arrays#sort(double[]) Arrays.sort} method. The algorithm requires a working
-     * space no greater than the size of the specified range of the original
-     * array. The {@link ForkJoinPool#commonPool() ForkJoin common pool} is
-     * used to execute any parallel tasks.
-     *
-     * @param a the array to be sorted
-     * @param fromIndex the index of the first element, inclusive, to be sorted
-     * @param toIndex the index of the last element, exclusive, to be sorted
-     *
-     * @throws IllegalArgumentException if {@code fromIndex > toIndex}
-     * @throws ArrayIndexOutOfBoundsException
-     *     if {@code fromIndex < 0} or {@code toIndex > a.length}
-     *
-     * @since 1.8
-     */
-    public static void parallelSort(double[] a, int fromIndex, int toIndex) {
-        rangeCheck(a.length, fromIndex, toIndex);
-        int n = toIndex - fromIndex, p, g;
-        if (n <= MIN_ARRAY_SORT_GRAN ||
-            (p = ForkJoinPool.getCommonPoolParallelism()) == 1)
-            DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
-        else
-            new ArraysParallelSortHelpers.FJDouble.Sorter
-                (null, a, new double[n], fromIndex, n, 0,
-                 ((g = n / (p << 2)) <= MIN_ARRAY_SORT_GRAN) ?
-                 MIN_ARRAY_SORT_GRAN : g).invoke();
-    }
+    private static final int MIN_ARRAY_SORT_GRAN = 1 << 13;
 
     /**
      * Sorts the specified array of objects into ascending order, according
@@ -1552,23 +1373,6 @@ public final class J8Arrays {
      */
     public static <T> T[] toArray(Collection<T> col, IntFunction<T[]> generator) {
         return col.toArray(generator.apply(0));
-    }
-
-    /**
-     * Checks that {@code fromIndex} and {@code toIndex} are in
-     * the range and throws an exception if they aren't.
-     */
-    private static void rangeCheck(int arrayLength, int fromIndex, int toIndex) {
-        if (fromIndex > toIndex) {
-            throw new IllegalArgumentException(
-                    "fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ")");
-        }
-        if (fromIndex < 0) {
-            throw new ArrayIndexOutOfBoundsException(fromIndex);
-        }
-        if (toIndex > arrayLength) {
-            throw new ArrayIndexOutOfBoundsException(toIndex);
-        }
     }
 
     private J8Arrays() {
