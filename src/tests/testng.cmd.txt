@@ -15,9 +15,9 @@ SET JAVA12=F:/Java/jdk12.0.2+10-openjdk/bin/java
 
 SET JAVA13=F:/Java/jdk13.0.2+8-openjdk/bin/java
 
-SET JAVA14=F:/Java/jdk14_ea+32/bin/java
+SET JAVA14=F:/Java/jdk14_ea+35/bin/java
 
-SET JAVA15=F:/Java/jdk15_ea+6/bin/java
+SET JAVA15=F:/Java/jdk15_ea+9/bin/java
 
 SET TEST_JAR=streamsupport-all-tests-1.7.2-SNAPSHOT.jar
 
@@ -56,6 +56,8 @@ SET USE_ITERATOR_SPLITERATOR=-Djava8.util.Spliterators.assume.oracle.collections
 %JAVA13% %PAR_GC% -cp .;./* %ARGS%
 
 %JAVA14% %PAR_GC% -cp .;./* %ARGS%
+
+%JAVA15% %PAR_GC% -cp .;./* %ARGS%
 
 
 
