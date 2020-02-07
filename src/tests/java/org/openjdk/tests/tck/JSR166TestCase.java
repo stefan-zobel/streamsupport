@@ -190,7 +190,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.270
+// CVS rev. 1.271
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1114,8 +1114,9 @@ public class JSR166TestCase extends TestCase {
         } catch (TimeoutException success) {
         } catch (Exception fail) {
             threadUnexpectedException(fail);
-        } finally { future.cancel(true); }
+        }
         assertTrue(millisElapsedSince(startTime) >= timeoutMillis);
+        assertFalse(future.isDone());
     }
 
     /**
