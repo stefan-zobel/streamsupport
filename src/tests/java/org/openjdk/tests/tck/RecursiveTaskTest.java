@@ -22,7 +22,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class RecursiveTaskTest extends JSR166TestCase {
-// CVS rev. 1.40
+// CVS rev. 1.41
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -409,8 +409,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 FailingFibTask f = new FailingFibTask(8);
                 assertSame(f, f.fork());
                 try {
-                    @SuppressWarnings("unused")
-                    Integer r = f.join();
+                    f.join();
                     shouldThrow();
                 } catch (FJException success) {
                     checkCompletedAbnormally(f, success);
@@ -430,8 +429,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 FailingFibTask f = new FailingFibTask(8);
                 assertSame(f, f.fork());
                 try {
-                    @SuppressWarnings("unused")
-                    Integer r = f.get();
+                    f.get();
                     shouldThrow();
                 } catch (ExecutionException success) {
                     Throwable cause = success.getCause();
@@ -453,8 +451,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 FailingFibTask f = new FailingFibTask(8);
                 assertSame(f, f.fork());
                 try {
-                    @SuppressWarnings("unused")
-                    Integer r = f.get(LONG_DELAY_MS, MILLISECONDS);
+                    f.get(LONG_DELAY_MS, MILLISECONDS);
                     shouldThrow();
                 } catch (ExecutionException success) {
                     Throwable cause = success.getCause();
@@ -493,8 +490,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 FibTask f = new FibTask(8);
                 assertTrue(f.cancel(true));
                 try {
-                    @SuppressWarnings("unused")
-                    Integer r = f.invoke();
+                    f.invoke();
                     shouldThrow();
                 } catch (CancellationException success) {
                     checkCancelled(f);
@@ -515,8 +511,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 assertTrue(f.cancel(true));
                 assertSame(f, f.fork());
                 try {
-                    @SuppressWarnings("unused")
-                    Integer r = f.join();
+                    f.join();
                     shouldThrow();
                 } catch (CancellationException success) {
                     checkCancelled(f);
@@ -537,8 +532,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 assertTrue(f.cancel(true));
                 assertSame(f, f.fork());
                 try {
-                    @SuppressWarnings("unused")
-                    Integer r = f.get();
+                    f.get();
                     shouldThrow();
                 } catch (CancellationException success) {
                     checkCancelled(f);
@@ -559,8 +553,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 assertTrue(f.cancel(true));
                 assertSame(f, f.fork());
                 try {
-                    @SuppressWarnings("unused")
-                    Integer r = f.get(LONG_DELAY_MS, MILLISECONDS);
+                    f.get(LONG_DELAY_MS, MILLISECONDS);
                     shouldThrow();
                 } catch (CancellationException success) {
                     checkCancelled(f);
@@ -713,8 +706,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
                 FibTask f = new FibTask(8);
                 f.completeExceptionally(new FJException());
                 try {
-                    @SuppressWarnings("unused")
-                    Integer r = f.invoke();
+                    f.invoke();
                     shouldThrow();
                 } catch (FJException success) {
                     checkCompletedAbnormally(f, success);
