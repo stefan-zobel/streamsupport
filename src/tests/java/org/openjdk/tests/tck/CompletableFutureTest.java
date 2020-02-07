@@ -55,7 +55,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.221
+// CVS rev. 1.223
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -3763,17 +3763,6 @@ public class CompletableFutureTest extends JSR166TestCase {
     }
 
     /**
-     * failedFuture(null) throws NPE
-     */
-    public void testFailedFuture_null() {
-        try {
-            @SuppressWarnings("unused")
-            CompletableFuture<Integer> f = CompletableFuture.failedFuture(null);
-            shouldThrow();
-        } catch (NullPointerException success) {}
-    }
-
-    /**
      * copy returns a CompletableFuture that is completed normally,
      * with the same value, when source is.
      */
@@ -4207,12 +4196,9 @@ public class CompletableFutureTest extends JSR166TestCase {
             // Manufacture boxed primitives for primitive params
             for (int i = 0; i < args.length; i++) {
                 Class<?> type = parameterTypes[i];
-                if (type == boolean.class)
-                    args[i] = false;
-                else if (type == int.class)
-                    args[i] = 0;
-                else if (type == long.class)
-                    args[i] = 0L;
+                if      (type == boolean.class) args[i] = false;
+                else if (type == int.class)     args[i] = 0;
+                else if (type == long.class)    args[i] = 0L;
             }
             for (CompletionStage<Integer> stage : stages) {
                 try {
