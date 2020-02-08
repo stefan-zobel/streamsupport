@@ -38,7 +38,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPoolTest extends JSR166TestCase {
-// CVS rev. 1.77
+// CVS rev. 1.78
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -405,8 +405,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
             p.shutdown();
             assertTrue(p.isShutdown());
             try {
-                @SuppressWarnings("unused")
-                ForkJoinTask<Integer> f = p.submit(new FibTask(8));
+                p.submit(new FibTask(8));
                 shouldThrow();
             } catch (RejectedExecutionException success) {}
         } finally {
@@ -654,8 +653,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         try {
             cleaner = cleaner(e);
             try {
-                @SuppressWarnings("unused")
-                Future<?> future = e.submit((Runnable) null);
+                e.submit((Runnable) null);
                 shouldThrow();
             } catch (NullPointerException success) {}
         } finally {
@@ -674,8 +672,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         try {
             cleaner = cleaner(e);
             try {
-                @SuppressWarnings("unused")
-                Future<String> future = e.submit((Callable<String>) null);
+                e.submit((Callable<String>) null);
                 shouldThrow();
             } catch (NullPointerException success) {}
         } finally {
