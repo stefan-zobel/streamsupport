@@ -63,7 +63,7 @@ import java8.util.stream.StreamSupport;
  */
 @Test
 public final class Collection8Test extends JSR166TestCase {
-// CVS rev. 1.59
+// CVS rev. 1.60
 
     Collection8Test() {
     }
@@ -478,7 +478,6 @@ public final class Collection8Test extends JSR166TestCase {
             if (rnd.nextBoolean()) assertTrue(it.hasNext());
             it.next();
         }
-//        Consumer<?> alwaysThrows = e -> { throw new AssertionError(); };
         // TODO: many more removal methods
         if (rnd.nextBoolean()) {
             for (Iterator<?> z = c.iterator(); z.hasNext(); ) {
@@ -712,7 +711,6 @@ public final class Collection8Test extends JSR166TestCase {
     public void testStreamForEach(String description, Supplier<CollectionImplementation> sci) throws Throwable {
         CollectionImplementation impl = sci.get();
         final Collection c = impl.emptyCollection();
-//        final AtomicLong count = new AtomicLong(0L);
         final Object x = impl.makeElement(1);
         final Object y = impl.makeElement(2);
         final ArrayList found = new ArrayList();
@@ -782,7 +780,6 @@ public final class Collection8Test extends JSR166TestCase {
     public void testForEach(String description, Supplier<CollectionImplementation> sci) throws Throwable {
         CollectionImplementation impl = sci.get();
         final Collection c = impl.emptyCollection();
-//        final AtomicLong count = new AtomicLong(0L);
         final Object x = impl.makeElement(1);
         final Object y = impl.makeElement(2);
         final ArrayList found = new ArrayList();
