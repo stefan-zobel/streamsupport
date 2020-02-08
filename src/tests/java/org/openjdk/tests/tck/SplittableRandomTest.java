@@ -14,13 +14,16 @@ import java8.util.SplittableRandom;
 import java8.util.concurrent.atomic.LongAdder;
 import java8.util.function.Predicate;
 import java8.util.stream.Collectors;
+import java8.util.stream.DoubleStream;
+import java8.util.stream.IntStream;
+import java8.util.stream.LongStream;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class SplittableRandomTest extends JSR166TestCase {
-// CVS rev. 1.25
+// CVS rev. 1.26
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -336,12 +339,12 @@ public class SplittableRandomTest extends JSR166TestCase {
         SplittableRandom r = new SplittableRandom();
         assertThrows(
             IllegalArgumentException.class,
-            () -> { java8.util.stream.IntStream x = r.ints(-1L); },
-            () -> { java8.util.stream.IntStream x = r.ints(-1L, 2, 3); },
-            () -> { java8.util.stream.LongStream x = r.longs(-1L); },
-            () -> { java8.util.stream.LongStream x = r.longs(-1L, -1L, 1L); },
-            () -> { java8.util.stream.DoubleStream x = r.doubles(-1L); },
-            () -> { java8.util.stream.DoubleStream x = r.doubles(-1L, .5, .6); });
+            () -> { IntStream unused = r.ints(-1L); },
+            () -> { IntStream unused = r.ints(-1L, 2, 3); },
+            () -> { LongStream unused = r.longs(-1L); },
+            () -> { LongStream unused = r.longs(-1L, -1L, 1L); },
+            () -> { DoubleStream unused = r.doubles(-1L); },
+            () -> { DoubleStream unused = r.doubles(-1L, .5, .6); });
     }
 
     /**
@@ -353,12 +356,12 @@ public class SplittableRandomTest extends JSR166TestCase {
         SplittableRandom r = new SplittableRandom();
         assertThrows(
             IllegalArgumentException.class,
-            () -> { java8.util.stream.IntStream x = r.ints(2, 1); },
-            () -> { java8.util.stream.IntStream x = r.ints(10, 42, 42); },
-            () -> { java8.util.stream.LongStream x = r.longs(-1L, -1L); },
-            () -> { java8.util.stream.LongStream x = r.longs(10, 1L, -2L); },
-            () -> { java8.util.stream.DoubleStream x = r.doubles(0.0, 0.0); },
-            () -> { java8.util.stream.DoubleStream x = r.doubles(10, .5, .4); });
+            () -> { IntStream unused = r.ints(2, 1); },
+            () -> { IntStream unused = r.ints(10, 42, 42); },
+            () -> { LongStream unused = r.longs(-1L, -1L); },
+            () -> { LongStream unused = r.longs(10, 1L, -2L); },
+            () -> { DoubleStream unused = r.doubles(0.0, 0.0); },
+            () -> { DoubleStream unused = r.doubles(10, .5, .4); });
     }
 
     /**
