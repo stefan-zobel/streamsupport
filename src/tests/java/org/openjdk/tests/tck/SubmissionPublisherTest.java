@@ -26,7 +26,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
-// CVS rev. 1.29
+// CVS rev. 1.30
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -967,7 +967,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
         SubmissionPublisher<Integer> p = basicPublisher();
         try {
             @SuppressWarnings("unused")
-            CompletableFuture<Void> f = p.consume(null);
+            CompletableFuture<Void> unused = p.consume(null);
             shouldThrow();
         } catch (NullPointerException success) {}
     }
