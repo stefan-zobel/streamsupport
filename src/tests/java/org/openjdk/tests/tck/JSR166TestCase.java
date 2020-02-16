@@ -52,7 +52,6 @@ import java.io.ObjectOutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.LockInfo;
 import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -246,9 +245,6 @@ public class JSR166TestCase extends TestCase {
                               name, floatString));
         }
     }
-
-    private static final ThreadMXBean THREAD_MXBEAN
-        = ManagementFactory.getThreadMXBean();
 
     /**
      * The scaling factor to apply to standard delays used in tests.
@@ -1006,7 +1002,8 @@ public class JSR166TestCase extends TestCase {
     }
 
     /** Returns true if thread info might be useful in a thread dump. */
-    static boolean threadOfInterest(ThreadInfo info) {
+    static boolean threadOfInterest(Object info_) {
+        ThreadInfo info = (ThreadInfo) info_; 
         final String name = info.getThreadName();
         String lockName;
         if (name == null)
@@ -1053,7 +1050,7 @@ public class JSR166TestCase extends TestCase {
         }
 
         System.err.println("------ stacktrace dump start ------");
-        for (ThreadInfo info : THREAD_MXBEAN.dumpAllThreads(true, true))
+        for (ThreadInfo info : ManagementFactory.getThreadMXBean().dumpAllThreads(true, true))
             if (threadOfInterest(info))
                 System.err.print(info);
         System.err.println("------ stacktrace dump end ------");
@@ -1089,7 +1086,7 @@ public class JSR166TestCase extends TestCase {
      */
     String blockerClassName(Thread thread) {
         ThreadInfo threadInfo; LockInfo lockInfo;
-        if ((threadInfo = THREAD_MXBEAN.getThreadInfo(thread.getId(), 0)) != null
+        if ((threadInfo = ManagementFactory.getThreadMXBean().getThreadInfo(thread.getId(), 0)) != null
             && (lockInfo = threadInfo.getLockInfo()) != null)
             return lockInfo.getClassName();
         return null;
