@@ -28,6 +28,9 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Comparator;
 
+import java8.lang.Integers;
+import java8.lang.Longs;
+
 import java8.util.concurrent.ForkJoinPool;
 import java8.util.function.BinaryOperator;
 import java8.util.function.DoubleBinaryOperator;
@@ -45,8 +48,9 @@ import java8.util.stream.Stream;
 import java8.util.stream.StreamSupport;
 
 /**
- * A place for static default implementations of the new Java 8
- * parallel methods of the {@link java.util.Arrays} class. 
+ * A place for the new {@link java.util.Arrays} methods added in Java 8 and Java
+ * 9 (partially) to Java 11 (especially the new parallel and spliterator methods
+ * of Java 8).
  */
 public final class J8Arrays {
     /**
@@ -2075,6 +2079,969 @@ public final class J8Arrays {
                     return i;
                 }
             }
+        }
+
+        return aLength != bLength ? length : -1;
+    }
+
+    /**
+     * Returns true if the two specified arrays of longs, over the specified
+     * ranges, are <i>equal</i> to one another.
+     *
+     * <p>Two arrays are considered equal if the number of elements covered by
+     * each range is the same, and all corresponding pairs of elements over the
+     * specified ranges in the two arrays are equal.  In other words, two arrays
+     * are equal if they contain, over the specified ranges, the same elements
+     * in the same order.
+     *
+     * @param a the first array to be tested for equality
+     * @param aFromIndex the index (inclusive) of the first element in the
+     *                   first array to be tested
+     * @param aToIndex the index (exclusive) of the last element in the
+     *                 first array to be tested
+     * @param b the second array to be tested for equality
+     * @param bFromIndex the index (inclusive) of the first element in the
+     *                   second array to be tested
+     * @param bToIndex the index (exclusive) of the last element in the
+     *                 second array to be tested
+     * @return {@code true} if the two arrays, over the specified ranges, are
+     *         equal
+     * @throws IllegalArgumentException
+     *         if {@code aFromIndex > aToIndex} or
+     *         if {@code bFromIndex > bToIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *         if {@code aFromIndex < 0 or aToIndex > a.length} or
+     *         if {@code bFromIndex < 0 or bToIndex > b.length}
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static boolean equals(long[] a, int aFromIndex, int aToIndex,
+                                 long[] b, int bFromIndex, int bToIndex) {
+        rangeCheck(a.length, aFromIndex, aToIndex);
+        rangeCheck(b.length, bFromIndex, bToIndex);
+
+        int aLength = aToIndex - aFromIndex;
+        int bLength = bToIndex - bFromIndex;
+        if (aLength != bLength)
+            return false;
+
+        for (int i = 0; i < aLength; i++)
+            if (a[aFromIndex++] != b[bFromIndex++])
+                return false;
+
+        return true;
+    }
+
+    /**
+     * Returns true if the two specified arrays of ints, over the specified
+     * ranges, are <i>equal</i> to one another.
+     *
+     * <p>Two arrays are considered equal if the number of elements covered by
+     * each range is the same, and all corresponding pairs of elements over the
+     * specified ranges in the two arrays are equal.  In other words, two arrays
+     * are equal if they contain, over the specified ranges, the same elements
+     * in the same order.
+     *
+     * @param a the first array to be tested for equality
+     * @param aFromIndex the index (inclusive) of the first element in the
+     *                   first array to be tested
+     * @param aToIndex the index (exclusive) of the last element in the
+     *                 first array to be tested
+     * @param b the second array to be tested for equality
+     * @param bFromIndex the index (inclusive) of the first element in the
+     *                   second array to be tested
+     * @param bToIndex the index (exclusive) of the last element in the
+     *                 second array to be tested
+     * @return {@code true} if the two arrays, over the specified ranges, are
+     *         equal
+     * @throws IllegalArgumentException
+     *         if {@code aFromIndex > aToIndex} or
+     *         if {@code bFromIndex > bToIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *         if {@code aFromIndex < 0 or aToIndex > a.length} or
+     *         if {@code bFromIndex < 0 or bToIndex > b.length}
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static boolean equals(int[] a, int aFromIndex, int aToIndex,
+                                 int[] b, int bFromIndex, int bToIndex) {
+        rangeCheck(a.length, aFromIndex, aToIndex);
+        rangeCheck(b.length, bFromIndex, bToIndex);
+
+        int aLength = aToIndex - aFromIndex;
+        int bLength = bToIndex - bFromIndex;
+        if (aLength != bLength)
+            return false;
+
+        for (int i = 0; i < aLength; i++)
+            if (a[aFromIndex++] != b[bFromIndex++])
+                return false;
+
+        return true;
+    }
+
+    /**
+     * Returns true if the two specified arrays of doubles, over the specified
+     * ranges, are <i>equal</i> to one another.
+     *
+     * <p>Two arrays are considered equal if the number of elements covered by
+     * each range is the same, and all corresponding pairs of elements over the
+     * specified ranges in the two arrays are equal.  In other words, two arrays
+     * are equal if they contain, over the specified ranges, the same elements
+     * in the same order.
+     *
+     * <p>Two doubles {@code d1} and {@code d2} are considered equal if:
+     * <pre>    {@code new Double(d1).equals(new Double(d2))}</pre>
+     * (Unlike the {@code ==} operator, this method considers
+     * {@code NaN} equals to itself, and 0.0d unequal to -0.0d.)
+     *
+     * @param a the first array to be tested for equality
+     * @param aFromIndex the index (inclusive) of the first element in the
+     *                   first array to be tested
+     * @param aToIndex the index (exclusive) of the last element in the
+     *                 first array to be tested
+     * @param b the second array to be tested for equality
+     * @param bFromIndex the index (inclusive) of the first element in the
+     *                   second array to be tested
+     * @param bToIndex the index (exclusive) of the last element in the
+     *                 second array to be tested
+     * @return {@code true} if the two arrays, over the specified ranges, are
+     *         equal
+     * @throws IllegalArgumentException
+     *         if {@code aFromIndex > aToIndex} or
+     *         if {@code bFromIndex > bToIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *         if {@code aFromIndex < 0 or aToIndex > a.length} or
+     *         if {@code bFromIndex < 0 or bToIndex > b.length}
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @see Double#equals(Object)
+     * @since 9
+     */
+    public static boolean equals(double[] a, int aFromIndex, int aToIndex,
+                                 double[] b, int bFromIndex, int bToIndex) {
+        rangeCheck(a.length, aFromIndex, aToIndex);
+        rangeCheck(b.length, bFromIndex, bToIndex);
+
+        int aLength = aToIndex - aFromIndex;
+        int bLength = bToIndex - bFromIndex;
+        if (aLength != bLength)
+            return false;
+
+        for (int i = 0; i < aLength; i++) {
+            Double va = a[aFromIndex++], vb = b[bFromIndex++];
+            if (Double.doubleToRawLongBits(va) != Double.doubleToRawLongBits(vb))
+                if (!Double.isNaN(va) || !Double.isNaN(vb))
+                    return false;
+        }
+
+        return true;
+    }
+
+    // Compare int
+
+    /**
+     * Compares two {@code int} arrays lexicographically.
+     *
+     * <p>If the two arrays share a common prefix then the lexicographic
+     * comparison is the result of comparing two elements, as if by
+     * {@link Integers#compare(int, int)}, at an index within the respective
+     * arrays that is the prefix length.
+     * Otherwise, one array is a proper prefix of the other and, lexicographic
+     * comparison is the result of comparing the two array lengths.
+     * (See {@link #mismatch(int[], int[])} for the definition of a common and
+     * proper prefix.)
+     *
+     * <p>A {@code null} array reference is considered lexicographically less
+     * than a non-{@code null} array reference.  Two {@code null} array
+     * references are considered equal.
+     *
+     * <p>The comparison is consistent with {@link java.util.Arrays#equals(int[], int[]) Arrays.equals},
+     * more specifically the following holds for arrays {@code a} and {@code b}:
+     * <pre>{@code
+     *     java.util.Arrays.equals(a, b) == (J8Arrays.compare(a, b) == 0)
+     * }</pre>
+     *
+     * <p><b>API Note:</b><br>
+     * <p>This method behaves as if (for non-{@code null} array references):
+     * <pre>{@code
+     *     int i = J8Arrays.mismatch(a, b);
+     *     if (i >= 0 && i < Math.min(a.length, b.length))
+     *         return java8.lang.Integers.compare(a[i], b[i]);
+     *     return a.length - b.length;
+     * }</pre>
+     *
+     * @param a the first array to compare
+     * @param b the second array to compare
+     * @return the value {@code 0} if the first and second array are equal and
+     *         contain the same elements in the same order;
+     *         a value less than {@code 0} if the first array is
+     *         lexicographically less than the second array; and
+     *         a value greater than {@code 0} if the first array is
+     *         lexicographically greater than the second array
+     * @since 9
+     */
+    public static int compare(int[] a, int[] b) {
+        if (a == b)
+            return 0;
+        if (a == null || b == null)
+            return a == null ? -1 : 1;
+
+        int length = Math.min(a.length, b.length);
+        for (int i = 0; i < length; i++) {
+            if (a[i] != b[i]) return Integers.compare(a[i], b[i]);
+        }
+
+        return a.length - b.length;
+    }
+
+    /**
+     * Compares two {@code int} arrays lexicographically over the specified
+     * ranges.
+     *
+     * <p>If the two arrays, over the specified ranges, share a common prefix
+     * then the lexicographic comparison is the result of comparing two
+     * elements, as if by {@link Integers#compare(int, int)}, at a relative index
+     * within the respective arrays that is the length of the prefix.
+     * Otherwise, one array is a proper prefix of the other and, lexicographic
+     * comparison is the result of comparing the two range lengths.
+     * (See {@link #mismatch(int[], int, int, int[], int, int)} for the
+     * definition of a common and proper prefix.)
+     *
+     * <p>The comparison is consistent with
+     * {@link #equals(int[], int, int, int[], int, int) equals}, more
+     * specifically the following holds for arrays {@code a} and {@code b} with
+     * specified ranges [{@code aFromIndex}, {@code atoIndex}) and
+     * [{@code bFromIndex}, {@code btoIndex}) respectively:
+     * <pre>{@code
+     *     J8Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex) ==
+     *         (J8Arrays.compare(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex) == 0)
+     * }</pre>
+     *
+     * <p><b>API Note:</b><br>
+     * <p>This method behaves as if:
+     * <pre>{@code
+     *     int i = J8Arrays.mismatch(a, aFromIndex, aToIndex,
+     *                               b, bFromIndex, bToIndex);
+     *     if (i >= 0 && i < Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex))
+     *         return java8.lang.Integers.compare(a[aFromIndex + i], b[bFromIndex + i]);
+     *     return (aToIndex - aFromIndex) - (bToIndex - bFromIndex);
+     * }</pre>
+     *
+     * @param a the first array to compare
+     * @param aFromIndex the index (inclusive) of the first element in the
+     *                   first array to be compared
+     * @param aToIndex the index (exclusive) of the last element in the
+     *                 first array to be compared
+     * @param b the second array to compare
+     * @param bFromIndex the index (inclusive) of the first element in the
+     *                   second array to be compared
+     * @param bToIndex the index (exclusive) of the last element in the
+     *                 second array to be compared
+     * @return the value {@code 0} if, over the specified ranges, the first and
+     *         second array are equal and contain the same elements in the same
+     *         order;
+     *         a value less than {@code 0} if, over the specified ranges, the
+     *         first array is lexicographically less than the second array; and
+     *         a value greater than {@code 0} if, over the specified ranges, the
+     *         first array is lexicographically greater than the second array
+     * @throws IllegalArgumentException
+     *         if {@code aFromIndex > aToIndex} or
+     *         if {@code bFromIndex > bToIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *         if {@code aFromIndex < 0 or aToIndex > a.length} or
+     *         if {@code bFromIndex < 0 or bToIndex > b.length}
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static int compare(int[] a, int aFromIndex, int aToIndex,
+                              int[] b, int bFromIndex, int bToIndex) {
+        rangeCheck(a.length, aFromIndex, aToIndex);
+        rangeCheck(b.length, bFromIndex, bToIndex);
+
+        int aLength = aToIndex - aFromIndex;
+        int bLength = bToIndex - bFromIndex;
+        int length = Math.min(aLength, bLength);
+        for (int i = 0; i < length; i++) {
+            int va = a[aFromIndex++];
+            int vb = b[bFromIndex++];
+            if (va != vb) return Integers.compare(va, vb);
+        }
+
+        return aLength - bLength;
+    }
+
+    // Compare long
+
+    /**
+     * Compares two {@code long} arrays lexicographically.
+     *
+     * <p>If the two arrays share a common prefix then the lexicographic
+     * comparison is the result of comparing two elements, as if by
+     * {@link Longs#compare(long, long)}, at an index within the respective
+     * arrays that is the prefix length.
+     * Otherwise, one array is a proper prefix of the other and, lexicographic
+     * comparison is the result of comparing the two array lengths.
+     * (See {@link #mismatch(long[], long[])} for the definition of a common and
+     * proper prefix.)
+     *
+     * <p>A {@code null} array reference is considered lexicographically less
+     * than a non-{@code null} array reference.  Two {@code null} array
+     * references are considered equal.
+     *
+     * <p>The comparison is consistent with {@link java.util.Arrays#equals(long[], long[]) Arrays.equals},
+     * more specifically the following holds for arrays {@code a} and {@code b}:
+     * <pre>{@code
+     *     java.util.Arrays.equals(a, b) == (J8Arrays.compare(a, b) == 0)
+     * }</pre>
+     *
+     * <p><b>API Note:</b><br>
+     * <p>This method behaves as if (for non-{@code null} array references):
+     * <pre>{@code
+     *     int i = J8Arrays.mismatch(a, b);
+     *     if (i >= 0 && i < Math.min(a.length, b.length))
+     *         return java8.lang.Longs.compare(a[i], b[i]);
+     *     return a.length - b.length;
+     * }</pre>
+     *
+     * @param a the first array to compare
+     * @param b the second array to compare
+     * @return the value {@code 0} if the first and second array are equal and
+     *         contain the same elements in the same order;
+     *         a value less than {@code 0} if the first array is
+     *         lexicographically less than the second array; and
+     *         a value greater than {@code 0} if the first array is
+     *         lexicographically greater than the second array
+     * @since 9
+     */
+    public static int compare(long[] a, long[] b) {
+        if (a == b)
+            return 0;
+        if (a == null || b == null)
+            return a == null ? -1 : 1;
+
+        int length = Math.min(a.length, b.length);
+        for (int i = 0; i < length; i++) {
+            if (a[i] != b[i]) return Longs.compare(a[i], b[i]);
+        }
+
+        return a.length - b.length;
+    }
+
+    /**
+     * Compares two {@code long} arrays lexicographically over the specified
+     * ranges.
+     *
+     * <p>If the two arrays, over the specified ranges, share a common prefix
+     * then the lexicographic comparison is the result of comparing two
+     * elements, as if by {@link Longs#compare(long, long)}, at a relative index
+     * within the respective arrays that is the length of the prefix.
+     * Otherwise, one array is a proper prefix of the other and, lexicographic
+     * comparison is the result of comparing the two range lengths.
+     * (See {@link #mismatch(long[], int, int, long[], int, int)} for the
+     * definition of a common and proper prefix.)
+     *
+     * <p>The comparison is consistent with
+     * {@link #equals(long[], int, int, long[], int, int) equals}, more
+     * specifically the following holds for arrays {@code a} and {@code b} with
+     * specified ranges [{@code aFromIndex}, {@code atoIndex}) and
+     * [{@code bFromIndex}, {@code btoIndex}) respectively:
+     * <pre>{@code
+     *     J8Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex) ==
+     *         (J8Arrays.compare(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex) == 0)
+     * }</pre>
+     *
+     * <p><b>API Note:</b><br>
+     * <p>This method behaves as if:
+     * <pre>{@code
+     *     int i = J8Arrays.mismatch(a, aFromIndex, aToIndex,
+     *                               b, bFromIndex, bToIndex);
+     *     if (i >= 0 && i < Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex))
+     *         return java8.lang.Longs.compare(a[aFromIndex + i], b[bFromIndex + i]);
+     *     return (aToIndex - aFromIndex) - (bToIndex - bFromIndex);
+     * }</pre>
+     *
+     * @param a the first array to compare
+     * @param aFromIndex the index (inclusive) of the first element in the
+     *                   first array to be compared
+     * @param aToIndex the index (exclusive) of the last element in the
+     *                 first array to be compared
+     * @param b the second array to compare
+     * @param bFromIndex the index (inclusive) of the first element in the
+     *                   second array to be compared
+     * @param bToIndex the index (exclusive) of the last element in the
+     *                 second array to be compared
+     * @return the value {@code 0} if, over the specified ranges, the first and
+     *         second array are equal and contain the same elements in the same
+     *         order;
+     *         a value less than {@code 0} if, over the specified ranges, the
+     *         first array is lexicographically less than the second array; and
+     *         a value greater than {@code 0} if, over the specified ranges, the
+     *         first array is lexicographically greater than the second array
+     * @throws IllegalArgumentException
+     *         if {@code aFromIndex > aToIndex} or
+     *         if {@code bFromIndex > bToIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *         if {@code aFromIndex < 0 or aToIndex > a.length} or
+     *         if {@code bFromIndex < 0 or bToIndex > b.length}
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static int compare(long[] a, int aFromIndex, int aToIndex,
+                              long[] b, int bFromIndex, int bToIndex) {
+        rangeCheck(a.length, aFromIndex, aToIndex);
+        rangeCheck(b.length, bFromIndex, bToIndex);
+
+        int aLength = aToIndex - aFromIndex;
+        int bLength = bToIndex - bFromIndex;
+        int length = Math.min(aLength, bLength);
+        for (int i = 0; i < length; i++) {
+            long va = a[aFromIndex++];
+            long vb = b[bFromIndex++];
+            if (va != vb) return Longs.compare(va, vb);
+        }
+
+        return aLength - bLength;
+    }
+
+    // Compare double
+
+    /**
+     * Compares two {@code double} arrays lexicographically.
+     *
+     * <p>If the two arrays share a common prefix then the lexicographic
+     * comparison is the result of comparing two elements, as if by
+     * {@link Double#compare(double, double)}, at an index within the respective
+     * arrays that is the prefix length.
+     * Otherwise, one array is a proper prefix of the other and, lexicographic
+     * comparison is the result of comparing the two array lengths.
+     * (See {@link #mismatch(double[], double[])} for the definition of a common
+     * and proper prefix.)
+     *
+     * <p>A {@code null} array reference is considered lexicographically less
+     * than a non-{@code null} array reference.  Two {@code null} array
+     * references are considered equal.
+     *
+     * <p>The comparison is consistent with {@link java.util.Arrays#equals(double[], double[]) Arrays.equals},
+     * more specifically the following holds for arrays {@code a} and {@code b}:
+     * <pre>{@code
+     *     java.util.Arrays.equals(a, b) == (J8Arrays.compare(a, b) == 0)
+     * }</pre>
+     *
+     * <p><b>API Note:</b><br>
+     * <p>This method behaves as if (for non-{@code null} array references):
+     * <pre>{@code
+     *     int i = J8Arrays.mismatch(a, b);
+     *     if (i >= 0 && i < Math.min(a.length, b.length))
+     *         return Double.compare(a[i], b[i]);
+     *     return a.length - b.length;
+     * }</pre>
+     *
+     * @param a the first array to compare
+     * @param b the second array to compare
+     * @return the value {@code 0} if the first and second array are equal and
+     *         contain the same elements in the same order;
+     *         a value less than {@code 0} if the first array is
+     *         lexicographically less than the second array; and
+     *         a value greater than {@code 0} if the first array is
+     *         lexicographically greater than the second array
+     * @since 9
+     */
+    public static int compare(double[] a, double[] b) {
+        if (a == b)
+            return 0;
+        if (a == null || b == null)
+            return a == null ? -1 : 1;
+
+        int length = Math.min(a.length, b.length);
+        for (int i = 0; i < length; i++) {
+            double va = a[i], vb = b[i];
+            if (Double.doubleToRawLongBits(va) != Double.doubleToRawLongBits(vb)) {
+                int c = Double.compare(va, vb);
+                if (c != 0) return c;
+            }
+        }
+
+        return a.length - b.length;
+    }
+
+    /**
+     * Compares two {@code double} arrays lexicographically over the specified
+     * ranges.
+     *
+     * <p>If the two arrays, over the specified ranges, share a common prefix
+     * then the lexicographic comparison is the result of comparing two
+     * elements, as if by {@link Double#compare(double, double)}, at a relative
+     * index within the respective arrays that is the length of the prefix.
+     * Otherwise, one array is a proper prefix of the other and, lexicographic
+     * comparison is the result of comparing the two range lengths.
+     * (See {@link #mismatch(double[], int, int, double[], int, int)} for the
+     * definition of a common and proper prefix.)
+     *
+     * <p>The comparison is consistent with
+     * {@link #equals(double[], int, int, double[], int, int) equals}, more
+     * specifically the following holds for arrays {@code a} and {@code b} with
+     * specified ranges [{@code aFromIndex}, {@code atoIndex}) and
+     * [{@code bFromIndex}, {@code btoIndex}) respectively:
+     * <pre>{@code
+     *     J8Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex) ==
+     *         (J8Arrays.compare(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex) == 0)
+     * }</pre>
+     *
+     * <p><b>API Note:</b><br>
+     * <p>This method behaves as if:
+     * <pre>{@code
+     *     int i = J8Arrays.mismatch(a, aFromIndex, aToIndex,
+     *                               b, bFromIndex, bToIndex);
+     *     if (i >= 0 && i < Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex))
+     *         return Double.compare(a[aFromIndex + i], b[bFromIndex + i]);
+     *     return (aToIndex - aFromIndex) - (bToIndex - bFromIndex);
+     * }</pre>
+     *
+     * @param a the first array to compare
+     * @param aFromIndex the index (inclusive) of the first element in the
+     *                   first array to be compared
+     * @param aToIndex the index (exclusive) of the last element in the
+     *                 first array to be compared
+     * @param b the second array to compare
+     * @param bFromIndex the index (inclusive) of the first element in the
+     *                   second array to be compared
+     * @param bToIndex the index (exclusive) of the last element in the
+     *                 second array to be compared
+     * @return the value {@code 0} if, over the specified ranges, the first and
+     *         second array are equal and contain the same elements in the same
+     *         order;
+     *         a value less than {@code 0} if, over the specified ranges, the
+     *         first array is lexicographically less than the second array; and
+     *         a value greater than {@code 0} if, over the specified ranges, the
+     *         first array is lexicographically greater than the second array
+     * @throws IllegalArgumentException
+     *         if {@code aFromIndex > aToIndex} or
+     *         if {@code bFromIndex > bToIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *         if {@code aFromIndex < 0 or aToIndex > a.length} or
+     *         if {@code bFromIndex < 0 or bToIndex > b.length}
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static int compare(double[] a, int aFromIndex, int aToIndex,
+                              double[] b, int bFromIndex, int bToIndex) {
+        rangeCheck(a.length, aFromIndex, aToIndex);
+        rangeCheck(b.length, bFromIndex, bToIndex);
+
+        int aLength = aToIndex - aFromIndex;
+        int bLength = bToIndex - bFromIndex;
+        int length = Math.min(aLength, bLength);
+        for (int i = 0; i < length; i++) {
+            double va = a[aFromIndex++], vb = b[bFromIndex++];
+            if (Double.doubleToRawLongBits(va) != Double.doubleToRawLongBits(vb)) {
+                int c = Double.compare(va, vb);
+                if (c != 0) return c;
+            }
+        }
+
+        return aLength - bLength;
+    }
+
+    // Mismatch int
+
+    /**
+     * Finds and returns the index of the first mismatch between two {@code int}
+     * arrays, otherwise return -1 if no mismatch is found.  The index will be
+     * in the range of 0 (inclusive) up to the length (inclusive) of the smaller
+     * array.
+     *
+     * <p>If the two arrays share a common prefix then the returned index is the
+     * length of the common prefix and it follows that there is a mismatch
+     * between the two elements at that index within the respective arrays.
+     * If one array is a proper prefix of the other then the returned index is
+     * the length of the smaller array and it follows that the index is only
+     * valid for the larger array.
+     * Otherwise, there is no mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b}, share a common
+     * prefix of length {@code pl} if the following expression is true:
+     * <pre>{@code
+     *     pl >= 0 &&
+     *     pl < Math.min(a.length, b.length) &&
+     *     J8Arrays.equals(a, 0, pl, b, 0, pl) &&
+     *     a[pl] != b[pl]
+     * }</pre>
+     * Note that a common prefix length of {@code 0} indicates that the first
+     * elements from each array mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b}, share a proper
+     * prefix if the following expression is true:
+     * <pre>{@code
+     *     a.length != b.length &&
+     *     J8Arrays.equals(a, 0, Math.min(a.length, b.length),
+     *                     b, 0, Math.min(a.length, b.length))
+     * }</pre>
+     *
+     * @param a the first array to be tested for a mismatch
+     * @param b the second array to be tested for a mismatch
+     * @return the index of the first mismatch between the two arrays,
+     *         otherwise {@code -1}.
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static int mismatch(int[] a, int[] b) {
+        int length = Math.min(a.length, b.length); // Check null array refs
+        if (a == b)
+            return -1;
+
+        for (int i = 0; i < length; i++) {
+            if (a[i] != b[i]) return i;
+        }
+
+        return a.length != b.length ? length : -1;
+    }
+
+    /**
+     * Finds and returns the relative index of the first mismatch between two
+     * {@code int} arrays over the specified ranges, otherwise return -1 if no
+     * mismatch is found.  The index will be in the range of 0 (inclusive) up to
+     * the length (inclusive) of the smaller range.
+     *
+     * <p>If the two arrays, over the specified ranges, share a common prefix
+     * then the returned relative index is the length of the common prefix and
+     * it follows that there is a mismatch between the two elements at that
+     * relative index within the respective arrays.
+     * If one array is a proper prefix of the other, over the specified ranges,
+     * then the returned relative index is the length of the smaller range and
+     * it follows that the relative index is only valid for the array with the
+     * larger range.
+     * Otherwise, there is no mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b} with specified
+     * ranges [{@code aFromIndex}, {@code atoIndex}) and
+     * [{@code bFromIndex}, {@code btoIndex}) respectively, share a common
+     * prefix of length {@code pl} if the following expression is true:
+     * <pre>{@code
+     *     pl >= 0 &&
+     *     pl < Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex) &&
+     *     J8Arrays.equals(a, aFromIndex, aFromIndex + pl, b, bFromIndex, bFromIndex + pl) &&
+     *     a[aFromIndex + pl] != b[bFromIndex + pl]
+     * }</pre>
+     * Note that a common prefix length of {@code 0} indicates that the first
+     * elements from each array mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b} with specified
+     * ranges [{@code aFromIndex}, {@code atoIndex}) and
+     * [{@code bFromIndex}, {@code btoIndex}) respectively, share a proper
+     * prefix if the following expression is true:
+     * <pre>{@code
+     *     (aToIndex - aFromIndex) != (bToIndex - bFromIndex) &&
+     *     J8Arrays.equals(a, 0, Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex),
+     *                     b, 0, Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex))
+     * }</pre>
+     *
+     * @param a the first array to be tested for a mismatch
+     * @param aFromIndex the index (inclusive) of the first element in the
+     *                   first array to be tested
+     * @param aToIndex the index (exclusive) of the last element in the
+     *                 first array to be tested
+     * @param b the second array to be tested for a mismatch
+     * @param bFromIndex the index (inclusive) of the first element in the
+     *                   second array to be tested
+     * @param bToIndex the index (exclusive) of the last element in the
+     *                 second array to be tested
+     * @return the relative index of the first mismatch between the two arrays
+     *         over the specified ranges, otherwise {@code -1}.
+     * @throws IllegalArgumentException
+     *         if {@code aFromIndex > aToIndex} or
+     *         if {@code bFromIndex > bToIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *         if {@code aFromIndex < 0 or aToIndex > a.length} or
+     *         if {@code bFromIndex < 0 or bToIndex > b.length}
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static int mismatch(int[] a, int aFromIndex, int aToIndex,
+                               int[] b, int bFromIndex, int bToIndex) {
+        rangeCheck(a.length, aFromIndex, aToIndex);
+        rangeCheck(b.length, bFromIndex, bToIndex);
+
+        int aLength = aToIndex - aFromIndex;
+        int bLength = bToIndex - bFromIndex;
+        int length = Math.min(aLength, bLength);
+        for (int i = 0; i < length; i++) {
+            if (a[aFromIndex++] != b[bFromIndex++]) return i;
+        }
+
+        return aLength != bLength ? length : -1;
+    }
+
+    // Mismatch long
+
+    /**
+     * Finds and returns the index of the first mismatch between two {@code long}
+     * arrays, otherwise return -1 if no mismatch is found.  The index will be
+     * in the range of 0 (inclusive) up to the length (inclusive) of the smaller
+     * array.
+     *
+     * <p>If the two arrays share a common prefix then the returned index is the
+     * length of the common prefix and it follows that there is a mismatch
+     * between the two elements at that index within the respective arrays.
+     * If one array is a proper prefix of the other then the returned index is
+     * the length of the smaller array and it follows that the index is only
+     * valid for the larger array.
+     * Otherwise, there is no mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b}, share a common
+     * prefix of length {@code pl} if the following expression is true:
+     * <pre>{@code
+     *     pl >= 0 &&
+     *     pl < Math.min(a.length, b.length) &&
+     *     J8Arrays.equals(a, 0, pl, b, 0, pl) &&
+     *     a[pl] != b[pl]
+     * }</pre>
+     * Note that a common prefix length of {@code 0} indicates that the first
+     * elements from each array mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b}, share a proper
+     * prefix if the following expression is true:
+     * <pre>{@code
+     *     a.length != b.length &&
+     *     J8Arrays.equals(a, 0, Math.min(a.length, b.length),
+     *                     b, 0, Math.min(a.length, b.length))
+     * }</pre>
+     *
+     * @param a the first array to be tested for a mismatch
+     * @param b the second array to be tested for a mismatch
+     * @return the index of the first mismatch between the two arrays,
+     *         otherwise {@code -1}.
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static int mismatch(long[] a, long[] b) {
+        int length = Math.min(a.length, b.length); // Check null array refs
+        if (a == b)
+            return -1;
+
+        for (int i = 0; i < length; i++) {
+            if (a[i] != b[i]) return i;
+        }
+
+        return a.length != b.length ? length : -1;
+    }
+
+    /**
+     * Finds and returns the relative index of the first mismatch between two
+     * {@code long} arrays over the specified ranges, otherwise return -1 if no
+     * mismatch is found.  The index will be in the range of 0 (inclusive) up to
+     * the length (inclusive) of the smaller range.
+     *
+     * <p>If the two arrays, over the specified ranges, share a common prefix
+     * then the returned relative index is the length of the common prefix and
+     * it follows that there is a mismatch between the two elements at that
+     * relative index within the respective arrays.
+     * If one array is a proper prefix of the other, over the specified ranges,
+     * then the returned relative index is the length of the smaller range and
+     * it follows that the relative index is only valid for the array with the
+     * larger range.
+     * Otherwise, there is no mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b} with specified
+     * ranges [{@code aFromIndex}, {@code atoIndex}) and
+     * [{@code bFromIndex}, {@code btoIndex}) respectively, share a common
+     * prefix of length {@code pl} if the following expression is true:
+     * <pre>{@code
+     *     pl >= 0 &&
+     *     pl < Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex) &&
+     *     J8Arrays.equals(a, aFromIndex, aFromIndex + pl, b, bFromIndex, bFromIndex + pl) &&
+     *     a[aFromIndex + pl] != b[bFromIndex + pl]
+     * }</pre>
+     * Note that a common prefix length of {@code 0} indicates that the first
+     * elements from each array mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b} with specified
+     * ranges [{@code aFromIndex}, {@code atoIndex}) and
+     * [{@code bFromIndex}, {@code btoIndex}) respectively, share a proper
+     * prefix if the following expression is true:
+     * <pre>{@code
+     *     (aToIndex - aFromIndex) != (bToIndex - bFromIndex) &&
+     *     J8Arrays.equals(a, 0, Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex),
+     *                     b, 0, Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex))
+     * }</pre>
+     *
+     * @param a the first array to be tested for a mismatch
+     * @param aFromIndex the index (inclusive) of the first element in the
+     *                   first array to be tested
+     * @param aToIndex the index (exclusive) of the last element in the
+     *                 first array to be tested
+     * @param b the second array to be tested for a mismatch
+     * @param bFromIndex the index (inclusive) of the first element in the
+     *                   second array to be tested
+     * @param bToIndex the index (exclusive) of the last element in the
+     *                 second array to be tested
+     * @return the relative index of the first mismatch between the two arrays
+     *         over the specified ranges, otherwise {@code -1}.
+     * @throws IllegalArgumentException
+     *         if {@code aFromIndex > aToIndex} or
+     *         if {@code bFromIndex > bToIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *         if {@code aFromIndex < 0 or aToIndex > a.length} or
+     *         if {@code bFromIndex < 0 or bToIndex > b.length}
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static int mismatch(long[] a, int aFromIndex, int aToIndex,
+                               long[] b, int bFromIndex, int bToIndex) {
+        rangeCheck(a.length, aFromIndex, aToIndex);
+        rangeCheck(b.length, bFromIndex, bToIndex);
+
+        int aLength = aToIndex - aFromIndex;
+        int bLength = bToIndex - bFromIndex;
+        int length = Math.min(aLength, bLength);
+        for (int i = 0; i < length; i++) {
+            if (a[aFromIndex++] != b[bFromIndex++]) return i;
+        }
+
+        return aLength != bLength ? length : -1;
+    }
+
+    // Mismatch double
+
+    /**
+     * Finds and returns the index of the first mismatch between two
+     * {@code double} arrays, otherwise return -1 if no mismatch is found.  The
+     * index will be in the range of 0 (inclusive) up to the length (inclusive)
+     * of the smaller array.
+     *
+     * <p>If the two arrays share a common prefix then the returned index is the
+     * length of the common prefix and it follows that there is a mismatch
+     * between the two elements at that index within the respective arrays.
+     * If one array is a proper prefix of the other then the returned index is
+     * the length of the smaller array and it follows that the index is only
+     * valid for the larger array.
+     * Otherwise, there is no mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b}, share a common
+     * prefix of length {@code pl} if the following expression is true:
+     * <pre>{@code
+     *     pl >= 0 &&
+     *     pl < Math.min(a.length, b.length) &&
+     *     J8Arrays.equals(a, 0, pl, b, 0, pl) &&
+     *     Double.compare(a[pl], b[pl]) != 0
+     * }</pre>
+     * Note that a common prefix length of {@code 0} indicates that the first
+     * elements from each array mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b}, share a proper
+     * prefix if the following expression is true:
+     * <pre>{@code
+     *     a.length != b.length &&
+     *     J8Arrays.equals(a, 0, Math.min(a.length, b.length),
+     *                     b, 0, Math.min(a.length, b.length))
+     * }</pre>
+     *
+     * @param a the first array to be tested for a mismatch
+     * @param b the second array to be tested for a mismatch
+     * @return the index of the first mismatch between the two arrays,
+     *         otherwise {@code -1}.
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static int mismatch(double[] a, double[] b) {
+        int length = Math.min(a.length, b.length); // Check null array refs
+        if (a == b)
+            return -1;
+
+        for (int i = 0; i < length; i++) {
+            double va = a[i], vb = b[i];
+            if (Double.doubleToRawLongBits(va) != Double.doubleToRawLongBits(vb))
+                if (!Double.isNaN(va) || !Double.isNaN(vb))
+                    return i;
+        }
+
+        return a.length != b.length ? length : -1;
+    }
+
+    /**
+     * Finds and returns the relative index of the first mismatch between two
+     * {@code double} arrays over the specified ranges, otherwise return -1 if
+     * no mismatch is found.  The index will be in the range of 0 (inclusive) up
+     * to the length (inclusive) of the smaller range.
+     *
+     * <p>If the two arrays, over the specified ranges, share a common prefix
+     * then the returned relative index is the length of the common prefix and
+     * it follows that there is a mismatch between the two elements at that
+     * relative index within the respective arrays.
+     * If one array is a proper prefix of the other, over the specified ranges,
+     * then the returned relative index is the length of the smaller range and
+     * it follows that the relative index is only valid for the array with the
+     * larger range.
+     * Otherwise, there is no mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b} with specified
+     * ranges [{@code aFromIndex}, {@code atoIndex}) and
+     * [{@code bFromIndex}, {@code btoIndex}) respectively, share a common
+     * prefix of length {@code pl} if the following expression is true:
+     * <pre>{@code
+     *     pl >= 0 &&
+     *     pl < Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex) &&
+     *     J8Arrays.equals(a, aFromIndex, aFromIndex + pl, b, bFromIndex, bFromIndex + pl) &&
+     *     Double.compare(a[aFromIndex + pl], b[bFromIndex + pl]) != 0
+     * }</pre>
+     * Note that a common prefix length of {@code 0} indicates that the first
+     * elements from each array mismatch.
+     *
+     * <p>Two non-{@code null} arrays, {@code a} and {@code b} with specified
+     * ranges [{@code aFromIndex}, {@code atoIndex}) and
+     * [{@code bFromIndex}, {@code btoIndex}) respectively, share a proper
+     * prefix if the following expression is true:
+     * <pre>{@code
+     *     (aToIndex - aFromIndex) != (bToIndex - bFromIndex) &&
+     *     J8Arrays.equals(a, 0, Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex),
+     *                     b, 0, Math.min(aToIndex - aFromIndex, bToIndex - bFromIndex))
+     * }</pre>
+     *
+     * @param a the first array to be tested for a mismatch
+     * @param aFromIndex the index (inclusive) of the first element in the
+     *                   first array to be tested
+     * @param aToIndex the index (exclusive) of the last element in the
+     *                 first array to be tested
+     * @param b the second array to be tested for a mismatch
+     * @param bFromIndex the index (inclusive) of the first element in the
+     *                   second array to be tested
+     * @param bToIndex the index (exclusive) of the last element in the
+     *                 second array to be tested
+     * @return the relative index of the first mismatch between the two arrays
+     *         over the specified ranges, otherwise {@code -1}.
+     * @throws IllegalArgumentException
+     *         if {@code aFromIndex > aToIndex} or
+     *         if {@code bFromIndex > bToIndex}
+     * @throws ArrayIndexOutOfBoundsException
+     *         if {@code aFromIndex < 0 or aToIndex > a.length} or
+     *         if {@code bFromIndex < 0 or bToIndex > b.length}
+     * @throws NullPointerException
+     *         if either array is {@code null}
+     * @since 9
+     */
+    public static int mismatch(double[] a, int aFromIndex, int aToIndex,
+                               double[] b, int bFromIndex, int bToIndex) {
+        rangeCheck(a.length, aFromIndex, aToIndex);
+        rangeCheck(b.length, bFromIndex, bToIndex);
+
+        int aLength = aToIndex - aFromIndex;
+        int bLength = bToIndex - bFromIndex;
+        int length = Math.min(aLength, bLength);
+        for (int i = 0; i < length; i++) {
+            double va = a[aFromIndex++], vb = b[bFromIndex++];
+            if (Double.doubleToRawLongBits(va) != Double.doubleToRawLongBits(vb))
+                if (!Double.isNaN(va) || !Double.isNaN(vb))
+                    return i;
         }
 
         return aLength != bLength ? length : -1;
