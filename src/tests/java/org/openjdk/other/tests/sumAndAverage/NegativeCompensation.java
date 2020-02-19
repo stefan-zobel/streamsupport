@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 
 public class NegativeCompensation {
     static final double VAL = 1.000000001;
-    static final int LOG_ITER = 21;
+    static final int LOG_ITER = 20;
 
     @Test
     public static void test() {
@@ -58,10 +58,14 @@ public class NegativeCompensation {
             stat2.combine(stat1);
         }
 
-        System.out.println("count: " + stat2.getCount());
-        for (long i = 0, iend = stat2.getCount(); i < iend; ++i) {
+        final long iend = stat2.getCount();
+        System.out.println("NegativeCompensation count: " + iend);
+        long start = System.currentTimeMillis();
+
+        for (long i = 0L; i < iend; ++i) {
             stat0.accept(VAL);
         }
+        System.out.println("NegativeCompensation took: " + (System.currentTimeMillis() - start) + " ms");
 
         double absErr = Math.abs(stat0.getSum() - stat2.getSum());
         System.out.println("serial sum: " + stat0.getSum());
