@@ -79,8 +79,7 @@ public final class Maps {
      * {@code null}, else returns the current value.
      *
      * <p><b>Implementation Requirements:</b><br>
-     * The default implementation is equivalent to, for the {@code
-     * map}:
+     * The default implementation is equivalent to, for the {@code map}:
      *
      * <pre> {@code
      * V v = map.get(key);

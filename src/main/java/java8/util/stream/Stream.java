@@ -922,7 +922,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * additional synchronization is needed for a parallel reduction.
      *
      * <p><b>API Note:</b><br>
-     * The following will accumulate strings into an ArrayList:
+     * The following will accumulate strings into a List:
      * <pre>{@code
      *     List<String> asList = stringStream.collect(Collectors.toList());
      * }</pre>
