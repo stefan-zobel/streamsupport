@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.7.1-stable" is the current stable release
+ - "1.7.2-stable" is the current stable release
 
 
 GENERAL
@@ -85,6 +85,10 @@ GENERAL
  - Release 1.7.1 completes the Java 12 port and adds some improvements and
    bug fixes from Java 13.
 
+ - Release 1.7.2 has a new Dual-pivot quicksort implementation, adds a few
+   Java 9 methods to J8Arrays, is overall a bit smaller and adds some
+   improvements and minor documentation fixes from Java 14.
+
 
 
 KNOWN PROBLEMS
@@ -147,6 +151,20 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.7.2-stable (2020-03-27)
+ - JDK-8226297: Dual-pivot quicksort improvements
+ - JDK-8033148: Comparators and mismatchers for arrays (partially)
+ - JDK-8225490: Misc. changes imported from jsr166 CVS 2019-09
+ - JDK-8236850: Consistent constant folding on List/​Set.of() instances
+ - JDK-8236641: Improve Set.of(...).iterator() warmup characteristics
+ - JDK-8227235: Rare failures in testForkHelpQuiesce tests
+ - JDK-8231161: Wrong return type in Collector Javadoc code sample
+ - JDK-8224716: SummaryStatistics Javadoc overflow of count
+ - JDK-8238919: Spacing and punctuation in stream package doc
+ - JDK-8241014: Misc. typos in doc comments
+ - Test compatibility with Android 10 [#410, #411]
+ - Test on Java 14, 15 (early access) [#409, #416]
 
 1.7.1-stable (2019-05-26)
  - Completed Java 12 port, integrated improvements from Java 13
