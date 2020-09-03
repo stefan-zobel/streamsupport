@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1994, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1994, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,8 +23,6 @@
  * questions.
  */
 package java8.lang;
-
-import java.math.BigInteger;
 
 /**
  * A place for static default implementations of the new Java 8
@@ -62,41 +60,13 @@ public final class Longs {
      * @since 1.8
      */
     public static long divideUnsigned(long dividend, long divisor) {
-        if (divisor < 0L) { // signed comparison
-            // Answer must be 0 or 1 depending on relative magnitude
-            // of dividend and divisor.
-            return (compareUnsigned(dividend, divisor)) < 0 ? 0L :1L;
+        // See Hacker's Delight (2nd ed), section 9.3
+        if (divisor >= 0) {
+            long q = (dividend >>> 1) / divisor << 1;
+            long r = dividend - q * divisor;
+            return q + ((r | ~(r - divisor)) >>> Long.SIZE - 1);
         }
-
-        if (dividend > 0) { //  Both inputs non-negative
-            return dividend / divisor;
-        } else {
-            /*
-             * For simple code, leveraging BigInteger.  Longer and faster
-             * code written directly in terms of operations on longs is
-             * possible; see "Hacker's Delight" for divide and remainder
-             * algorithms.
-             */
-            return toUnsignedBigInteger(dividend).
-                divide(toUnsignedBigInteger(divisor)).longValue();
-        }
-    }
-
-    /**
-     * Return a BigInteger equal to the unsigned value of the
-     * argument.
-     */
-    private static BigInteger toUnsignedBigInteger(long i) {
-        if (i >= 0L) {
-            return BigInteger.valueOf(i);
-        } else {
-            int upper = (int) (i >>> 32);
-            int lower = (int) i;
-
-            // return (upper << 32) + lower
-            return (BigInteger.valueOf(Integers.toUnsignedLong(upper))).shiftLeft(32).
-                add(BigInteger.valueOf(Integers.toUnsignedLong(lower)));
-        }
+        return (dividend & ~(dividend - divisor)) >>> Long.SIZE - 1;
     }
 
     /**
@@ -146,16 +116,13 @@ public final class Longs {
      * @since 1.8
      */
     public static long remainderUnsigned(long dividend, long divisor) {
-        if (dividend > 0 && divisor > 0) { // signed comparisons
-            return dividend % divisor;
-        } else {
-            if (compareUnsigned(dividend, divisor) < 0) { // Avoid explicit check for 0 divisor
-                return dividend;
-            } else {
-                return toUnsignedBigInteger(dividend).
-                    remainder(toUnsignedBigInteger(divisor)).longValue();
-            }
+        // See Hacker's Delight (2nd ed), section 9.3
+        if (divisor >= 0) {
+            long q = (dividend >>> 1) / divisor << 1;
+            long r = dividend - q * divisor;
+            return r - (~(r - divisor) >> Long.SIZE - 1 & divisor);
         }
+        return dividend - ((dividend & ~(dividend - divisor)) >> Long.SIZE - 1 & divisor);
     }
 
     /**
