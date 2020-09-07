@@ -109,6 +109,7 @@ import java.util.concurrent.atomic.AtomicLong;
     }
 
     private static final class SeedsHolder {
+        SeedsHolder() {}
         long threadSeed;
         int threadProbe;
         int threadSecondarySeed;

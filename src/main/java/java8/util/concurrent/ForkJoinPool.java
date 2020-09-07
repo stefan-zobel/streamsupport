@@ -659,6 +659,8 @@ public class ForkJoinPool extends AbstractExecutorService {
                             pool, ClassLoader.getSystemClassLoader()); }},
                 ACC);
         }
+
+        DefaultForkJoinWorkerThreadFactory() {}
     }
 
     // Constants shared across ForkJoinPool and WorkQueue
@@ -2444,7 +2446,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      * Constructor for common pool using parameters possibly
      * overridden by system properties
      */
-    private ForkJoinPool(byte forCommonPoolOnly) {
+    ForkJoinPool(byte forCommonPoolOnly) {
         int parallelism = -1;
         ForkJoinWorkerThreadFactory fac = null;
         UncaughtExceptionHandler handler = null;
@@ -3387,6 +3389,8 @@ public class ForkJoinPool extends AbstractExecutorService {
                             InnocuousForkJoinWorkerThread(pool); }},
                 ACC);
         }
+
+        InnocuousForkJoinWorkerThreadFactory() {}
     }
 
     static final class MemBar {

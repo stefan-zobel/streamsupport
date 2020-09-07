@@ -152,7 +152,7 @@ public class ThreadLocalRandom extends Random {
      * @param bound the upper bound (exclusive), must not equal origin
      * @return a pseudorandom value
      */
-    private final long internalNextLong(long origin, long bound) {
+    final long internalNextLong(long origin, long bound) {
         long r = TLRandom.mix64(nextSeed());
         if (origin < bound) {
             long n = bound - origin, m = n - 1;
@@ -181,7 +181,7 @@ public class ThreadLocalRandom extends Random {
      * @param bound the upper bound (exclusive), must not equal origin
      * @return a pseudorandom value
      */
-    private final int internalNextInt(int origin, int bound) {
+    final int internalNextInt(int origin, int bound) {
         int r = TLRandom.mix32(nextSeed());
         if (origin < bound) {
             int n = bound - origin, m = n - 1;
@@ -209,7 +209,7 @@ public class ThreadLocalRandom extends Random {
      * @param bound the upper bound (exclusive), must not equal origin
      * @return a pseudorandom value
      */
-    private final double internalNextDouble(double origin, double bound) {
+    final double internalNextDouble(double origin, double bound) {
         double r = (nextLong() >>> 11) * DOUBLE_UNIT;
         if (origin < bound) {
             r = r * (bound - origin) + origin;
