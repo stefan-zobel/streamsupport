@@ -320,9 +320,8 @@ abstract class DoublePipeline<E_IN>
                     }
 
                     @Override
-                    @SuppressWarnings("unchecked")
                     public void accept(double t) {
-                            mapper.accept(t, (DoubleConsumer) downstream);
+                        mapper.accept(t, (DoubleConsumer) downstream);
                     }
                 };
             }

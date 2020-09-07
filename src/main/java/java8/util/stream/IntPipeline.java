@@ -354,7 +354,6 @@ abstract class IntPipeline<E_IN>
                     }
 
                     @Override
-                    @SuppressWarnings("unchecked")
                     public void accept(int t) {
                         mapper.accept(t, (IntConsumer) downstream);
                     }
