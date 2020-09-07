@@ -38,7 +38,6 @@ import java8.util.OptionalDouble;
 import java8.util.OptionalInt;
 import java8.util.OptionalLong;
 import java8.util.PrimitiveIterator;
-
 import java8.util.Spliterator;
 import java8.util.function.BiConsumer;
 import java8.util.function.BiFunction;
@@ -72,10 +71,11 @@ import java8.util.function.ObjLongConsumer;
 import java8.util.function.Predicate;
 import java8.util.function.Supplier;
 import java8.util.function.ToDoubleFunction;
-
 import java8.util.function.ToIntFunction;
 import java8.util.function.ToLongFunction;
-
+import java8.util.stream.DoubleStream.DoubleMapMultiConsumer;
+import java8.util.stream.IntStream.IntMapMultiConsumer;
+import java8.util.stream.LongStream.LongMapMultiConsumer;
 import static java8.util.stream.Collectors.*;
 
 public final class DefaultMethodStreams {
@@ -226,6 +226,30 @@ public final class DefaultMethodStreams {
         @Override
         public DoubleStream flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper) {
             return s.flatMapToDouble(mapper);
+        }
+
+        @Override
+        public <R> Stream<R> mapMulti(
+                BiConsumer<? super T, ? super Consumer<R>> mapper) {
+            return s.mapMulti(mapper);
+        }
+
+        @Override
+        public IntStream mapMultiToInt(
+                BiConsumer<? super T, ? super IntConsumer> mapper) {
+            return s.mapMultiToInt(mapper);
+        }
+
+        @Override
+        public LongStream mapMultiToLong(
+                BiConsumer<? super T, ? super LongConsumer> mapper) {
+            return s.mapMultiToLong(mapper);
+        }
+
+        @Override
+        public DoubleStream mapMultiToDouble(
+                BiConsumer<? super T, ? super DoubleConsumer> mapper) {
+            return s.mapMultiToDouble(mapper);
         }
 
         @Override
@@ -432,6 +456,11 @@ public final class DefaultMethodStreams {
         @Override
         public IntStream flatMap(IntFunction<? extends IntStream> mapper) {
             return s.flatMap(mapper);
+        }
+
+        @Override
+        public IntStream mapMulti(IntMapMultiConsumer mapper) {
+            return s.mapMulti(mapper);
         }
 
         @Override
@@ -656,6 +685,11 @@ public final class DefaultMethodStreams {
         }
 
         @Override
+        public LongStream mapMulti(LongMapMultiConsumer mapper) {
+            return s.mapMulti(mapper);
+        }
+
+        @Override
         public LongStream distinct() {
             return s.distinct();
         }
@@ -856,6 +890,11 @@ public final class DefaultMethodStreams {
         @Override
         public DoubleStream flatMap(DoubleFunction<? extends DoubleStream> mapper) {
             return s.flatMap(mapper);
+        }
+
+        @Override
+        public DoubleStream mapMulti(DoubleMapMultiConsumer mapper) {
+            return s.mapMulti(mapper);
         }
 
         @Override

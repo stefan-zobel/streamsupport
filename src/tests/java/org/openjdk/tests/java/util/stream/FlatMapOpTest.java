@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -74,6 +74,7 @@ public class FlatMapOpTest extends OpTestCase {
         assertCountSum(StreamSupport.stream(countTo(10)).flatMap(mfId), 10, 55);
         assertCountSum(StreamSupport.stream(countTo(10)).flatMap(mfNull), 0, 0);
         assertCountSum(StreamSupport.stream(countTo(3)).flatMap(mfLt), 6, 4);
+        assertCountSum(StreamSupport.stream(countTo(10)).flatMap(e -> RefStreams.empty()), 0, 0);
 
         exerciseOps(TestData.Factory.ofArray("stringsArray", stringsArray), s -> s.flatMap(flattenChars));
         exerciseOps(TestData.Factory.ofArray("LONG_STRING", new String[] {LONG_STRING}), s -> s.flatMap(flattenChars));

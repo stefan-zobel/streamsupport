@@ -72,6 +72,7 @@
       <class name="org.openjdk.tests.java.util.stream.FindAnyOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.StreamBuilderTest"/>
       <class name="org.openjdk.tests.java.util.stream.FlatMapOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.mapMultiOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.SliceOpTest"/>
 
       <!-- block 7 -->
