@@ -902,13 +902,13 @@ public interface LongStream extends BaseStream<Long, LongStream> {
     /**
      * Represents an operation that accepts a {@code long}-valued argument
      * and a LongConsumer, and returns no result. This functional interface is
-     * used by {@link LongStreams#mapMulti(LongStream, LongStream.LongMapMultiConsumer)
+     * used by {@link LongStream#mapMulti(LongStream.LongMapMultiConsumer)
      * LongStream.mapMulti} to replace a long value with zero or more long values.
      *
      * <p>This is a <a href="../function/package-summary.html">functional interface</a>
      * whose functional method is {@link #accept(long, LongConsumer)}.
      *
-     * @see LongStreams#mapMulti
+     * @see LongStream#mapMulti
      *
      * @since 16
      */

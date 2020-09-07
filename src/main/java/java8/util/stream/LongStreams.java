@@ -33,108 +33,12 @@ import java8.util.function.LongPredicate;
 import java8.util.function.LongSupplier;
 import java8.util.function.LongUnaryOperator;
 import java8.util.stream.LongStream.Builder;
-import java8.util.stream.LongStream.LongMapMultiConsumer;
 
 /**
- * A place for static default implementations of the new Java 8/9 static
- * interface methods and default interface methods ({@code takeWhile()},
- * {@code dropWhile()} and {@code mapMulti()}) in the {@link LongStream}
- * interface. 
+ * A place for the implementations of the new Java 8/9 static interface methods
+ * in the {@link LongStream} interface.
  */
 public final class LongStreams {
-    /**
-     * Returns a stream consisting of elements of the passed stream that match
-     * the given predicate up to, but discarding, the first element encountered
-     * that does not match the predicate.  All subsequently encountered elements
-     * are discarded.
-     *
-     * <p>This is a <a href="package-summary.html#StreamOps">short-circuiting
-     * stateful intermediate operation</a>.
-     *
-     * @param stream the stream to wrap for the {@code takeWhile()} operation
-     * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
-     *                  predicate to apply to each element to determine if it
-     *                  should be included, or it and all subsequently
-     *                  encountered elements be discarded.
-     * @return the new stream
-     * @since 9
-     */
-    public static LongStream takeWhile(LongStream stream, LongPredicate predicate) {
-        Objects.requireNonNull(stream);
-        Objects.requireNonNull(predicate);
-        // Reuses the unordered spliterator, which, when encounter is present,
-        // is safe to use as long as it configured not to split
-        return StreamSupport.longStream(
-                new WhileOps.UnorderedWhileSpliterator.OfLong.Taking(stream.spliterator(), true, predicate),
-                stream.isParallel()).onClose(StreamSupport.closeHandler(stream));
-    }
-
-    /**
-     * Returns a stream consisting of the remaining elements of the passed
-     * stream after discarding elements that match the given predicate up to,
-     * but not discarding, the first element encountered that does not match
-     * the predicate.  All subsequently encountered elements are not discarded.
-     *
-     * <p>This is a <a href="package-summary.html#StreamOps">stateful
-     * intermediate operation</a>.
-     *
-     * @param stream the stream to wrap for the {@code dropWhile()} operation
-     * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
-     *                  predicate to apply to each element to determine if it
-     *                  should be discarded, or it and all subsequently
-     *                  encountered elements be included.
-     * @return the new stream
-     * @since 9
-     */
-    public static LongStream dropWhile(LongStream stream, LongPredicate predicate) {
-        Objects.requireNonNull(stream);
-        Objects.requireNonNull(predicate);
-        // Reuses the unordered spliterator, which, when encounter is present,
-        // is safe to use as long as it configured not to split
-        return StreamSupport.longStream(
-                new WhileOps.UnorderedWhileSpliterator.OfLong.Dropping(stream.spliterator(), true, predicate),
-                stream.isParallel()).onClose(StreamSupport.closeHandler(stream));
-    }
-
-    /**
-     * Returns a stream consisting of the results of replacing each element of
-     * this stream with multiple elements, specifically zero or more elements.
-     * Replacement is performed by applying the provided mapping function to each
-     * element in conjunction with a {@linkplain LongConsumer consumer} argument
-     * that accepts replacement elements. The mapping function calls the consumer
-     * zero or more times to provide the replacement elements.
-     *
-     * <p>This is an <a href="package-summary.html#StreamOps">intermediate
-     * operation</a>.
-     *
-     * <p>If the {@linkplain LongConsumer consumer} argument is used outside the scope of
-     * its application to the mapping function, the results are undefined.
-     *
-     * <p><b>Implementation Requirements:</b><br>
-     * The default implementation invokes {@link LongStream#flatMap flatMap} on the stream
-     * given, passing a function that behaves as follows. First, it calls the mapper function
-     * with a {@code LongConsumer} that accumulates replacement elements into a newly created
-     * internal buffer. When the mapper function returns, it creates a {@code LongStream} from
-     * the internal buffer. Finally, it returns this stream to {@code flatMap}.
-     * 
-     * @param stream the stream to wrap for the {@code mapMulti()} operation
-     * @param mapper a <a href="package-summary.html#NonInterference">non-interfering</a>,
-     *               <a href="package-summary.html#Statelessness">stateless</a>
-     *               function that generates replacement elements
-     * @return the new stream
-     * @see Stream#mapMulti Stream.mapMulti
-     * @since 16
-     */
-    public static LongStream mapMulti(LongStream stream, LongMapMultiConsumer mapper) {
-        Objects.requireNonNull(stream);
-        Objects.requireNonNull(mapper);
-        return stream.flatMap(e -> {
-            SpinedBuffer.OfLong buffer = new SpinedBuffer.OfLong();
-            mapper.accept(e, buffer);
-            return StreamSupport.longStream(buffer.spliterator(), false);
-        });
-    }
-
     // Static factories
 
     /**

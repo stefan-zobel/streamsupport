@@ -971,13 +971,13 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
     /**
      * Represents an operation that accepts a {@code double}-valued argument
      * and a DoubleConsumer, and returns no result. This functional interface is
-     * used by {@link DoubleStreams#mapMulti(DoubleStream, DoubleStream.DoubleMapMultiConsumer)
+     * used by {@link DoubleStream#mapMulti(DoubleStream.DoubleMapMultiConsumer)
      * DoubleStreams.mapMulti} to replace a double value with zero or more double values.
      *
      * <p>This is a <a href="../function/package-summary.html">functional interface</a>
      * whose functional method is {@link #accept(double, DoubleConsumer)}.
      *
-     * @see DoubleStreams#mapMulti
+     * @see DoubleStream#mapMulti
      *
      * @since 16
      */

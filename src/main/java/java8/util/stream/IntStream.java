@@ -913,13 +913,13 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
     /**
      * Represents an operation that accepts an {@code int}-valued argument
      * and an IntConsumer, and returns no result. This functional interface is
-     * used by {@link IntStreams#mapMulti(IntStream, IntStream.IntMapMultiConsumer)
+     * used by {@link IntStream#mapMulti(IntStream.IntMapMultiConsumer)
      * IntStream.mapMulti} to replace an int value with zero or more int values.
      *
      * <p>This is a <a href="../function/package-summary.html">functional interface</a>
      * whose functional method is {@link #accept(int, IntConsumer)}.
      *
-     * @see IntStreams#mapMulti
+     * @see IntStream#mapMulti
      *
      * @since 16
      */
