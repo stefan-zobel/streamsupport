@@ -50,7 +50,7 @@ final class SliceOps {
      *        a value of {@code Long.MAX_VALUE} if there is no limit
      * @return the sliced size
      */
-    private static long calcSize(long size, long skip, long limit) {
+    static long calcSize(long size, long skip, long limit) {
         return size >= 0 ? Math.max(-1, Math.min(size - skip, limit)) : -1;
     }
 
@@ -62,7 +62,7 @@ final class SliceOps {
      *        a value of {@code Long.MAX_VALUE} if there is no limit
      * @return the slice fence.
      */
-    private static long calcSliceFence(long skip, long limit) {
+    static long calcSliceFence(long skip, long limit) {
         long sliceFence = limit >= 0 ? skip + limit : Long.MAX_VALUE;
         // Check for overflow
         return (sliceFence >= 0) ? sliceFence : Long.MAX_VALUE;
@@ -74,7 +74,7 @@ final class SliceOps {
      * be SUBSIZED.
      */
     @SuppressWarnings("unchecked")
-    private static <P_IN> Spliterator<P_IN> sliceSpliterator(StreamShape shape,
+    static <P_IN> Spliterator<P_IN> sliceSpliterator(StreamShape shape,
                                                              Spliterator<P_IN> s,
                                                              long skip, long limit) {
         long sliceFence = calcSliceFence(skip, limit);

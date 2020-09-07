@@ -343,6 +343,8 @@ final class Streams {
         // count == -1 for no elements
         // count == -2 for one element held by first
 
+        AbstractStreamBuilderImpl() {}
+
         @Override
         public S trySplit() {
             return null;
@@ -893,7 +895,7 @@ final class Streams {
         private abstract static class OfPrimitive<T, T_CONS, T_SPLITR extends Spliterator.OfPrimitive<T, T_CONS, T_SPLITR>>
                 extends ConcatSpliterator<T, T_SPLITR>
                 implements Spliterator.OfPrimitive<T, T_CONS, T_SPLITR> {
-            private OfPrimitive(T_SPLITR aSpliterator, T_SPLITR bSpliterator) {
+            OfPrimitive(T_SPLITR aSpliterator, T_SPLITR bSpliterator) {
                 super(aSpliterator, bSpliterator);
             }
 

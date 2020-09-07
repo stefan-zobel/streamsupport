@@ -57,8 +57,8 @@ final class MatchOps {
         /** Do no elements match the predicate? */
         NONE(true, false);
 
-        private final boolean stopOnPredicateMatches;
-        private final boolean shortCircuitResult;
+        final boolean stopOnPredicateMatches;
+        final boolean shortCircuitResult;
 
         private MatchKind(boolean stopOnPredicateMatches,
                           boolean shortCircuitResult) {

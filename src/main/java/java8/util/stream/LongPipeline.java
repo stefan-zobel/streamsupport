@@ -111,7 +111,7 @@ abstract class LongPipeline<E_IN>
      * The implementation attempts to cast to a Spliterator.OfLong, and throws
      * an exception if this cast is not possible.
      */
-    private static Spliterator.OfLong adapt(Spliterator<Long> s) {
+    static Spliterator.OfLong adapt(Spliterator<Long> s) {
         if (s instanceof Spliterator.OfLong) {
             return (Spliterator.OfLong) s;
         } else {

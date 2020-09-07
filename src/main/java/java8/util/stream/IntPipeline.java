@@ -112,7 +112,7 @@ abstract class IntPipeline<E_IN>
      * The implementation attempts to cast to a Spliterator.OfInt, and throws an
      * exception if this cast is not possible.
      */
-    private static Spliterator.OfInt adapt(Spliterator<Integer> s) {
+    static Spliterator.OfInt adapt(Spliterator<Integer> s) {
         if (s instanceof Spliterator.OfInt) {
             return (Spliterator.OfInt) s;
         }

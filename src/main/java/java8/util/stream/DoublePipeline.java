@@ -109,7 +109,7 @@ abstract class DoublePipeline<E_IN>
      * The implementation attempts to cast to a Spliterator.OfDouble, and throws
      * an exception if this cast is not possible.
      */
-    private static Spliterator.OfDouble adapt(Spliterator<Double> s) {
+    static Spliterator.OfDouble adapt(Spliterator<Double> s) {
         if (s instanceof Spliterator.OfDouble) {
             return (Spliterator.OfDouble) s;
         } else {
