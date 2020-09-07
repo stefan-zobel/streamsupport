@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,6 +27,7 @@ package java8.util.stream;
 import java8.util.Objects;
 import java8.util.Spliterator;
 import java8.util.Spliterators;
+import java8.util.function.BiConsumer;
 import java8.util.function.Consumer;
 import java8.util.function.Predicate;
 import java8.util.function.Supplier;
@@ -36,7 +37,7 @@ import java8.util.stream.Stream.Builder;
 /**
  * A place for static default implementations of the new Java 8/9 static
  * interface methods and default interface methods ({@code takeWhile()},
- * {@code dropWhile()}) in the {@link Stream} interface.
+ * {@code dropWhile()} and {@code mapMulti()}) in the {@link Stream} interface.
  */
 public final class RefStreams {
 
@@ -199,6 +200,100 @@ public final class RefStreams {
         return StreamSupport.stream(
                 new WhileOps.UnorderedWhileSpliterator.OfRef.Dropping<>(s.spliterator(), true, predicate),
                 s.isParallel()).onClose(StreamSupport.closeHandler(s));
+    }
+
+    /**
+     * Returns a stream consisting of the results of replacing each element of the
+     * passed stream with multiple elements, specifically zero or more elements.
+     * Replacement is performed by applying the provided mapping function to each
+     * element in conjunction with a {@linkplain Consumer consumer} argument
+     * that accepts replacement elements. The mapping function calls the consumer
+     * zero or more times to provide the replacement elements.
+     *
+     * <p>This is an <a href="package-summary.html#StreamOps">intermediate
+     * operation</a>.
+     *
+     * <p>If the {@linkplain Consumer consumer} argument is used outside the scope of
+     * its application to the mapping function, the results are undefined.
+     *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation invokes {@link Stream#flatMap flatMap} on the stream
+     * given, passing a function that behaves as follows. First, it calls the mapper function
+     * with a {@code Consumer} that accumulates replacement elements into a newly created
+     * internal buffer. When the mapper function returns, it creates a stream from the
+     * internal buffer. Finally, it returns this stream to {@code Stream.flatMap}.
+     *
+     * <p><b>API Note:</b><br>
+     * This method is similar to {@link Stream#flatMap flatMap} in that it applies a
+     * one-to-many transformation to the elements of the stream and flattens the result
+     * elements into a new stream. This method is preferable to {@code flatMap} in the
+     * following circumstances:
+     * <ul>
+     * <li>When replacing each stream element with a small (possibly zero) number of
+     * elements. Using this method avoids the overhead of creating a new Stream instance
+     * for every group of result elements, as required by {@code flatMap}.</li>
+     * <li>When it is easier to use an imperative approach for generating result
+     * elements than it is to return them in the form of a Stream.</li>
+     * </ul>
+     *
+     * <p>If a lambda expression is provided as the mapper function argument, additional type
+     * information maybe be necessary for proper inference of the element type {@code <R>} of
+     * the returned stream. This can be provided in the form of explicit type declarations for
+     * the lambda parameters or as an explicit type argument to the {@code mapMulti} call.
+     *
+     * <p><b>Examples</b>
+     *
+     * <p>Given a stream of {@code Number} objects, the following
+     * produces a list containing only the {@code Integer} objects:
+     * <pre>{@code
+     *     Stream<Number> numbers = ... ;
+     *     List<Integer> integers = RefStreams.<Number, Integer>mapMulti(numbers, (number, consumer) -> {
+     *             if (number instanceof Integer)
+     *                 consumer.accept((Integer) number);
+     *         })
+     *         .collect(Collectors.toList());
+     * }</pre>
+     *
+     * <p>If we have an {@code Iterable<Object>} and need to recursively expand its elements
+     * that are themselves of type {@code Iterable}, we can use {@code mapMulti} as follows:
+     * <pre>{@code
+     * class C {
+     *     static void expandIterable(Object e, Consumer<Object> c) {
+     *         if (e instanceof Iterable) {
+     *             for (Object ie: (Iterable<?>) e) {
+     *                 expandIterable(ie, c);
+     *             }
+     *         } else if (e != null) {
+     *             c.accept(e);
+     *         }
+     *     }
+     *
+     *     public static void main(String[] args) {
+     *         Stream<Object> stream = ...;
+     *         Stream<Object> expandedStream = RefStreams.mapMulti(stream, C::expandIterable);
+     *     }
+     * }
+     * }</pre>
+     *
+     * @param <T> the type of the stream elements
+     * @param <R> The element type of the new stream
+     * @param stream the stream to wrap for the {@code mapMulti()} operation
+     * @param mapper a <a href="package-summary.html#NonInterference">non-interfering</a>,
+     *               <a href="package-summary.html#Statelessness">stateless</a>
+     *               function that generates replacement elements
+     * @return the new stream
+     * @see Stream#flatMap flatMap
+     * @since 16
+     */
+    public static <T, R> Stream<R> mapMulti(Stream<? extends T> stream,
+            BiConsumer<? super T, ? super Consumer<R>> mapper) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(mapper);
+        return stream.flatMap(e -> {
+            SpinedBuffer<R> buffer = new SpinedBuffer<>();
+            mapper.accept(e, buffer);
+            return StreamSupport.stream(buffer.spliterator(), false);
+        });
     }
 
     /**

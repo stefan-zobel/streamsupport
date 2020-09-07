@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -159,6 +159,36 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
      * @see Stream#flatMap(Function)
      */
     DoubleStream flatMap(DoubleFunction<? extends DoubleStream> mapper);
+
+    /**
+     * Returns a stream consisting of the results of replacing each element of
+     * this stream with multiple elements, specifically zero or more elements.
+     * Replacement is performed by applying the provided mapping function to each
+     * element in conjunction with a {@linkplain DoubleConsumer consumer} argument
+     * that accepts replacement elements. The mapping function calls the consumer
+     * zero or more times to provide the replacement elements.
+     *
+     * <p>This is an <a href="package-summary.html#StreamOps">intermediate
+     * operation</a>.
+     *
+     * <p>If the {@linkplain DoubleConsumer consumer} argument is used outside the scope of
+     * its application to the mapping function, the results are undefined.
+     *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation invokes {@link #flatMap flatMap} on this stream,
+     * passing a function that behaves as follows. First, it calls the mapper function
+     * with a {@code DoubleConsumer} that accumulates replacement elements into a newly created
+     * internal buffer. When the mapper function returns, it creates a {@code DoubleStream} from the
+     * internal buffer. Finally, it returns this stream to {@code flatMap}.
+     *
+     * @param mapper a <a href="package-summary.html#NonInterference">non-interfering</a>,
+     *               <a href="package-summary.html#Statelessness">stateless</a>
+     *               function that generates replacement elements
+     * @return the new stream
+     * @see Stream#mapMulti Stream.mapMulti
+     * @since 16
+     */
+    DoubleStream mapMulti(DoubleMapMultiConsumer mapper);
 
     /**
      * Returns a stream consisting of the distinct elements of this stream. The
@@ -936,5 +966,30 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
          * to the built state
          */
         DoubleStream build();
+    }
+
+    /**
+     * Represents an operation that accepts a {@code double}-valued argument
+     * and a DoubleConsumer, and returns no result. This functional interface is
+     * used by {@link DoubleStreams#mapMulti(DoubleStream, DoubleStream.DoubleMapMultiConsumer)
+     * DoubleStreams.mapMulti} to replace a double value with zero or more double values.
+     *
+     * <p>This is a <a href="../function/package-summary.html">functional interface</a>
+     * whose functional method is {@link #accept(double, DoubleConsumer)}.
+     *
+     * @see DoubleStreams#mapMulti
+     *
+     * @since 16
+     */
+    interface DoubleMapMultiConsumer {
+
+        /**
+         * Replaces the given {@code value} with zero or more values by feeding the mapped
+         * values to the {@code dc} consumer.
+         *
+         * @param value the double value coming from upstream
+         * @param dc a {@code DoubleConsumer} accepting the mapped values
+         */
+        void accept(double value, DoubleConsumer dc);
     }
 }

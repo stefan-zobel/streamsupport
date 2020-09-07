@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,11 +32,13 @@ import java8.util.function.DoublePredicate;
 import java8.util.function.DoubleSupplier;
 import java8.util.function.DoubleUnaryOperator;
 import java8.util.stream.DoubleStream.Builder;
+import java8.util.stream.DoubleStream.DoubleMapMultiConsumer;
 
 /**
  * A place for static default implementations of the new Java 8/9 static
  * interface methods and default interface methods ({@code takeWhile()},
- * {@code dropWhile()}) in the {@link DoubleStream} interface.
+ * {@code dropWhile()} and {@code mapMulti()}) in the {@link DoubleStream}
+ * interface.
  */
 public final class DoubleStreams {
 
@@ -92,6 +94,45 @@ public final class DoubleStreams {
         return StreamSupport.doubleStream(
                 new WhileOps.UnorderedWhileSpliterator.OfDouble.Dropping(stream.spliterator(), true, predicate),
                 stream.isParallel()).onClose(StreamSupport.closeHandler(stream));
+    }
+
+    /**
+     * Returns a stream consisting of the results of replacing each element of
+     * this stream with multiple elements, specifically zero or more elements.
+     * Replacement is performed by applying the provided mapping function to each
+     * element in conjunction with a {@linkplain DoubleConsumer consumer} argument
+     * that accepts replacement elements. The mapping function calls the consumer
+     * zero or more times to provide the replacement elements.
+     *
+     * <p>This is an <a href="package-summary.html#StreamOps">intermediate
+     * operation</a>.
+     *
+     * <p>If the {@linkplain DoubleConsumer consumer} argument is used outside the scope of
+     * its application to the mapping function, the results are undefined.
+     *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation invokes {@link DoubleStream#flatMap flatMap} on the stream
+     * given, passing a function that behaves as follows. First, it calls the mapper function
+     * with a {@code DoubleConsumer} that accumulates replacement elements into a newly created
+     * internal buffer. When the mapper function returns, it creates a {@code DoubleStream} from
+     * the internal buffer. Finally, it returns this stream to {@code flatMap}.
+     *
+     * @param stream the stream to wrap for the {@code mapMulti()} operation
+     * @param mapper a <a href="package-summary.html#NonInterference">non-interfering</a>,
+     *               <a href="package-summary.html#Statelessness">stateless</a>
+     *               function that generates replacement elements
+     * @return the new stream
+     * @see Stream#mapMulti Stream.mapMulti
+     * @since 16
+     */
+    public static DoubleStream mapMulti(DoubleStream stream, DoubleMapMultiConsumer mapper) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(mapper);
+        return stream.flatMap(e -> {
+            SpinedBuffer.OfDouble buffer = new SpinedBuffer.OfDouble();
+            mapper.accept(e, buffer);
+            return StreamSupport.doubleStream(buffer.spliterator(), false);
+        });
     }
 
     // Static factories

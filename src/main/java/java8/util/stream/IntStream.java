@@ -162,6 +162,36 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
     IntStream flatMap(IntFunction<? extends IntStream> mapper);
 
     /**
+     * Returns a stream consisting of the results of replacing each element of
+     * this stream with multiple elements, specifically zero or more elements.
+     * Replacement is performed by applying the provided mapping function to each
+     * element in conjunction with a {@linkplain IntConsumer consumer} argument
+     * that accepts replacement elements. The mapping function calls the consumer
+     * zero or more times to provide the replacement elements.
+     *
+     * <p>This is an <a href="package-summary.html#StreamOps">intermediate
+     * operation</a>.
+     *
+     * <p>If the {@linkplain IntConsumer consumer} argument is used outside the scope of
+     * its application to the mapping function, the results are undefined.
+     *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation invokes {@link #flatMap flatMap} on this stream,
+     * passing a function that behaves as follows. First, it calls the mapper function
+     * with an {@code IntConsumer} that accumulates replacement elements into a newly created
+     * internal buffer. When the mapper function returns, it creates an {@code IntStream} from the
+     * internal buffer. Finally, it returns this stream to {@code flatMap}.
+     *
+     * @param mapper a <a href="package-summary.html#NonInterference">non-interfering</a>,
+     *               <a href="package-summary.html#Statelessness">stateless</a>
+     *               function that generates replacement elements
+     * @return the new stream
+     * @see Stream#mapMulti Stream.mapMulti
+     * @since 16
+     */
+    IntStream mapMulti(IntMapMultiConsumer mapper);
+
+    /**
      * Returns a stream consisting of the distinct elements of this stream.
      *
      * <p>This is a <a href="package-summary.html#StreamOps">stateful
@@ -878,5 +908,30 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
          * the built state
          */
         IntStream build();
+    }
+
+    /**
+     * Represents an operation that accepts an {@code int}-valued argument
+     * and an IntConsumer, and returns no result. This functional interface is
+     * used by {@link IntStreams#mapMulti(IntStream, IntStream.IntMapMultiConsumer)
+     * IntStream.mapMulti} to replace an int value with zero or more int values.
+     *
+     * <p>This is a <a href="../function/package-summary.html">functional interface</a>
+     * whose functional method is {@link #accept(int, IntConsumer)}.
+     *
+     * @see IntStreams#mapMulti
+     *
+     * @since 16
+     */
+    interface IntMapMultiConsumer {
+
+        /**
+         * Replaces the given {@code value} with zero or more values by feeding the mapped
+         * values to the {@code ic} consumer.
+         *
+         * @param value the int value coming from upstream
+         * @param ic an {@code IntConsumer} accepting the mapped values
+         */
+        void accept(int value, IntConsumer ic);
     }
 }
