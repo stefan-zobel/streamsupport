@@ -54,7 +54,7 @@ Please give feedback [here](https://github.com/stefan-zobel/streamsupport/issues
 
 ```gradle
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.7.2'
+    implementation 'net.sourceforge.streamsupport:streamsupport:1.7.2'
 }
 ```
 
