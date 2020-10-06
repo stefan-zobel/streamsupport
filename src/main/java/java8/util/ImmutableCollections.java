@@ -89,7 +89,7 @@ final class ImmutableCollections {
         // use the lowest bit to determine if we should reverse iteration
         REVERSE = (SALT32L & 1) == 0;
         EMPTY = new Object();
-        EMPTY_LIST = new ListN<>();
+        EMPTY_LIST = new ListN<>(new Object[0]);
         EMPTY_SET = new SetN<>();
         EMPTY_MAP = new MapN<>();
     }
@@ -480,14 +480,30 @@ final class ImmutableCollections {
 
         private final E[] elements;
 
-        ListN(E... input) {
+        ListN(E[] array) {
+            elements = array;
+        }
+
+        // creates a new internal array, and checks and rejects null elements
+        static <E> List<E> fromArray(E... input) {
             // copy and check manually to avoid TOCTOU
             @SuppressWarnings("unchecked")
             E[] tmp = (E[]) new Object[input.length]; // implicit nullcheck of input
             for (int i = 0; i < input.length; i++) {
                 tmp[i] = Objects.requireNonNull(input[i]);
             }
-            elements = tmp;
+            return new ListN<>(tmp);
+        }
+
+        // Avoids creating a new array, but checks and rejects null elements.
+        // Declared with Object... arg so that varargs calls don't accidentally
+        // create an array of a subtype.
+        @SuppressWarnings("unchecked")
+        static <E> List<E> fromTrustedArray(Object... input) {
+            for (Object o : input) {
+                Objects.requireNonNull(o);
+            }
+            return new ListN<>((E[])input);
         }
 
         @Override
