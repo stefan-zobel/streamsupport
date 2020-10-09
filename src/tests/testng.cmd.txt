@@ -3,23 +3,25 @@ SET JAVA6=F:/Java/sun-jdk1.6.0_45-64bit/bin/java
 
 SET JAVA7=F:/Java/sun-jdk1.7.0_80-64bit/bin/java
 
-SET JAVA8=F:/Java/jdk1.8.0_242-zulu-64bit/bin/java
+SET JAVA8=F:/Java/jdk1.8.0_265-zulu-64bit/bin/java
 
 SET JAVA9=F:/Java/jdk9.0.4+11/bin/java
 
 SET JAVA10=F:/Java/jdk10.0.2+13/bin/java
 
-SET JAVA11=F:/Java/jdk11.0.6+10-zulu/bin/java
+SET JAVA11=F:/Java/jdk11.0.8+10-zulu/bin/java
 
 SET JAVA12=F:/Java/jdk12.0.2+10-openjdk/bin/java
 
-SET JAVA13=F:/Java/jdk13.0.2+8-openjdk/bin/java
+SET JAVA13=F:/Java/jdk13.0.4+8-zulu/bin/java
 
-SET JAVA14=F:/Java/jdk14+36-openjdk/bin/java
+SET JAVA14=F:/Java/jdk14.0.2+12-zulu/bin/java
 
-SET JAVA15=F:/Java/jdk15_ea+16/bin/java
+SET JAVA15=F:/Java/jdk15+36/bin/java
 
-SET TEST_JAR=streamsupport-all-tests-1.7.2.jar
+SET JAVA16=F:/Java/jdk16_ea+19/bin/java
+
+SET TEST_JAR=streamsupport-all-tests-1.7.3.jar
 
 SET ARGS=org.testng.TestNG testng_all.xml -testjar %TEST_JAR%
 
@@ -58,6 +60,8 @@ SET USE_ITERATOR_SPLITERATOR=-Djava8.util.Spliterators.assume.oracle.collections
 %JAVA14% %PAR_GC% -cp .;./* %ARGS%
 
 %JAVA15% %PAR_GC% -cp .;./* %ARGS%
+
+%JAVA16% %PAR_GC% -cp .;./* %ARGS%
 
 
 
