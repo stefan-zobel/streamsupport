@@ -3,7 +3,13 @@
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
-
+/*
+ * Any changes or additions made by the maintainers of the
+ * streamsupport (https://github.com/stefan-zobel/streamsupport)
+ * or retrostreams (https://github.com/retrostreams) libraries are
+ * also released to the public domain, as explained at
+ * https://creativecommons.org/publicdomain/zero/1.0/
+ */
 package java8.util.concurrent;
 
 import java.util.concurrent.Executor;

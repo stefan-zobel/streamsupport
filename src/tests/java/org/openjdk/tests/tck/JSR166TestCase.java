@@ -6,6 +6,13 @@
  * Other contributors include Andrew Wright, Jeffrey Hayes,
  * Pat Fisher, Mike Judd.
  */
+/*
+ * Any changes or additions made by the maintainers of the
+ * streamsupport (https://github.com/stefan-zobel/streamsupport)
+ * or retrostreams (https://github.com/retrostreams) libraries are
+ * also released to the public domain, as explained at
+ * https://creativecommons.org/publicdomain/zero/1.0/
+ */
 package org.openjdk.tests.tck;
 
 /*
