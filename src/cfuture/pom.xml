@@ -13,6 +13,14 @@
 			<name>GNU General Public License, version 2, with the Classpath Exception</name>
 			<url>http://openjdk.java.net/legal/gplv2+ce.html</url>
 		</license>
+		<license>
+			<name>CC0 1.0 Universal</name>
+			<url>https://creativecommons.org/publicdomain/zero/1.0/</url>
+			<comments>Creative Commons CC0 1.0 Universal license applies
+				to the source code derived from the JSR-166 project as
+				indicated in the respective source code files
+			</comments>
+		</license>
 	</licenses>
 	<developers>
 		<developer>
