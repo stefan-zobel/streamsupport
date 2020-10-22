@@ -238,6 +238,11 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     static final int SMASK       = 0x0000ffff;  // short bits for tags
 
     /**
+     * Constructor for subclasses to call.
+     */
+    public ForkJoinTask() {}
+
+    /**
      * Marks completion and wakes up threads waiting to join this
      * task.
      *

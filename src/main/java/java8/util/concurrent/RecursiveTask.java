@@ -43,8 +43,13 @@ package java8.util.concurrent;
  * @author Doug Lea
  */
 public abstract class RecursiveTask<V> extends ForkJoinTask<V> {
-// CVS rev. 1.10
+// CVS rev. 1.11
     private static final long serialVersionUID = 5232453952276485270L;
+
+    /**
+     * Constructor for subclasses to call.
+     */
+    public RecursiveTask() {}
 
     /**
      * The result of the computation.
