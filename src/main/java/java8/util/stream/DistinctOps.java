@@ -82,7 +82,7 @@ final class DistinctOps {
                 }
                 else {
                     // Holder of null state since ConcurrentHashMap does not support null values
-                    AtomicBoolean seenNull = new AtomicBoolean(false);
+                    AtomicBoolean seenNull = new AtomicBoolean();
                     // Pre-size map to reduce concurrent re-sizes
                     ConcurrentMap<T, Boolean> map = new ConcurrentHashMap<T, Boolean>(512, 0.75f,
                             ForkJoinPool.getCommonPoolParallelism() + 1);
