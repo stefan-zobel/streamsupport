@@ -22,7 +22,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ThreadLocalRandomTest extends JSR166TestCase {
-// CVS rev. 1.29
+// CVS rev. 1.30
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -323,27 +323,24 @@ public class ThreadLocalRandomTest extends JSR166TestCase {
             new AtomicReference<>();
         final AtomicLong rand = new AtomicLong();
 
-        long firstRand = 0;
-
         Runnable getRandomState = new CheckedRunnable() {
             public void realRun() {
                 ThreadLocalRandom current = ThreadLocalRandom.current();
                 assertSame(current, ThreadLocalRandom.current());
-                // test bug: the following is not guaranteed and not true in JDK8
-                //                assertNotSame(current, threadLocalRandom.get());
                 rand.set(current.nextLong());
                 threadLocalRandom.set(current);
             }};
 
-        Thread first = newStartedThread(getRandomState);
-        awaitTermination(first);
-        firstRand = rand.get();
-        @SuppressWarnings("unused")
+        awaitTermination(newStartedThread(getRandomState));
+        long firstRand = rand.get();
         ThreadLocalRandom firstThreadLocalRandom = threadLocalRandom.get();
+        assertNotNull(firstThreadLocalRandom);
 
         for (int i = 0; i < NCALLS; i++) {
-            Thread t = newStartedThread(getRandomState);
-            awaitTermination(t);
+            awaitTermination(newStartedThread(getRandomState));
+            if (testImplementationDetails)
+                // ThreadLocalRandom has been a singleton since jdk8.
+                assertSame(firstThreadLocalRandom, threadLocalRandom.get());
             if (firstRand != rand.get())
                 return;
         }
