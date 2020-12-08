@@ -46,7 +46,7 @@ import java.io.Serializable;
  * @author Doug Lea
  */
 public class LongAdder extends Striped64 implements Serializable {
-// CVS rev. 1.22
+// CVS rev. 1.23
     private static final long serialVersionUID = 7249069246863182397L;
 
     /**
@@ -61,17 +61,14 @@ public class LongAdder extends Striped64 implements Serializable {
      * @param x the value to add
      */
     public void add(long x) {
-        Cell[] cs;
-        long b, v;
-        int m;
-        Cell c;
+        Cell[] cs; long b, v; int m; Cell c;
         if ((cs = cells) != null || !casBase(b = base, b + x)) {
+            int index = getProbe();
             boolean uncontended = true;
             if (cs == null || (m = cs.length - 1) < 0 ||
-                (c = cs[getProbe() & m]) == null ||
-                !(uncontended = c.cas(v = c.value, v + x))) {
-                longAccumulate(x, null, uncontended);
-            }
+                (c = cs[index & m]) == null ||
+                !(uncontended = c.cas(v = c.value, v + x)))
+                longAccumulate(x, null, uncontended, index);
         }
     }
 

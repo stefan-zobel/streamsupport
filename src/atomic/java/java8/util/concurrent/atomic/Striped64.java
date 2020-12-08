@@ -26,7 +26,7 @@ import java8.util.function.LongBinaryOperator;
  */
 @SuppressWarnings("serial")
 abstract class Striped64 extends Number {
-// CVS rev. 1.26
+// CVS rev. 1.27
     /*
      * This class maintains a lazily-initialized table of atomically
      * updated variables, plus an extra "base" field. The table size
@@ -219,20 +219,19 @@ abstract class Striped64 extends Number {
      * @param fn the update function, or null for add (this convention
      * avoids the need for an extra field or function in LongAdder).
      * @param wasUncontended false if CAS failed before call
+     * @param index thread index from getProbe
      */
     final void longAccumulate(long x, LongBinaryOperator fn,
-                              boolean wasUncontended) {
-        int h;
-        if ((h = getProbe()) == 0) {
+                              boolean wasUncontended, int index) {
+        if (index == 0) {
             ThreadLocalRandom.current(); // force initialization
-            h = getProbe();
+            index = getProbe();
             wasUncontended = true;
         }
-        boolean collide = false;                // True if last slot nonempty
-        done: for (;;) {
+        for (boolean collide = false;;) {       // True if last slot nonempty
             Cell[] cs; Cell c; int n; long v;
             if ((cs = cells) != null && (n = cs.length) > 0) {
-                if ((c = cs[(n - 1) & h]) == null) {
+                if ((c = cs[(n - 1) & index]) == null) {
                     if (cellsBusy == 0) {       // Try to attach new Cell
                         Cell r = new Cell(x);   // Optimistically create
                         if (cellsBusy == 0 && casCellsBusy()) {
@@ -240,9 +239,9 @@ abstract class Striped64 extends Number {
                                 Cell[] rs; int m, j;
                                 if ((rs = cells) != null &&
                                     (m = rs.length) > 0 &&
-                                    rs[j = (m - 1) & h] == null) {
+                                    rs[j = (m - 1) & index] == null) {
                                     rs[j] = r;
-                                    break done;
+                                    break;
                                 }
                             } finally {
                                 cellsBusy = 0;
@@ -255,7 +254,7 @@ abstract class Striped64 extends Number {
                 else if (!wasUncontended)       // CAS already known to fail
                     wasUncontended = true;      // Continue after rehash
                 else if (c.cas(v = c.value,
-                               ((fn == null) ? v + x : fn.applyAsLong(v, x))))
+                               (fn == null) ? v + x : fn.applyAsLong(v, x)))
                     break;
                 else if (n >= NCPU || cells != cs)
                     collide = false;            // At max size or stale
@@ -263,24 +262,23 @@ abstract class Striped64 extends Number {
                     collide = true;
                 else if (cellsBusy == 0 && casCellsBusy()) {
                     try {
-                        if (cells == cs) {      // Expand table unless stale
+                        if (cells == cs)        // Expand table unless stale
                             cells = Arrays.copyOf(cs, n << 1);
-                        }
                     } finally {
                         cellsBusy = 0;
                     }
                     collide = false;
                     continue;                   // Retry with expanded table
                 }
-                h = advanceProbe(h);
+                index = advanceProbe(index);
             }
             else if (cellsBusy == 0 && cells == cs && casCellsBusy()) {
                 try {                           // Initialize table
                     if (cells == cs) {
                         Cell[] rs = new Cell[2];
-                        rs[h & 1] = new Cell(x);
+                        rs[index & 1] = new Cell(x);
                         cells = rs;
-                        break done;
+                        break;
                     }
                 } finally {
                     cellsBusy = 0;
@@ -288,9 +286,8 @@ abstract class Striped64 extends Number {
             }
             // Fall back on using base
             else if (casBase(v = base,
-                             ((fn == null) ? v + x : fn.applyAsLong(v, x)))) {
-                break done;
-            }
+                             (fn == null) ? v + x : fn.applyAsLong(v, x)))
+                break;
         }
     }
 
@@ -307,18 +304,16 @@ abstract class Striped64 extends Number {
      * maintained by copy/paste/adapt.
      */
     final void doubleAccumulate(double x, DoubleBinaryOperator fn,
-                                boolean wasUncontended) {
-        int h;
-        if ((h = getProbe()) == 0) {
+                                boolean wasUncontended, int index) {
+        if (index == 0) {
             ThreadLocalRandom.current(); // force initialization
-            h = getProbe();
+            index = getProbe();
             wasUncontended = true;
         }
-        boolean collide = false;                // True if last slot nonempty
-        done: for (;;) {
+        for (boolean collide = false;;) {       // True if last slot nonempty
             Cell[] cs; Cell c; int n; long v;
             if ((cs = cells) != null && (n = cs.length) > 0) {
-                if ((c = cs[(n - 1) & h]) == null) {
+                if ((c = cs[(n - 1) & index]) == null) {
                     if (cellsBusy == 0) {       // Try to attach new Cell
                         Cell r = new Cell(Double.doubleToRawLongBits(x));
                         if (cellsBusy == 0 && casCellsBusy()) {
@@ -326,9 +321,9 @@ abstract class Striped64 extends Number {
                                 Cell[] rs; int m, j;
                                 if ((rs = cells) != null &&
                                     (m = rs.length) > 0 &&
-                                    rs[j = (m - 1) & h] == null) {
+                                    rs[j = (m - 1) & index] == null) {
                                     rs[j] = r;
-                                    break done;
+                                    break;
                                 }
                             } finally {
                                 cellsBusy = 0;
@@ -348,33 +343,31 @@ abstract class Striped64 extends Number {
                     collide = true;
                 else if (cellsBusy == 0 && casCellsBusy()) {
                     try {
-                        if (cells == cs) {      // Expand table unless stale
+                        if (cells == cs)        // Expand table unless stale
                             cells = Arrays.copyOf(cs, n << 1);
-                        }
                     } finally {
                         cellsBusy = 0;
                     }
                     collide = false;
                     continue;                   // Retry with expanded table
                 }
-                h = advanceProbe(h);
+                index = advanceProbe(index);
             }
             else if (cellsBusy == 0 && cells == cs && casCellsBusy()) {
                 try {                           // Initialize table
                     if (cells == cs) {
                         Cell[] rs = new Cell[2];
-                        rs[h & 1] = new Cell(Double.doubleToRawLongBits(x));
+                        rs[index & 1] = new Cell(Double.doubleToRawLongBits(x));
                         cells = rs;
-                        break done;
+                        break;
                     }
                 } finally {
                     cellsBusy = 0;
                 }
             }
             // Fall back on using base
-            else if (casBase(v = base, apply(fn, v, x))) {
-                break done;
-            }
+            else if (casBase(v = base, apply(fn, v, x)))
+                break;
         }
     }
 
