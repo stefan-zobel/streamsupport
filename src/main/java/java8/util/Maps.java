@@ -618,23 +618,17 @@ public final class Maps {
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
-     * steps for the {@code map}, then returning the current value or
-     * {@code null} if absent:
+     * steps for the {@code map}:
      *
      * <pre> {@code
      * V oldValue = map.get(key);
      * V newValue = remappingFunction.apply(key, oldValue);
-     * if (oldValue != null ) {
-     *    if (newValue != null)
-     *       map.put(key, newValue);
-     *    else
-     *       map.remove(key);
-     * } else {
-     *    if (newValue != null)
-     *       map.put(key, newValue);
-     *    else
-     *       return null;
+     * if (newValue != null) {
+     *     map.put(key, newValue);
+     * } else if (oldValue != null || map.containsKey(key)) {
+     *     map.remove(key);
      * }
+     * return newValue;
      * }</pre>
      *
      * <p>The default implementation makes no guarantees about detecting if the
