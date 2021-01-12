@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import java8.util.DoubleSummaryStatistics;
@@ -310,6 +311,11 @@ public final class DefaultMethodStreams {
         @Override
         public <A> A[] toArray(IntFunction<A[]> generator) {
             return s.toArray(generator);
+        }
+
+        @Override
+        public List<T> toList() {
+            return s.toList();
         }
 
         @Override
