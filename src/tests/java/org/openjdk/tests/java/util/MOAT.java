@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -149,7 +149,16 @@ public class MOAT {
                 Lists.of(1, 2, 3, 4, 5, 6, 7, 8),
                 Lists.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
                 Lists.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                Lists.of(integerArray)))
+                Lists.of(integerArray),
+                RefStreams.<Integer>empty().toList(),
+                RefStreams.of(1).toList(),
+                RefStreams.of(1, 2).toList(),
+                RefStreams.of(1, 2, 3).toList(),
+                RefStreams.of(1, 2, 3, 4).toList(),
+                RefStreams.of((Integer) null).toList(),
+                RefStreams.of(1, null).toList(),
+                RefStreams.of(1, null, 3).toList(),
+                RefStreams.of(1, null, 3, 4).toList()))
         {
             testCollection(list);
             testImmutableList(list);
@@ -1033,6 +1042,15 @@ public class MOAT {
             }
             catch (Throwable t) { unexpected(t); }
         }
+
+        int hashCode = 1;
+        for (Integer i : l)
+            hashCode = 31 * hashCode + (i == null ? 0 : i.hashCode());
+        check(l.hashCode() == hashCode);
+
+        ArrayList<Integer> t = new ArrayList<>(l);
+        check(t.equals(l));
+        check(l.equals(t));
     }
 
     private static void testCollection(Collection<Integer> c) {
@@ -1067,6 +1085,13 @@ public class MOAT {
 
         if (c instanceof List)
             testList((List<Integer>)c);
+
+        if (c instanceof Set) {
+            int hashCode = 0;
+            for (Integer i : c)
+                hashCode = hashCode + (i == null ? 0 : i.hashCode());
+            check(c.hashCode() == hashCode);
+        }
 
         check(supportsRemove(c));
 
@@ -1166,6 +1191,15 @@ public class MOAT {
 
     private static void testMap(Map<Integer,Integer> m) {
 //        System.out.println("\n==> " + m.getClass().getName());
+        int hashCode = 0;
+
+        for (Map.Entry<Integer, Integer> e : m.entrySet()) {
+            int entryHash = (e.getKey() == null ? 0 : e.getKey().hashCode()) ^
+                            (e.getValue() == null ? 0 : e.getValue().hashCode());
+            check(e.hashCode() == entryHash);
+            hashCode += entryHash;
+        }
+        check(m.hashCode() == hashCode);
 
         if (m instanceof ConcurrentMap)
             testConcurrentMap((ConcurrentMap<Integer,Integer>) m);
