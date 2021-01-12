@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,6 +25,7 @@
 package java8.util.stream;
 
 import java.util.Comparator;
+import java.util.List;
 
 import java8.util.function.BiConsumer;
 import java8.util.function.BiFunction;
@@ -1129,6 +1130,40 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * @see Collectors
      */
     <R, A> R collect(Collector<? super T, A, R> collector);
+
+    /**
+     * Accumulates the elements of this stream into a {@code List}. The elements in
+     * the list will be in this stream's encounter order, if one exists. The returned List
+     * is unmodifiable; calls to any mutator method will always cause
+     * {@code UnsupportedOperationException} to be thrown. There are no
+     * guarantees on the implementation type or serializability of the returned List.
+     *
+     * <p>The returned instance may be <a href="../../lang/package-summary.html#Value-based-Classes">value-based</a>.
+     * Callers should make no assumptions about the identity of the returned instances.
+     * Identity-sensitive operations on these instances (reference equality ({@code ==}),
+     * identity hash code, and synchronization) are unreliable and should be avoided.
+     *
+     * <p>This is a <a href="package-summary.html#StreamOps">terminal operation</a>.
+     *
+     * <p><b>API Note:</b><br>
+     * If more control over the returned object is required, use
+     * {@link Collectors#toCollection(Supplier)}.
+     *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation returns a List produced as if by the following:
+     * <pre>{@code
+     * Collections.unmodifiableList(new ArrayList<>(Arrays.asList(this.toArray())))
+     * }</pre>
+     *
+     * <p><b>Implementation Note:</b><br>
+     * Most instances of Stream will override this method and provide an implementation
+     * that is highly optimized compared to the default implementation.
+     *
+     * @return a List containing the stream elements
+     *
+     * @since 16
+     */
+    List<T> toList();
 
     /**
      * Returns the minimum element of this stream according to the provided

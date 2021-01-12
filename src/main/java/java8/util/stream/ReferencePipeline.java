@@ -26,6 +26,7 @@ package java8.util.stream;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 import java8.util.Objects;
 import java8.util.function.BiConsumer;
@@ -639,6 +640,11 @@ abstract class ReferencePipeline<P_IN, P_OUT>
     @Override
     public final Object[] toArray() {
         return toArray(Object[]::new);
+    }
+
+    @Override
+    public List<P_OUT> toList() {
+        return Collectors.listFromTrustedArrayNullsAllowed(this.toArray());
     }
 
     @Override
