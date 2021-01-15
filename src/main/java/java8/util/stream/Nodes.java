@@ -3014,7 +3014,7 @@ final class Nodes {
                     int i = 0;
                     for (;i < task.node.getChildCount() - 1; i++) {
                         K leftTask = task.makeChild(i, task.offset + size);
-                        size += leftTask.node.count();
+                        size += (int) leftTask.node.count();
                         leftTask.fork();
                     }
                     task = task.makeChild(i, task.offset + size);
