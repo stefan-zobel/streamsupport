@@ -2231,7 +2231,7 @@ public final class J8Arrays {
             return false;
 
         for (int i = 0; i < aLength; i++) {
-            Double va = a[aFromIndex++], vb = b[bFromIndex++];
+            double va = a[aFromIndex++], vb = b[bFromIndex++];
             if (Double.doubleToRawLongBits(va) != Double.doubleToRawLongBits(vb))
                 if (!Double.isNaN(va) || !Double.isNaN(vb))
                     return false;
