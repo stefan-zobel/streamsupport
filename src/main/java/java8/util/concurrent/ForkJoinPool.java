@@ -961,7 +961,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         /**
          * Polls and executes up to limit consecutive tasks or until empty.
          *
-         * @param limit, or zero for no limit
+         * @param limit max runs, or zero for no limit
          */
         final void localPollAndExec(int limit) {
             for (int polls = 0;;) {
