@@ -437,7 +437,7 @@ class TimSort<T> {
                 n > 1 && runLen[n-2] <= runLen[n] + runLen[n-1]) {
                 if (runLen[n - 1] < runLen[n + 1])
                     n--;
-            } else if (n < 0 || runLen[n] > runLen[n + 1]) {
+            } else if (runLen[n] > runLen[n + 1]) {
                 break; // Invariant is established
             }
             mergeAt(n);
