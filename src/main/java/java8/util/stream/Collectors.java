@@ -1110,7 +1110,12 @@ public final class Collectors {
 
         return new CollectorImpl<T, OptionalBox, Optional<T>>(
                 OptionalBox::new, OptionalBox::accept,
-                (a, b) -> { if (b.present) a.accept(b.value); return a; },
+                (a, b) -> {
+                    if (b.present) {
+                        a.accept(b.value);
+                    }
+                    return a;
+                },
                 a -> Optional.ofNullable(a.value), CH_NOID);
     }
 
