@@ -2410,7 +2410,7 @@ final class DualPivotQuicksort {
             if (ak == 0.0f && Float.floatToRawIntBits(ak) < 0) { // ak is -0.0f
                 numNegativeZero += 1;
                 a[k] = 0.0f;
-            } else if (ak != ak) { // ak is NaN
+            } else if (Float.isNaN(ak)) { // ak is NaN
                 a[k] = a[--high];
                 a[high] = ak;
             }
@@ -3216,7 +3216,7 @@ final class DualPivotQuicksort {
             if (ak == 0.0d && Double.doubleToRawLongBits(ak) < 0) { // ak is -0.0d
                 numNegativeZero += 1;
                 a[k] = 0.0d;
-            } else if (ak != ak) { // ak is NaN
+            } else if (Double.isNaN(ak)) { // ak is NaN
                 a[k] = a[--high];
                 a[high] = ak;
             }
