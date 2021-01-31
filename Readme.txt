@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.7.2-stable" is the current stable release
+ - "1.7.3-stable" is the current stable release
 
 
 GENERAL
@@ -89,6 +89,9 @@ GENERAL
    Java 9 methods to J8Arrays, is overall a bit smaller and adds some
    improvements and minor documentation fixes from Java 14.
 
+ - Release 1.7.3 completes the Java 16 port and adds two new Stream methods
+   (multiMap and toList) introduced in Java 16.
+
 
 
 KNOWN PROBLEMS
@@ -151,6 +154,27 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.7.3-stable (2021-01-31)
+ - JDK-8238286: Add new flatMap stream operation multiMap (Java 16)
+ - JDK-8180352: Add Stream.toList() method (Java 16)
+ - JDK-8234131: Misc. changes imported from jsr166 CVS 2021-01
+ - JDK-8156071: List.of: reduce array copying during creation
+ - JDK-8255150: Add utility methods to check long indexes and ranges
+ - JDK-8238669: Long.divideUnsigned is slow for certain values
+ - JDK-8254350: CompletableFuture.get may swallow InterruptedException
+ - JDK-8259796: Timed CompletableFuture.get swallows InterruptedException
+ - JDK-8254973: ThreadPerTaskExecutor does not throw NPE in #execute
+ - JDK-8250240: Address use of default constructors in java.util.concurrent
+ - JDK-8254146: Avoid unnecessary volatile write on new AtomicBoolean
+ - JDK-8247402: Map::compute Javadoc confusing implementation requirements
+ - JDK-8228615: Optional.empty doc should suggest using isEmpty
+ - JDK-8245970: IntStream.reduce Javadoc should not mention average
+ - JDK-8243655: Map.replace javadoc code snippet typo
+ - JDK-8253066: Typo in Stream.mapMulti
+ - JDK-8259816: Typo in java.util.stream package description
+ - Add Loom's CompletableFuture.completed (Project Loom)
+ - Completed Java 16 port
 
 1.7.2-stable (2020-03-27)
  - JDK-8226297: Dual-pivot quicksort improvements
