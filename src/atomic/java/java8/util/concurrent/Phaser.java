@@ -125,7 +125,13 @@ import java.util.concurrent.locks.LockSupport;
  * useful for synchronization control.  Method {@link #toString}
  * returns snapshots of these state queries in a form convenient for
  * informal monitoring.
- *
+ * 
+ * <p>Memory consistency effects: Actions prior to any form of arrive
+ * method <a href="package-summary.html#MemoryVisibility">
+ * <i>happen-before</i></a> a corresponding phase advance and
+ * onAdvance actions (if present), which in turn <i>happen-before</i>
+ * actions following the phase advance.
+ * 
  * <p><b>Sample usages:</b>
  *
  * <p>A {@code Phaser} may be used instead of a {@code CountDownLatch}
@@ -233,7 +239,7 @@ import java.util.concurrent.locks.LockSupport;
  * @author Doug Lea
  */
 public class Phaser {
-// CVS rev. 1.96
+// CVS rev. 1.97
     /*
      * This class implements an extension of X10 "clocks".  Thanks to
      * Vijay Saraswat for the idea, and to Vivek Sarkar for
