@@ -708,6 +708,7 @@ final class ImmutableCollections {
         public abstract int hashCode();
     }
 
+    @SuppressWarnings("lgtm[java/inconsistent-equals-and-hashcode]")
     static final class Set12<E> extends AbstractImmutableSet<E>
             implements Serializable {
 
@@ -827,6 +828,7 @@ final class ImmutableCollections {
      * least one null is always present.
      * @param <E> the element type
      */
+    @SuppressWarnings("lgtm[java/inconsistent-equals-and-hashcode]")
     static final class SetN<E> extends AbstractImmutableSet<E>
             implements Serializable {
 
@@ -995,6 +997,7 @@ final class ImmutableCollections {
         @Override public V remove(Object key) { throw uoe(); }
     }
 
+    @SuppressWarnings("lgtm[java/inconsistent-equals-and-hashcode]")
     static final class Map1<K,V> extends AbstractImmutableMap<K,V> {
         private final K k0;
         private final V v0;
@@ -1057,6 +1060,7 @@ final class ImmutableCollections {
      * @param <K> the key type
      * @param <V> the value type
      */
+    @SuppressWarnings("lgtm[java/inconsistent-equals-and-hashcode]")
     static final class MapN<K,V> extends AbstractImmutableMap<K,V> {
 
         final Object[] table; // pairs of key, value
@@ -1111,7 +1115,7 @@ final class ImmutableCollections {
             for (int i = 0; i < table.length; i += 2) {
                 Object k = table[i];
                 if (k != null) {
-                    hash += k.hashCode() ^ table[i + 1].hashCode();
+                    hash += k.hashCode() ^ table[i + 1].hashCode(); // "lgtm[java/index-out-of-bounds]"
                 }
             }
             return hash;
@@ -1126,7 +1130,7 @@ final class ImmutableCollections {
             }
             int i = probe(o);
             if (i >= 0) {
-                return (V) table[i + 1];
+                return (V) table[i + 1]; // "lgtm[java/index-out-of-bounds]"
             } else {
                 return null;
             }
@@ -1234,7 +1238,7 @@ final class ImmutableCollections {
             for (int i = 0; i < len; i += 2) {
                 if (table[i] != null) {
                     array[dest++] = table[i];
-                    array[dest++] = table[i + 1];
+                    array[dest++] = table[i + 1]; // "lgtm[java/index-out-of-bounds]"
                 }
             }
             return new ColSer(ColSer.IMM_MAP, array);
