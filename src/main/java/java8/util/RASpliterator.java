@@ -58,7 +58,7 @@ final class RASpliterator<E> implements Spliterator<E> {
         this.index = origin;
         this.fence = fence;
 
-        this.alist = list instanceof AbstractList ? (AbstractList<E>) list
+        this.alist = list instanceof AbstractList ? (AbstractList<E>) list // "lgtm[java/abstract-to-concrete-cast]"
                 : null;
         this.expectedModCount = expectedModCount;
     }

@@ -1269,7 +1269,7 @@ final class Nodes {
             else if (to <= leftCount)
                 return left.truncate(from, to, generator);
             else {
-                return Nodes.conc(getShape(), left.truncate(from, leftCount, generator),
+                return Nodes.conc(getShape(), left.truncate(from, leftCount, generator), // "lgtm[java/subtle-inherited-call]"
                                   right.truncate(0, to - leftCount, generator));
             }
         }

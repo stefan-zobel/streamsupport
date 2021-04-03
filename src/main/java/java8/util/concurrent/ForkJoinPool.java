@@ -1089,11 +1089,11 @@ public class ForkJoinPool extends AbstractExecutorService {
             int s = top - 1, al; ForkJoinTask<?>[] a;
             if ((a = array) != null && (al = a.length) > 0) {
                 int index = (al - 1) & s;
-                long offset = ((long)index << ASHIFT) + ABASE;
+                long offset = ((long) index << ASHIFT) + ABASE;
                 ForkJoinTask<?> t = (ForkJoinTask<?>) U.getObject(a, offset);
                 if (t == task &&
                     U.compareAndSwapInt(this, PHASE, 0, QLOCK)) {
-                    if (top == s + 1 && array == a &&
+                    if (top == s + 1 && array == a && // "lgtm[java/constant-comparison]"
                         U.compareAndSwapObject(a, offset, task, null)) {
                         popped = true;
                         top = s;
@@ -1115,11 +1115,11 @@ public class ForkJoinPool extends AbstractExecutorService {
                     int b = base, s = top, al; ForkJoinTask<?>[] a;
                     if ((a = array) != null && b != s && (al = a.length) > 0) {
                         int index = (al - 1) & (s - 1);
-                        long offset = ((long)index << ASHIFT) + ABASE;
+                        long offset = ((long) index << ASHIFT) + ABASE;
                         ForkJoinTask<?> o = (ForkJoinTask<?>)
                             U.getObject(a, offset);
                         if (o instanceof CountedCompleter) {
-                            CountedCompleter<?> t = (CountedCompleter<?>)o;
+                            CountedCompleter<?> t = (CountedCompleter<?>) o;
                             for (CountedCompleter<?> f = t;;) {
                                 if (f != task) {
                                     if ((f = f.completer) == null)
@@ -1128,7 +1128,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                                 else {
                                     if (U.compareAndSwapInt(this, PHASE,
                                                             0, QLOCK)) {
-                                        if (top == s && array == a &&
+                                        if (top == s && array == a && // "lgtm[java/constant-comparison]"
                                             U.compareAndSwapObject(a, offset,
                                                                    t, null)) {
                                             help = true;

@@ -1036,7 +1036,7 @@ public final class Spliterators {
 
         if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof CopyOnWriteArraySet) {
             return COWArraySetSpliterator
-                    .spliterator((CopyOnWriteArraySet<T>) c);
+                    .spliterator((CopyOnWriteArraySet<T>) c); // "lgtm[java/abstract-to-concrete-cast]"
         }
 
         // default from j.u.Set
