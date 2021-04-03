@@ -1,6 +1,7 @@
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/stefan-zobel/streamsupport.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/stefan-zobel/streamsupport/alerts/)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/stefan-zobel/streamsupport.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/stefan-zobel/streamsupport/context:java)
 [![Maven Central](https://img.shields.io/maven-central/v/net.sourceforge.streamsupport/streamsupport.svg)](http://mvnrepository.com/artifact/net.sourceforge.streamsupport/streamsupport)
 [![javadoc.io](https://javadoc.io/badge2/net.sourceforge.streamsupport/streamsupport/javadoc.svg)](https://javadoc.io/doc/net.sourceforge.streamsupport/streamsupport)
-[![Download](https://api.bintray.com/packages/stefan-zobel/streamsupport/streamsupport/images/download.svg) ](https://bintray.com/stefan-zobel/streamsupport/streamsupport/_latestVersion)
 
 # streamsupport
 
