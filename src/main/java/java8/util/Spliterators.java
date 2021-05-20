@@ -2933,7 +2933,7 @@ public final class Spliterators {
     static final class IntIteratorSpliterator implements Spliterator.OfInt {
         static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
         static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
-        private java8.util.PrimitiveIterator.OfInt it;
+        private final java8.util.PrimitiveIterator.OfInt it;
         private final int characteristics;
         private long est;             // size estimate
         private int batch;            // batch size for splits
@@ -3047,7 +3047,7 @@ public final class Spliterators {
     static final class LongIteratorSpliterator implements Spliterator.OfLong {
         static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
         static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
-        private java8.util.PrimitiveIterator.OfLong it;
+        private final java8.util.PrimitiveIterator.OfLong it;
         private final int characteristics;
         private long est;             // size estimate
         private int batch;            // batch size for splits
@@ -3161,7 +3161,7 @@ public final class Spliterators {
     static final class DoubleIteratorSpliterator implements Spliterator.OfDouble {
         static final int BATCH_UNIT = IteratorSpliterator.BATCH_UNIT;
         static final int MAX_BATCH = IteratorSpliterator.MAX_BATCH;
-        private java8.util.PrimitiveIterator.OfDouble it;
+        private final java8.util.PrimitiveIterator.OfDouble it;
         private final int characteristics;
         private long est;             // size estimate
         private int batch;            // batch size for splits
