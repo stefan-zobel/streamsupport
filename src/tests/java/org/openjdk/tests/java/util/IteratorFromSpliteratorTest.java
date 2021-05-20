@@ -82,11 +82,11 @@ public class IteratorFromSpliteratorTest {
                 result.add(iterator.nextInt());
             }
             assertEquals(iterator.hasNext(), result.size() < input.length);
-            Iterators.forEachRemaining(iterator, (IntConsumer) result::add);
-            Iterators.forEachRemaining(iterator, (IntConsumer) (x -> fail("Should not be called")));
+            iterator.forEachRemaining((IntConsumer) result::add);
+            iterator.forEachRemaining((IntConsumer) (x -> fail("Should not be called")));
             assertFalse(iterator.hasNext());
             assertThrows(NoSuchElementException.class, iterator::next);
-            Iterators.forEachRemaining(iterator, (IntConsumer) (x -> fail("Should not be called")));
+            iterator.forEachRemaining((IntConsumer) (x -> fail("Should not be called")));
             assertEquals(StreamSupport.stream(result).mapToInt(x -> x).toArray(), input);
         }
     }
@@ -102,11 +102,11 @@ public class IteratorFromSpliteratorTest {
                 result.add(iterator.nextLong());
             }
             assertEquals(iterator.hasNext(), result.size() < input.length);
-            Iterators.forEachRemaining(iterator, (LongConsumer) result::add);
-            Iterators.forEachRemaining(iterator, (LongConsumer) (x -> fail("Should not be called")));
+            iterator.forEachRemaining((LongConsumer) result::add);
+            iterator.forEachRemaining((LongConsumer) (x -> fail("Should not be called")));
             assertFalse(iterator.hasNext());
             assertThrows(NoSuchElementException.class, iterator::next);
-            Iterators.forEachRemaining(iterator, (LongConsumer) (x -> fail("Should not be called")));
+            iterator.forEachRemaining((LongConsumer) (x -> fail("Should not be called")));
             assertEquals(StreamSupport.stream(result).mapToLong(x -> x).toArray(), input);
         }
     }
@@ -122,11 +122,11 @@ public class IteratorFromSpliteratorTest {
                 result.add(iterator.nextDouble());
             }
             assertEquals(iterator.hasNext(), result.size() < input.length);
-            Iterators.forEachRemaining(iterator, (DoubleConsumer) result::add);
-            Iterators.forEachRemaining(iterator, (DoubleConsumer) (x -> fail("Should not be called")));
+            iterator.forEachRemaining((DoubleConsumer) result::add);
+            iterator.forEachRemaining((DoubleConsumer) (x -> fail("Should not be called")));
             assertFalse(iterator.hasNext());
             assertThrows(NoSuchElementException.class, iterator::next);
-            Iterators.forEachRemaining(iterator, (DoubleConsumer) (x -> fail("Should not be called")));
+            iterator.forEachRemaining((DoubleConsumer) (x -> fail("Should not be called")));
             assertEquals(StreamSupport.stream(result).mapToDouble(x -> x).toArray(), input);
         }
     }
