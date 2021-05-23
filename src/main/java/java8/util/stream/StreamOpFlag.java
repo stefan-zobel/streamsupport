@@ -330,7 +330,7 @@ enum StreamOpFlag {
     SHORT_CIRCUIT(12,
                   set(Type.OP).set(Type.TERMINAL_OP));
 
-    // The following 2 flags are currently undefined and a free for any further
+    // The following 3 flags are currently undefined and are free for any further
     // stream flags if/when required
     //
     // 13, 0x04000000
