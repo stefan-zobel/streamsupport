@@ -130,4 +130,25 @@ public class IteratorFromSpliteratorTest {
             assertEquals(StreamSupport.stream(result).mapToDouble(x -> x).toArray(), input);
         }
     }
+
+    @Test
+    public void testIteratorFromSpliteratorEmpty() {
+        Iterator<?> it = Spliterators.iterator(Spliterators.emptySpliterator());
+        Iterators.forEachRemaining(it, x -> fail("Should not be called"));
+        assertFalse(it.hasNext());
+        Iterators.forEachRemaining(it, x -> fail("Should not be called"));
+        assertThrows(NoSuchElementException.class, it::next);
+
+        PrimitiveIterator<?, ?>[] iterators = {
+            Spliterators.iterator(Spliterators.emptyIntSpliterator()),
+            Spliterators.iterator(Spliterators.emptyLongSpliterator()),
+            Spliterators.iterator(Spliterators.emptyDoubleSpliterator())
+        };
+        for (PrimitiveIterator<?, ?> iterator : iterators) {
+            Iterators.forEachRemaining(iterator, x -> fail("Should not be called"));
+            assertFalse(iterator.hasNext());
+            Iterators.forEachRemaining(iterator, x -> fail("Should not be called"));
+            assertThrows(NoSuchElementException.class, iterator::next);
+        }
+    }
 }
