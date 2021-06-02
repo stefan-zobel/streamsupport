@@ -39,7 +39,7 @@ public final class Doubles {
      */
     public static int hashCode(double value) {
         long bits = Double.doubleToLongBits(value);
-        return (int) (bits ^ (bits >>> 32));
+        return Longs.hashCode(bits);
     }
 
     /**
