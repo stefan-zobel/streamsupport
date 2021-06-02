@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -930,6 +930,37 @@ public final class Maps {
             Objects.requireNonNull(cmp);
             return (Comparator<Map.Entry<K, V>> & Serializable) (c1, c2) -> cmp
                     .compare(c1.getValue(), c2.getValue());
+        }
+
+        /**
+         * Returns a copy of the given {@code Map.Entry}. The returned instance is not
+         * associated with any map. The returned instance has the same characteristics
+         * as instances returned by the {@link Maps#entry Maps::entry} method.
+         *
+         * <p><b>API Note:</b><br>
+         * An instance obtained from a map's entry-set view has a connection to that map.
+         * The {@code copyOf}  method may be used to create a {@code Map.Entry} instance,
+         * containing the same key and value, that is independent of any map.
+         *
+         * <p><b>Implementation Note:</b>
+         * If the given entry was obtained from a call to {@code copyOf} or {@code Maps::entry},
+         * calling {@code copyOf} will generally not create another copy.
+         *
+         * @param <K> the type of the key
+         * @param <V> the type of the value
+         * @param e the entry to be copied
+         * @return a map entry equal to the given entry
+         * @throws NullPointerException if e is null or if either of its key or value is null
+         * @since 17
+         */
+        @SuppressWarnings("unchecked")
+        public static <K, V> Map.Entry<K, V> copyOf(Map.Entry<? extends K, ? extends V> e) {
+            Objects.requireNonNull(e);
+            if (e instanceof KeyValueHolder) {
+                return (Map.Entry<K, V>) e;
+            } else {
+                return Maps.entry(e.getKey(), e.getValue());
+            }
         }
 
         private Entry() {
