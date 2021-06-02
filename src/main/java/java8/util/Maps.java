@@ -1284,7 +1284,7 @@ public final class Maps {
     }
 
     /**
-     * Returns an unmodifiable {@link Entry} containing the given key and value.
+     * Returns an unmodifiable {@link java.util.Map.Entry} containing the given key and value.
      * These entries are suitable for populating {@code Map} instances using the
      * {@link Maps#ofEntries Maps.ofEntries()} method.
      * The {@code Entry} instances created by this method have the following characteristics:
