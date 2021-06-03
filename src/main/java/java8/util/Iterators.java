@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -42,14 +42,13 @@ public final class Iterators {
     /**
      * Performs the given action for each remaining element until all elements
      * have been processed or the action throws an exception.  Actions are
-     * performed in the order of iteration.
+     * performed in the order of iteration, if that order is specified.
      * Exceptions thrown by the action are relayed to the caller.
-     *
      * <p>
-     * The behavior of an iterator is unspecified if the action modifies the underlying
-     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
-     * method or other mutator methods of {@code Iterator} subtypes), unless an overriding
-     * class has specified a concurrent modification policy.
+     * The behavior of an iterator is unspecified if the action modifies the
+     * source of elements in any way (even by calling the {@link Iterator#remove remove}
+     * method or other mutator methods of {@code Iterator} subtypes),
+     * unless an overriding class has specified a concurrent modification policy.
      * <p>
      * Subsequent behavior of an iterator is unspecified if the action throws an
      * exception.
@@ -78,14 +77,13 @@ public final class Iterators {
     /**
      * Performs the given action for each remaining element until all elements
      * have been processed or the action throws an exception.  Actions are
-     * performed in the order of iteration.
+     * performed in the order of iteration, if that order is specified.
      * Exceptions thrown by the action are relayed to the caller.
-     *
      * <p>
-     * The behavior of an iterator is unspecified if the action modifies the underlying
-     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
-     * methodor other mutator methods of {@code Iterator} subtypes), unless an overriding
-     * class has specified a concurrent modification policy.
+     * The behavior of an iterator is unspecified if the action modifies the
+     * source of elements in any way (even by calling the {@link Iterator#remove remove}
+     * method or other mutator methods of {@code Iterator} subtypes),
+     * unless an overriding class has specified a concurrent modification policy.
      * <p>
      * Subsequent behavior of an iterator is unspecified if the action throws an
      * exception.
@@ -113,14 +111,13 @@ public final class Iterators {
     /**
      * Performs the given action for each remaining element until all elements
      * have been processed or the action throws an exception.  Actions are
-     * performed in the order of iteration.
+     * performed in the order of iteration, if that order is specified.
      * Exceptions thrown by the action are relayed to the caller.
-     *
      * <p>
-     * The behavior of an iterator is unspecified if the action modifies the underlying
-     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
-     * method or other mutator methods of {@code Iterator} subtypes), unless an overriding
-     * class has specified a concurrent modification policy.
+     * The behavior of an iterator is unspecified if the action modifies the
+     * source of elements in any way (even by calling the {@link Iterator#remove remove}
+     * method or other mutator methods of {@code Iterator} subtypes),
+     * unless an overriding class has specified a concurrent modification policy.
      * <p>
      * Subsequent behavior of an iterator is unspecified if the action throws an
      * exception.
@@ -148,14 +145,13 @@ public final class Iterators {
     /**
      * Performs the given action for each remaining element until all elements
      * have been processed or the action throws an exception.  Actions are
-     * performed in the order of iteration.
+     * performed in the order of iteration, if that order is specified.
      * Exceptions thrown by the action are relayed to the caller.
-     *
      * <p>
-     * The behavior of an iterator is unspecified if the action modifies the underlying
-     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
-     * method or other mutator methods of {@code Iterator} subtypes), unless an overriding
-     * class has specified a concurrent modification policy.
+     * The behavior of an iterator is unspecified if the action modifies the
+     * source of elements in any way (even by calling the {@link Iterator#remove remove}
+     * method or other mutator methods of {@code Iterator} subtypes),
+     * unless an overriding class has specified a concurrent modification policy.
      * <p>
      * Subsequent behavior of an iterator is unspecified if the action throws an
      * exception.

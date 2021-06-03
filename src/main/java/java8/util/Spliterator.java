@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2015 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -305,7 +305,10 @@ public interface Spliterator<T> {
      * Spliterator is {@link #ORDERED} the action is performed on the
      * next element in encounter order.  Exceptions thrown by the
      * action are relayed to the caller.
-     *
+     * <p>
+     * Subsequent behavior of a spliterator is unspecified if the action throws
+     * an exception.
+     * 
      * @param action The action
      * @return {@code false} if no remaining elements existed
      * upon entry to this method, else {@code true}.
@@ -410,7 +413,10 @@ public interface Spliterator<T> {
      * throws an exception.  If this Spliterator is {@link #ORDERED}, actions
      * are performed in encounter order.  Exceptions thrown by the action
      * are relayed to the caller.
-     *
+     * <p>
+     * Subsequent behavior of a spliterator is unspecified if the action throws
+     * an exception.
+     * 
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation repeatedly invokes {@link #tryAdvance} until
      * it returns {@code false}.  It should be overridden whenever possible.
@@ -615,7 +621,10 @@ public interface Spliterator<T> {
          * Spliterator is {@link #ORDERED} the action is performed on the
          * next element in encounter order.  Exceptions thrown by the
          * action are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * @param action The action
          * @return {@code false} if no remaining elements existed
          * upon entry to this method, else {@code true}.
@@ -629,7 +638,10 @@ public interface Spliterator<T> {
          * action throws an exception.  If this Spliterator is {@link #ORDERED},
          * actions are performed in encounter order.  Exceptions thrown by the
          * action are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * The default implementation repeatedly invokes {@link #tryAdvance}
          * until it returns {@code false}.  It should be overridden whenever

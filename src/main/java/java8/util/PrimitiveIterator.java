@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2015 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -65,16 +65,15 @@ import java8.util.function.LongConsumer;
 public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
 
     /**
-     * Performs the given action for each remaining element, in the order
-     * elements occur when iterating, until all elements have been processed
-     * or the action throws an exception.  Errors or runtime exceptions
-     * thrown by the action are relayed to the caller.
-     *
+     * Performs the given action for each remaining element until all elements
+     * have been processed or the action throws an exception.  Actions are
+     * performed in the order of iteration, if that order is specified.
+     * Exceptions thrown by the action are relayed to the caller.
      * <p>
-     * The behavior of an iterator is unspecified if the action modifies the underlying
-     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
-     * method or other mutator methods of {@code Iterator} subtypes), unless an overriding
-     * class has specified a concurrent modification policy.
+     * The behavior of an iterator is unspecified if the action modifies the
+     * source of elements in any way (even by calling the {@link #remove remove}
+     * method or other mutator methods of {@code Iterator} subtypes),
+     * unless an overriding class has specified a concurrent modification policy.
      * <p>
      * Subsequent behavior of an iterator is unspecified if the action throws an
      * exception.
@@ -126,10 +125,14 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
         void forEachRemaining(IntConsumer action);
 
         /**
-         * {@inheritDoc}
+         * Returns the next element in the iteration.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * The default implementation boxes the result of calling
          * {@link #nextInt()}, and returns that boxed result.
+         * 
+         * @return the next element in the iteration
+         * @throws NoSuchElementException if the iteration has no more elements
          */
         @Override
         Integer next();
@@ -177,10 +180,14 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
         void forEachRemaining(LongConsumer action);
 
         /**
-         * {@inheritDoc}
+         * Returns the next element in the iteration.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * The default implementation boxes the result of calling
          * {@link #nextLong()}, and returns that boxed result.
+         * 
+         * @return the next element in the iteration
+         * @throws NoSuchElementException if the iteration has no more elements
          */
         @Override
         Long next();
@@ -228,10 +235,14 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
         void forEachRemaining(DoubleConsumer action);
 
         /**
-         * {@inheritDoc}
+         * Returns the next element in the iteration.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * The default implementation boxes the result of calling
          * {@link #nextDouble()}, and returns that boxed result.
+         * 
+         * @return the next element in the iteration
+         * @throws NoSuchElementException if the iteration has no more elements
          */
         @Override
         Double next();

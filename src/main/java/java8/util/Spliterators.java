@@ -190,7 +190,10 @@ public final class Spliterators {
          * action throws an exception.  If the {@code this_} Spliterator is
          * {@link Spliterator#ORDERED}, actions are performed in encounter order.
          * Exceptions thrown by the action are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * The default implementation repeatedly invokes
          * {@link Spliterator.OfPrimitive#tryAdvance} until it returns {@code false}.
@@ -227,7 +230,10 @@ public final class Spliterators {
          * the action throws an exception.  If the {@code this_} Spliterator is {@link Spliterator#ORDERED},
          * actions are performed in encounter order.  Exceptions thrown by the
          * action are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * The default implementation repeatedly invokes {@link #tryAdvance}
          * until it returns {@code false}.  It should be overridden whenever
@@ -248,7 +254,10 @@ public final class Spliterators {
          * Spliterator is {@link Spliterator#ORDERED} the action is performed on the
          * next element in encounter order.  Exceptions thrown by the
          * action are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * If the action is an instance of {@code IntConsumer} then it is cast
          * to {@code IntConsumer} and passed to
@@ -283,7 +292,10 @@ public final class Spliterators {
          * throws an exception.  If the {@code this_} Spliterator is {@link Spliterator#ORDERED}, actions
          * are performed in encounter order.  Exceptions thrown by the action
          * are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * If the action is an instance of {@code IntConsumer} then it is cast
          * to {@code IntConsumer} and passed to
@@ -320,7 +332,10 @@ public final class Spliterators {
          * the action throws an exception.  If the {@code this_} Spliterator is {@link Spliterator#ORDERED},
          * actions are performed in encounter order.  Exceptions thrown by the
          * action are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * The default implementation repeatedly invokes {@link #tryAdvance}
          * until it returns {@code false}.  It should be overridden whenever
@@ -341,7 +356,10 @@ public final class Spliterators {
          * Spliterator is {@link Spliterator#ORDERED} the action is performed on the
          * next element in encounter order.  Exceptions thrown by the
          * action are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * If the action is an instance of {@code LongConsumer} then it is cast
          * to {@code LongConsumer} and passed to
@@ -376,7 +394,10 @@ public final class Spliterators {
          * throws an exception.  If the {@code this_} Spliterator is {@link Spliterator#ORDERED}, actions
          * are performed in encounter order.  Exceptions thrown by the action
          * are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * If the action is an instance of {@code LongConsumer} then it is cast
          * to {@code LongConsumer} and passed to
@@ -413,7 +434,10 @@ public final class Spliterators {
          * the action throws an exception.  If the {@code this_} Spliterator is {@link Spliterator#ORDERED},
          * actions are performed in encounter order.  Exceptions thrown by the
          * action are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * The default implementation repeatedly invokes {@link #tryAdvance}
          * until it returns {@code false}.  It should be overridden whenever
@@ -434,7 +458,10 @@ public final class Spliterators {
          * Spliterator is {@link Spliterator#ORDERED} the action is performed on the
          * next element in encounter order.  Exceptions thrown by the
          * action are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * If the action is an instance of {@code DoubleConsumer} then it is
          * cast to {@code DoubleConsumer} and passed to
@@ -469,7 +496,10 @@ public final class Spliterators {
          * throws an exception.  If the {@code this_} Spliterator is {@link Spliterator#ORDERED}, actions
          * are performed in encounter order.  Exceptions thrown by the action
          * are relayed to the caller.
-         *
+         * <p>
+         * Subsequent behavior of a spliterator is unspecified if the action throws
+         * an exception.
+         * 
          * <p><b>Implementation Requirements:</b><br>
          * If the action is an instance of {@code DoubleConsumer} then it is
          * cast to {@code DoubleConsumer} and passed to
