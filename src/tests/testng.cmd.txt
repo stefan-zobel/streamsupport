@@ -13,7 +13,7 @@ SET JAVA11=F:/Java/jdk11.0.11+9-zulu/bin/java
 
 SET JAVA12=F:/Java/jdk12.0.2+10-openjdk/bin/java
 
-SET JAVA13=F:/Java/jdk13.0.4+8-zulu/bin/java
+SET JAVA13=F:/Java/jdk13.0.7+5-zulu/bin/java
 
 SET JAVA14=F:/Java/jdk14.0.2+12-zulu/bin/java
 
@@ -21,9 +21,9 @@ SET JAVA15=F:/Java/jdk15.0.3+3-zulu/bin/java
 
 SET JAVA16=F:/Java/jdk16.0.1+9-oracle/bin/java
 
-SET JAVA17=F:/Java/jdk17_ea+19/bin/java
+SET JAVA17=F:/Java/jdk17_ea+25/bin/java
 
-SET TEST_JAR=streamsupport-all-tests-1.7.3.jar
+SET TEST_JAR=streamsupport-all-tests-1.7.4-SNAPSHOT.jar
 
 SET ARGS=org.testng.TestNG testng_all.xml -testjar %TEST_JAR%
 
@@ -35,7 +35,9 @@ SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 
 SET USE_ITERATOR_SPLITERATOR=-Djava8.util.Spliterators.assume.oracle.collections.impl=false
 
-SET PERMIT=--illegal-access=permit
+SET OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
+
+REM SET PERMIT=--illegal-access=permit
 
 
 
@@ -65,13 +67,11 @@ SET PERMIT=--illegal-access=permit
 
 %JAVA15% %PAR_GC% -cp .;./* %ARGS%
 
-%JAVA16% %PAR_GC% %PERMIT% -cp .;./* %ARGS%
+%JAVA16% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 
-%JAVA17% %PAR_GC% %PERMIT% -cp .;./* %ARGS%
+%JAVA17% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 
 
-
-REM SET OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
 
 REM SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
 
