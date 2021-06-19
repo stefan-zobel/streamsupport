@@ -27,7 +27,7 @@ is fine as long as you have full control over your source code there is the othe
 3rd party dependency that has been compiled against the standard Java 8 `java.util.stream` API. In the latter case
 bytecode rewriting via [ProGuard](https://github.com/Guardsquare/proguard) might be an option. ProGuard supports
 most Java 8 language features and the latest release can also replace the standard Java 8 stream API by the the
-streamsupport backport (cf. the Proguard [documentation](https://www.guardsquare.com/en/products/proguard/manual/gradleplugin),
+streamsupport backport (cf. the Proguard [documentation](https://www.guardsquare.com/manual/languages/java),
 especially the section titled "Java 8 stream API support").
 
 The current stable release of streamsupport is `streamsupport-1.7.3`.
