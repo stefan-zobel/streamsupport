@@ -71,6 +71,18 @@ dependencies {
 ```
 
 
+### All-in-One JAR:
+Contains streamsupport core + atomic + cfuture + flow
+
+```xml
+<dependency>
+    <groupId>net.sourceforge.streamsupport</groupId>
+    <artifactId>streamsupport_all</artifactId>
+    <version>1.7.3.2</version>
+</dependency>
+```
+
+
 ### Example usage
 
 ```java
