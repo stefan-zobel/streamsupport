@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -328,12 +328,24 @@ enum StreamOpFlag {
      */
     // 12, 0x01000000
     SHORT_CIRCUIT(12,
-                  set(Type.OP).set(Type.TERMINAL_OP));
+                  set(Type.OP).set(Type.TERMINAL_OP)),
 
-    // The following 3 flags are currently undefined and are free for any further
+    /**
+     * Characteristic value signifying that an operation may adjust the
+     * total size of the stream.
+     * <p>
+     * The flag, if present, is only valid when SIZED is present;
+     * and is only valid for sequential streams.
+     * <p>
+     * An intermediate operation can preserve or inject this value.
+     */
+    // 13, 0x04000000
+    SIZE_ADJUSTING(13,
+                   set(Type.OP));
+
+    // The following 2 flags are currently undefined and are free for any further
     // stream flags if/when required
     //
-    // 13, 0x04000000
     // 14, 0x10000000
     // 15, 0x40000000
 
@@ -639,6 +651,11 @@ enum StreamOpFlag {
      * The bit value to inject {@link #SHORT_CIRCUIT}.
      */
     static final int IS_SHORT_CIRCUIT = SHORT_CIRCUIT.set;
+
+    /**
+     * The bit value to inject {@link #SIZE_ADJUSTING}.
+     */
+    static final int IS_SIZE_ADJUSTING = SIZE_ADJUSTING.set;
 
     private static int getMask(int flags) {
         return (flags == 0)
