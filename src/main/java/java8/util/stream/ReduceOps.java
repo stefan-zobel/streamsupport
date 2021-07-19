@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -348,16 +348,18 @@ final class ReduceOps {
             @Override
             public <P_IN> Long evaluateSequential(PipelineHelper<T> helper,
                                                   Spliterator<P_IN> spliterator) {
-                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
-                    return spliterator.getExactSizeIfKnown();
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size != -1L)
+                    return size;
                 return super.evaluateSequential(helper, spliterator);
             }
 
             @Override
             public <P_IN> Long evaluateParallel(PipelineHelper<T> helper,
                                                 Spliterator<P_IN> spliterator) {
-                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
-                    return spliterator.getExactSizeIfKnown();
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size != -1L)
+                    return size;
                 return super.evaluateParallel(helper, spliterator);
             }
 
@@ -594,16 +596,18 @@ final class ReduceOps {
             @Override
             public <P_IN> Long evaluateSequential(PipelineHelper<Integer> helper,
                                                   Spliterator<P_IN> spliterator) {
-                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
-                    return spliterator.getExactSizeIfKnown();
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size != -1L)
+                    return size;
                 return super.evaluateSequential(helper, spliterator);
             }
 
             @Override
             public <P_IN> Long evaluateParallel(PipelineHelper<Integer> helper,
                                                 Spliterator<P_IN> spliterator) {
-                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
-                    return spliterator.getExactSizeIfKnown();
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size != -1L)
+                    return size;
                 return super.evaluateParallel(helper, spliterator);
             }
 
@@ -840,16 +844,18 @@ final class ReduceOps {
             @Override
             public <P_IN> Long evaluateSequential(PipelineHelper<Long> helper,
                                                   Spliterator<P_IN> spliterator) {
-                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
-                    return spliterator.getExactSizeIfKnown();
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size != -1L)
+                    return size;
                 return super.evaluateSequential(helper, spliterator);
             }
 
             @Override
             public <P_IN> Long evaluateParallel(PipelineHelper<Long> helper,
                                                 Spliterator<P_IN> spliterator) {
-                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
-                    return spliterator.getExactSizeIfKnown();
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size != -1L)
+                    return size;
                 return super.evaluateParallel(helper, spliterator);
             }
 
@@ -1086,16 +1092,18 @@ final class ReduceOps {
             @Override
             public <P_IN> Long evaluateSequential(PipelineHelper<Double> helper,
                                                   Spliterator<P_IN> spliterator) {
-                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
-                    return spliterator.getExactSizeIfKnown();
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size != -1L)
+                    return size;
                 return super.evaluateSequential(helper, spliterator);
             }
 
             @Override
             public <P_IN> Long evaluateParallel(PipelineHelper<Double> helper,
                                                 Spliterator<P_IN> spliterator) {
-                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
-                    return spliterator.getExactSizeIfKnown();
+                long size = helper.exactOutputSizeIfKnown(spliterator);
+                if (size != -1L)
+                    return size;
                 return super.evaluateParallel(helper, spliterator);
             }
 
