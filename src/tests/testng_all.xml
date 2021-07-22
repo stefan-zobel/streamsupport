@@ -110,6 +110,7 @@
       <class name="org.openjdk.other.tests.stringJoiner.StringJoinerTest"/>
       <class name="org.openjdk.other.tests.sumAndAverage.TestDoubleSumAverage"/>
       <class name="org.openjdk.other.tests.sumAndAverage.NegativeCompensation"/>
+      <class name="org.openjdk.other.tests.sumAndAverage.CompensatedSums"/>
 
       <!-- block 9 -->
       <class name="java8.util.Sorting"/>
