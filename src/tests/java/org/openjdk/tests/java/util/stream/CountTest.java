@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2021, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,13 +24,14 @@
 /**
  * @test
  * @summary Tests counting of streams
- * @bug 8031187 8067969 8075307
+ * @bug 8031187 8067969 8075307 8265029
  */
 package org.openjdk.tests.java.util.stream;
 
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import java8.util.function.Supplier;
 import java8.util.stream.Collectors;
 import java8.util.stream.DoubleStream;
 import java8.util.stream.DoubleStreams;
@@ -58,6 +59,11 @@ public class CountTest extends OpTestCase {
         withData(data).
                 terminal(Stream::count).
                 expectedResult(expectedCount).
+                exercise();
+
+        withData(data).
+                terminal(s -> s.skip(1), Stream::count).
+                expectedResult(Math.max(0, expectedCount - 1)).
                 exercise();
 
         // Test with an unknown sized stream
@@ -95,6 +101,11 @@ public class CountTest extends OpTestCase {
                 expectedResult(expectedCount).
                 exercise();
 
+        withData(data).
+                terminal(s -> s.skip(1), IntStream::count).
+                expectedResult(Math.max(0, expectedCount - 1)).
+                exercise();
+
         // Test with an unknown sized stream
         withData(data).
                 terminal(s -> s.filter(e -> true), IntStream::count).
@@ -119,6 +130,11 @@ public class CountTest extends OpTestCase {
         withData(data).
                 terminal(LongStream::count).
                 expectedResult(expectedCount).
+                exercise();
+
+        withData(data).
+                terminal(s -> s.skip(1), LongStream::count).
+                expectedResult(Math.max(0, expectedCount - 1)).
                 exercise();
 
         // Test with an unknown sized stream
@@ -147,6 +163,11 @@ public class CountTest extends OpTestCase {
                 expectedResult(expectedCount).
                 exercise();
 
+        withData(data).
+                terminal(s -> s.skip(1), DoubleStream::count).
+                expectedResult(Math.max(0, expectedCount - 1)).
+                exercise();
+
         // Test with an unknown sized stream
         withData(data).
                 terminal(s -> s.filter(e -> true), DoubleStream::count).
@@ -165,40 +186,49 @@ public class CountTest extends OpTestCase {
     }
 
     public void testNoEvaluationForSizedStream() {
-        {
-            AtomicInteger ai = new AtomicInteger();
-            RefStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).count();
-            assertEquals(ai.get(), 0);
+        checkStreamDoesNotConsumeElements(() -> RefStreams.of(1, 2, 3, 4), 4);
+        checkStreamDoesNotConsumeElements(() -> RefStreams.of(1, 2, 3, 4).skip(1).limit(2).skip(1), 1);
+        checkIntStreamDoesNotConsumeElements(() -> IntStreams.of(1, 2, 3, 4), 4);
+        checkIntStreamDoesNotConsumeElements(() -> IntStreams.of(1, 2, 3, 4).skip(1).limit(2).skip(1), 1);
+        checkLongStreamDoesNotConsumeElements(() -> LongStreams.of(1, 2, 3, 4), 4);
+        checkLongStreamDoesNotConsumeElements(() -> LongStreams.of(1, 2, 3, 4).skip(1).limit(2).skip(1), 1);
+        checkDoubleStreamDoesNotConsumeElements(() -> DoubleStreams.of(1, 2, 3, 4), 4);
+        checkDoubleStreamDoesNotConsumeElements(() -> DoubleStreams.of(1, 2, 3, 4).skip(1).limit(2).skip(1), 1);
+    }
 
-            RefStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).parallel().count();
-            assertEquals(ai.get(), 0);
-        }
+    private void checkStreamDoesNotConsumeElements(Supplier<Stream<?>> supplier, long expectedCount) {
+        AtomicInteger ai = new AtomicInteger();
+        assertEquals(supplier.get().peek(e -> ai.getAndIncrement()).count(), expectedCount);
+        assertEquals(ai.get(), 0);
 
-        {
-            AtomicInteger ai = new AtomicInteger();
-            IntStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).count();
-            assertEquals(ai.get(), 0);
+        assertEquals(supplier.get().peek(e -> ai.getAndIncrement()).parallel().count(), expectedCount);
+        assertEquals(ai.get(), 0);
+    }
 
-            IntStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).parallel().count();
-            assertEquals(ai.get(), 0);
-        }
+    private void checkIntStreamDoesNotConsumeElements(Supplier<IntStream> supplier, long expectedCount) {
+        AtomicInteger ai = new AtomicInteger();
+        assertEquals(supplier.get().peek(e -> ai.getAndIncrement()).count(), expectedCount);
+        assertEquals(ai.get(), 0);
 
-        {
-            AtomicInteger ai = new AtomicInteger();
-            LongStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).count();
-            assertEquals(ai.get(), 0);
+        assertEquals(supplier.get().peek(e -> ai.getAndIncrement()).parallel().count(), expectedCount);
+        assertEquals(ai.get(), 0);
+    }
 
-            LongStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).parallel().count();
-            assertEquals(ai.get(), 0);
-        }
+    private void checkLongStreamDoesNotConsumeElements(Supplier<LongStream> supplier, long expectedCount) {
+        AtomicInteger ai = new AtomicInteger();
+        assertEquals(supplier.get().peek(e -> ai.getAndIncrement()).count(), expectedCount);
+        assertEquals(ai.get(), 0);
 
-        {
-            AtomicInteger ai = new AtomicInteger();
-            DoubleStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).count();
-            assertEquals(ai.get(), 0);
+        assertEquals(supplier.get().peek(e -> ai.getAndIncrement()).parallel().count(), expectedCount);
+        assertEquals(ai.get(), 0);
+    }
 
-            DoubleStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).parallel().count();
-            assertEquals(ai.get(), 0);
-        }
+    private void checkDoubleStreamDoesNotConsumeElements(Supplier<DoubleStream> supplier, long expectedCount) {
+        AtomicInteger ai = new AtomicInteger();
+        assertEquals(supplier.get().peek(e -> ai.getAndIncrement()).count(), expectedCount);
+        assertEquals(ai.get(), 0);
+
+        assertEquals(supplier.get().peek(e -> ai.getAndIncrement()).parallel().count(), expectedCount);
+        assertEquals(ai.get(), 0);
     }
 }
