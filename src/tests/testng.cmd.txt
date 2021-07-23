@@ -21,7 +21,9 @@ SET JAVA15=F:/Java/jdk15.0.3+3-zulu/bin/java
 
 SET JAVA16=F:/Java/jdk16.0.1+9-oracle/bin/java
 
-SET JAVA17=F:/Java/jdk17_ea+25/bin/java
+SET JAVA17=F:/Java/jdk17_ea+32/bin/java
+
+SET JAVA18=F:/Java/jdk18_ea+7/bin/java
 
 SET TEST_JAR=streamsupport-all-tests-1.7.4-SNAPSHOT.jar
 
@@ -70,6 +72,8 @@ REM SET PERMIT=--illegal-access=permit
 %JAVA16% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 
 %JAVA17% %PAR_GC% %OPENS% -cp .;./* %ARGS%
+
+%JAVA18% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 
 
 
