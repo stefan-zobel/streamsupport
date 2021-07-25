@@ -3,23 +3,23 @@ SET JAVA6=F:/Java/sun-jdk1.6.0_45-64bit/bin/java
 
 SET JAVA7=F:/Java/sun-jdk1.7.0_80-64bit/bin/java
 
-SET JAVA8=F:/Java/jdk1.8.0_292-zulu-64bit/bin/java
+SET JAVA8=F:/Java/jdk1.8.0_302-zulu-64bit/bin/java
 
 SET JAVA9=F:/Java/jdk9.0.4+11/bin/java
 
 SET JAVA10=F:/Java/jdk10.0.2+13/bin/java
 
-SET JAVA11=F:/Java/jdk11.0.11+9-zulu/bin/java
+SET JAVA11=F:/Java/jdk11.0.12+7-zulu/bin/java
 
 SET JAVA12=F:/Java/jdk12.0.2+10-openjdk/bin/java
 
-SET JAVA13=F:/Java/jdk13.0.7+5-zulu/bin/java
+SET JAVA13=F:/Java/jdk13.0.8+5-zulu/bin/java
 
 SET JAVA14=F:/Java/jdk14.0.2+12-zulu/bin/java
 
-SET JAVA15=F:/Java/jdk15.0.3+3-zulu/bin/java
+SET JAVA15=F:/Java/jdk15.0.4+5-zulu/bin/java
 
-SET JAVA16=F:/Java/jdk16.0.1+9-oracle/bin/java
+SET JAVA16=F:/Java/jdk16.0.2+7-oracle/bin/java
 
 SET JAVA17=F:/Java/jdk17_ea+32/bin/java
 
