@@ -19,11 +19,11 @@ SET JAVA14=F:/Java/jdk14.0.2+12-zulu/bin/java
 
 SET JAVA15=F:/Java/jdk15.0.4+5-zulu/bin/java
 
-SET JAVA16=F:/Java/jdk16.0.2+7-oracle/bin/java
+SET JAVA16=F:/Java/jdk16.0.2+7-zulu/bin/java
 
-SET JAVA17=F:/Java/jdk17_ea+32/bin/java
+SET JAVA17=F:/Java/jdk17_ea+34/bin/java
 
-SET JAVA18=F:/Java/jdk18_ea+7/bin/java
+SET JAVA18=F:/Java/jdk18_ea+9/bin/java
 
 SET TEST_JAR=streamsupport-all-tests-1.7.4-SNAPSHOT.jar
 
