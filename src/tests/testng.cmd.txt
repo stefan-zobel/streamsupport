@@ -21,7 +21,7 @@ SET JAVA15=F:/Java/jdk15.0.4+5-zulu/bin/java
 
 SET JAVA16=F:/Java/jdk16.0.2+7-zulu/bin/java
 
-SET JAVA17=F:/Java/jdk17_ea+34/bin/java
+SET JAVA17=F:/Java/jdk17_ea+35/bin/java
 
 SET JAVA18=F:/Java/jdk18_ea+9/bin/java
 
