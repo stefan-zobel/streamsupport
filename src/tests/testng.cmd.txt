@@ -23,9 +23,9 @@ SET JAVA16=F:/Java/jdk16.0.2+7-zulu/bin/java
 
 SET JAVA17=F:/Java/jdk17_ea+35/bin/java
 
-SET JAVA18=F:/Java/jdk18_ea+9/bin/java
+SET JAVA18=F:/Java/jdk18_ea+10/bin/java
 
-SET TEST_JAR=streamsupport-all-tests-1.7.4-SNAPSHOT.jar
+SET TEST_JAR=streamsupport-all-tests-1.7.4.jar
 
 SET ARGS=org.testng.TestNG testng_all.xml -testjar %TEST_JAR%
 
