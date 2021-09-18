@@ -21,9 +21,9 @@ SET JAVA15=F:/Java/jdk15.0.4+5-zulu/bin/java
 
 SET JAVA16=F:/Java/jdk16.0.2+7-zulu/bin/java
 
-SET JAVA17=F:/Java/jdk17_ea+35/bin/java
+SET JAVA17=F:/Java/jdk17+35-zulu/bin/java
 
-SET JAVA18=F:/Java/jdk18_ea+10/bin/java
+SET JAVA18=F:/Java/jdk18_ea+15/bin/java
 
 SET TEST_JAR=streamsupport-all-tests-1.7.4.jar
 
@@ -38,8 +38,6 @@ SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 SET USE_ITERATOR_SPLITERATOR=-Djava8.util.Spliterators.assume.oracle.collections.impl=false
 
 SET OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
-
-REM SET PERMIT=--illegal-access=permit
 
 
 
@@ -78,6 +76,4 @@ REM SET PERMIT=--illegal-access=permit
 
 
 REM SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
-
-REM %JAVA9% %DBG_MOD_ACCESS% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 
