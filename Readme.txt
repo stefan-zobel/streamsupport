@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.7.3-stable" is the current stable release
+ - "1.7.4-stable" is the current stable release
 
 
 GENERAL
@@ -92,6 +92,8 @@ GENERAL
  - Release 1.7.3 completes the Java 16 port and adds two new Stream methods
    (multiMap and toList) introduced in Java 16.
 
+ - Release 1.7.4 adds some improvements from Java 17.
+
 
 
 KNOWN PROBLEMS
@@ -154,6 +156,17 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.7.4-stable (2021-09-19)
+ - JDK-8265029: Preserve SIZED characteristics on slice operations (skip, limit)
+ - JDK-8267452: Delegate forEachRemaining in Spliterators.iterator
+ - JDK-8199318: add idempotent copy operation for Map.Entry
+ - JDK-8267939: Clarify the specification of forEachRemaining
+ - JDK-8271601: use x ^ y in the floorMod(int, int) test
+ - JDK-8268113: Reuse Long.hashCode()
+ - Implement Java 17 j.u.r.RandomGenerator methods
+ - Add new CompensatedSums test for JDK-8214761
+ - Completed Java 17 port
 
 1.7.3-stable (2021-01-31)
  - JDK-8238286: Add new flatMap stream operation multiMap (Java 16)

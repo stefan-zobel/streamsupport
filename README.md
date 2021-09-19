@@ -30,7 +30,7 @@ most Java 8 language features and the latest release can also replace the standa
 streamsupport backport (cf. the Proguard [documentation](https://www.guardsquare.com/manual/languages/java),
 especially the section titled "Java 8 stream API support").
 
-The current stable release of streamsupport is `streamsupport-1.7.3`.
+The current stable release of streamsupport is `streamsupport-1.7.4`.
 
 Want also lambdas? https://github.com/orfjackal/retrolambda
 
@@ -55,7 +55,7 @@ Please give feedback [here](https://github.com/stefan-zobel/streamsupport/issues
 
 ```gradle
 dependencies {
-    implementation 'net.sourceforge.streamsupport:streamsupport:1.7.3'
+    implementation 'net.sourceforge.streamsupport:streamsupport:1.7.4'
 }
 ```
 
@@ -66,7 +66,7 @@ dependencies {
 <dependency>
     <groupId>net.sourceforge.streamsupport</groupId>
     <artifactId>streamsupport</artifactId>
-    <version>1.7.3</version>
+    <version>1.7.4</version>
 </dependency>
 ```
 
@@ -78,7 +78,7 @@ Contains streamsupport core + atomic + cfuture + flow
 <dependency>
     <groupId>net.sourceforge.streamsupport</groupId>
     <artifactId>streamsupport_all</artifactId>
-    <version>1.7.3.2</version>
+    <version>1.7.4</version>
 </dependency>
 ```
 
