@@ -632,7 +632,7 @@ abstract class ReferencePipeline<P_IN, P_OUT>
         // Runtime checking will be performed when an element is stored in A[], thus if A is not a
         // super type of U an ArrayStoreException will be thrown.
         @SuppressWarnings("rawtypes")
-        IntFunction rawGenerator = (IntFunction) generator;
+        IntFunction rawGenerator = generator;
         return (A[]) Nodes.flatten((Node<A>) evaluateToArrayNode(rawGenerator), generator)
                               .asArray(rawGenerator);
     }
