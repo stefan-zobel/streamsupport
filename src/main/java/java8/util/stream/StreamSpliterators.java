@@ -980,7 +980,7 @@ class StreamSpliterators {
             }
         }
 
-        static abstract class OfPrimitive<T,
+        abstract static class OfPrimitive<T,
                 T_SPLITR extends Spliterator.OfPrimitive<T, T_CONS, T_SPLITR>,
                 T_CONS>
                 extends SliceSpliterator<T, T_SPLITR>

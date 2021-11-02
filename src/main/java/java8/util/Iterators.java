@@ -278,7 +278,7 @@ public final class Iterators {
         }
     }
 
-    static abstract class ImmutableIt<T> implements Iterator<T> {
+    abstract static class ImmutableIt<T> implements Iterator<T> {
         @Override
         public void remove() {
             throw new UnsupportedOperationException("remove");

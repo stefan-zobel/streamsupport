@@ -304,7 +304,7 @@ final class HMSpliterators {
         }
     }
 
-    private static abstract class HashMapSpliterator<K, V> {
+    private abstract static class HashMapSpliterator<K, V> {
         final HashMap<K, V> map;
         Object current; // current node
         int index; // current index, modified on advance/split
