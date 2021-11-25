@@ -471,7 +471,7 @@ final class Nodes {
     }
 
     /**
-     * Produces a variable size @{link Node.Builder}.
+     * Produces a variable size {@link Node.Builder}.
      *
      * @param <T> the type of elements of the node builder
      * @return a {@code Node.Builder}
@@ -509,7 +509,7 @@ final class Nodes {
     }
 
     /**
-     * Produces a variable size @{link Node.Builder.OfInt}.
+     * Produces a variable size {@link Node.Builder.OfInt}.
      *
      * @return a {@code Node.Builder.OfInt}
      */
@@ -546,7 +546,7 @@ final class Nodes {
     }
 
     /**
-     * Produces a variable size @{link Node.Builder.OfLong}.
+     * Produces a variable size {@link Node.Builder.OfLong}.
      *
      * @return a {@code Node.Builder.OfLong}
      */
@@ -583,7 +583,7 @@ final class Nodes {
     }
 
     /**
-     * Produces a variable size @{link Node.Builder.OfDouble}.
+     * Produces a variable size {@link Node.Builder.OfDouble}.
      *
      * @return a {@code Node.Builder.OfDouble}
      */
