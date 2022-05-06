@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,6 +25,8 @@ package org.openjdk.other.tests.sumAndAverage;
 /*
  * @test
  * @bug 8214761
+ * @key randomness
+ * @library /test/lib 
  * @run testng CompensatedSums
  * @summary
  */
@@ -83,7 +85,7 @@ public class CompensatedSums {
         }
 
         Assert.assertTrue(jdkParallelStreamError <= goodParallelStreamError);
-        Assert.assertTrue(badParallelStreamError > jdkParallelStreamError);
+        Assert.assertTrue(badParallelStreamError >= jdkParallelStreamError);
 
         Assert.assertTrue(goodSequentialStreamError >= jdkSequentialStreamError);
         Assert.assertTrue(naive > jdkSequentialStreamError);
@@ -94,7 +96,7 @@ public class CompensatedSums {
         return arg * arg;
     }
 
-    // from OpenJDK8 Collectors, unmodified
+    // from OpenJDK 18 Collectors, unmodified
     static double[] sumWithCompensation(double[] intermediateSum, double value) {
         double tmp = value - intermediateSum[1];
         double sum = intermediateSum[0];
@@ -104,9 +106,10 @@ public class CompensatedSums {
         return intermediateSum;
     }
 
-    // from OpenJDK8 Collectors, unmodified
+    // from OpenJDK 18 Collectors, unmodified
     static double computeFinalSum(double[] summands) {
-        double tmp = summands[0] + summands[1];
+        // Final sum with better error bounds subtract second summand as it is negated
+        double tmp = summands[0] - summands[1];
         double simpleSum = summands[summands.length - 1];
         if (Double.isNaN(tmp) && Double.isInfinite(simpleSum))
             return simpleSum;
