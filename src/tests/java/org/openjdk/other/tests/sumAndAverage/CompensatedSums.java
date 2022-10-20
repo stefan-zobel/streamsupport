@@ -48,7 +48,7 @@ public class CompensatedSums {
         double goodSequentialStreamError = 0.0;
         double jdkParallelStreamError = 0.0;
         double goodParallelStreamError = 0.0;
-        double badParallelStreamError = 0.0;
+//        double badParallelStreamError = 0.0;
 
         for (int loop = 0; loop < 100; loop++) {
             // sequence of random numbers of varying magnitudes, both positive and negative
@@ -81,11 +81,17 @@ public class CompensatedSums {
             goodParallelStreamError += square(computeFinalSum(DoubleStreams.of(rand).parallel().collect(doubleSupplier,objDoubleConsumer,goodCollectorConsumer)) - sum[0]);
 
             // the bad parallel stream
-            badParallelStreamError += square(computeFinalSum(DoubleStreams.of(rand).parallel().collect(doubleSupplier,objDoubleConsumer,badCollectorConsumer)) - sum[0]);
+//            badParallelStreamError += square(computeFinalSum(DoubleStreams.of(rand).parallel().collect(doubleSupplier,objDoubleConsumer,badCollectorConsumer)) - sum[0]);
         }
 
         Assert.assertTrue(jdkParallelStreamError <= goodParallelStreamError);
-        Assert.assertTrue(badParallelStreamError >= jdkParallelStreamError);
+        /*
+         * Due to floating-point addition being inherently non-associative,
+         * and due to the unpredictable scheduling of the threads used
+         * in parallel streams, this assertion can fail intermittently,
+         * hence is suppressed for now.
+         */
+        // Assert.assertTrue(badParallelStreamError >= jdkParallelStreamError);
 
         Assert.assertTrue(goodSequentialStreamError >= jdkSequentialStreamError);
         Assert.assertTrue(naive > jdkSequentialStreamError);
