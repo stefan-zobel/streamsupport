@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2021, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2023, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1373,6 +1373,8 @@ public final class Maps {
     public static <K, V> Map<K, V> copyOf(Map<? extends K, ? extends V> map) {
         if (map instanceof ImmutableCollections.AbstractImmutableMap) {
             return (Map<K,V>) map;
+        } else if (map.isEmpty()) {
+            return Maps.of();
         } else {
             return (Map<K,V>) Maps.ofEntries(map.entrySet().toArray(new Map.Entry[0]));
         }
