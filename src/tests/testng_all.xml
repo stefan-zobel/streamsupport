@@ -137,6 +137,7 @@
       <class name="org.openjdk.tests.java.util.concurrent.Completed"/>
       <class name="org.openjdk.tests.java.util.concurrent.LostInterrupt"/>
       <class name="org.openjdk.tests.java.util.concurrent.SwallowedInterruptedException"/>
+      <class name="org.openjdk.tests.java.util.concurrent.CompletableFutureOrTimeoutExceptionallyTest"/>
       <!-- Not a CF test, but a test with a dependency on CF -->
       <class name="org.openjdk.other.tests.chm.ConcurrentAssociateTest"/>
 
