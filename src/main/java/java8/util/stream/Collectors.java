@@ -2183,6 +2183,11 @@ public final class Collectors {
         }
 
         @Override
+        public boolean containsValue(Object value) {
+            return Objects.equals(value, forTrue) || Objects.equals(value, forFalse);
+        }
+
+        @Override
         public T get(Object key) {
             return (key instanceof Boolean)
                     ? (((Boolean) key).booleanValue() ? forTrue : forFalse)
